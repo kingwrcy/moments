@@ -19,12 +19,12 @@
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",
     "sass": "^1.72.0",
-    "shadcn-nuxt": "^0.10.2",
-    "sqlite3": "^5.1.7"
+    "shadcn-nuxt": "^0.10.2"
   }
 }
