@@ -1,0 +1,1 @@
+export const jwtKey = "xgQmd35eBnLIT5H0yDto"

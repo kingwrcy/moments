@@ -4,26 +4,33 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --host 0.0.0.0",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@prisma/client": "5.11.0",
     "@radix-icons/vue": "^1.0.0",
+    "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.11.1",
     "radix-vue": "^1.5.3",
-    "sequelize": "^6.37.1",
+    "reflect-metadata": "^0.2.2",
+    "short-uuid": "^4.2.2",
+    "sqlite3": "^5.1.7",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0",
-    "sqlite3": "^5.1.7"
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "prisma": "^5.11.0",
     "sass": "^1.72.0",
     "shadcn-nuxt": "^0.10.2"
   }
