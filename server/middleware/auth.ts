@@ -2,13 +2,13 @@ import { jwtKey } from "~/lib/constant";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "../api/user/login.post";
 
-const ignorePaths = ["/api/user/login"];
+const needLoginUrl = ["/api/memo/save"];
 
 export default defineEventHandler((event) => {
-  const token = getHeader(event, "Authorization");
+  const token = getCookie(event,'token')
   const url = getRequestURL(event);
   
-  if (ignorePaths.includes(url.pathname)) {
+  if (!needLoginUrl.includes(url.pathname)) {
     return;
   }
   if(!token){

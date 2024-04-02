@@ -8,47 +8,52 @@ type loginReq = {
   password: string;
 };
 
-
 export type JwtPayload = {
-  username:string
-  exp:number
-  userId:number
-}
+  username: string;
+  exp: number;
+  userId: number;
+};
 
 export default defineEventHandler(async (event) => {
-  const body = (await readBody(event)) as loginReq;
-
-  if (!body.username || !body.password) {
+  const {username,password} = (await readBody(event)) as loginReq;
+  let token = "";
+  if (!username || !password) {
     return {
+      success: false,
       message: "用户名或密码不能为空",
+      token,
     };
   }
 
-
-  const hash = bcrypt.hashSync(body.password, 10);
   const user = await prisma.user.findFirst({
     where: {
-      username: body.username,
+      username
     },
   });
 
-  if (!user || bcrypt.compareSync(hash, user.password)) {
+  if (!user || !bcrypt.compareSync(password, user.password)) {
     return {
       message: "用户名或密码错误",
+      success: false,
+      token,
     };
   }
 
-  const token = jwt.sign(
+  token = jwt.sign(
     {
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
       username: user.username,
-      userId:user.id,
+      userId: user.id,
     },
     jwtKey
   );
+  setCookie(event, "token", token, {
+    expires: new Date(Date.now() + 60 * 60 * 24 * 1000),
+  });
 
   return {
+    success: true,
     username: user.username,
-    token
+    message:""
   };
 });

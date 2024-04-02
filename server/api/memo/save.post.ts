@@ -1,23 +1,28 @@
-import prisma from "~/lib/db"
-
-
+import prisma from "~/lib/db";
 
 type SaveMemoReq = {
+  id?: number;
   content: string;
   imgUrls?: string[];
 };
 
-
 export default defineEventHandler(async (event) => {
-
   const body = (await readBody(event)) as SaveMemoReq;
-    await prisma.memo.create({
-      data:{
-        createdAt:new Date(),
-        updatedAt:new Date(),
-        imgs:body.imgUrls?.join(','),
-        content:body.content,
-        userId:event.context.userId,
-      }
-    })
-})
+  await prisma.memo.upsert({
+    where: {
+      id: body.id ?? -1,
+    },
+    create: {
+      imgs: body.imgUrls?.join(","),
+      content: body.content,
+      userId: event.context.userId,
+    },
+    update: {
+      imgs: body.imgUrls?.join(","),
+      content: body.content,
+    },
+  });
+  return {
+    success: true,
+  };
+});

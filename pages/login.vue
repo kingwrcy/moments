@@ -1,0 +1,43 @@
+<template>
+  <div class="p-4 flex justify-center min-h-[500px w-full]">
+    <div class="bg-white p-8 rounded shadow-md max-w-sm w-full">
+      <div class="mb-4">
+        <Label for="username" class="block text-gray-700 mb-2">用户名</Label>
+        <Input v-model="state.username" autocomplete="off" type="text" id="username"
+          />
+      </div>
+      <div class="mb-6">
+        <Label for="password" class="block text-gray-700 mb-2">密码</Label>
+        <Input v-model="state.password" autocomplete="off" type="text" id="password"
+          />
+      </div>
+      <Button @click="login" type="submit">登录</Button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { toast } from 'vue-sonner'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+const state = reactive({
+  username: 'admin',
+  password: 'a123456'
+})
+
+const login = async () => {
+  const res = await $fetch('/api/user/login', {
+    method: 'POST',
+    body: JSON.stringify(state)
+  })
+
+  if (res.success) {
+    toast.warning('登录成功', )
+    await navigateTo('/')    
+  } else {
+    toast.warning(res.message || '登录失败')
+  }
+}
+</script>
+
+<style scoped></style>

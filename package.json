@@ -10,21 +10,24 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "@prisma/client": "5.11.0",
     "@radix-icons/vue": "^1.0.0",
+    "@vueuse/core": "^10.9.0",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "dayjs": "^1.11.10",
     "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.11.1",
     "radix-vue": "^1.5.3",
     "reflect-metadata": "^0.2.2",
     "short-uuid": "^4.2.2",
-    "sqlite3": "^5.1.7",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vue-sonner": "^1.1.2"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",
