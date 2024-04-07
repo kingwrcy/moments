@@ -1,17 +1,19 @@
 <template>
   <div class="p-4 flex justify-center min-h-[500px w-full]">
     <div class="bg-white p-8 rounded shadow-md max-w-sm w-full">
+      <div class="text-center text-2xl">登录</div>
       <div class="mb-4">
         <Label for="username" class="block text-gray-700 mb-2">用户名</Label>
-        <Input v-model="state.username" autocomplete="off" type="text" id="username"
-          />
+        <Input v-model="state.username" autocomplete="off" type="text" id="username" />
       </div>
       <div class="mb-6">
         <Label for="password" class="block text-gray-700 mb-2">密码</Label>
-        <Input v-model="state.password" autocomplete="off" type="text" id="password"
-          />
+        <Input v-model="state.password" autocomplete="off" type="password" id="password" />
       </div>
-      <Button @click="login" type="submit">登录</Button>
+      <div class="flex flex-row gap-2">
+        <Button @click="login" type="button">登录</Button>
+        <Button variant="ghost" @click="navigateTo('/')" type="button">返回首页</Button>
+      </div>
     </div>
   </div>
 </template>
@@ -20,9 +22,16 @@
 import { toast } from 'vue-sonner'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+
+
+useHead({
+  title: '登录-极简朋友圈',
+})
+
+
 const state = reactive({
-  username: 'admin',
-  password: 'a123456'
+  username: '',
+  password: ''
 })
 
 const login = async () => {
@@ -32,8 +41,8 @@ const login = async () => {
   })
 
   if (res.success) {
-    toast.warning('登录成功', )
-    await navigateTo('/')    
+    toast.success('登录成功',)
+    await navigateTo('/')
   } else {
     toast.warning(res.message || '登录失败')
   }

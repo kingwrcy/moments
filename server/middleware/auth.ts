@@ -4,9 +4,14 @@ import { JwtPayload } from "../api/user/login.post";
 
 const needLoginUrl = ["/api/memo/save"];
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const token = getCookie(event,'token')
   const url = getRequestURL(event);
+
+  if(token && url.pathname === "/login"){
+    await sendRedirect(event, '/', 302)
+    return 
+  }
   
   if (!needLoginUrl.includes(url.pathname)) {
     return;

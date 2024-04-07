@@ -1,8 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxt/image",'@nuxtjs/color-mode'],
   css: ["~/assets/css/index.css"],
+  colorMode: {
+    classSuffix: ''
+  },
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -21,4 +24,7 @@ export default defineNuxtConfig({
       },
     },
   },
+  image: {
+    dir: "assets/upload"
+  }
 });

@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fancyapps/ui": "^5.0.35",
+    "@nuxt/image": "^1.5.0",
     "@pinia/nuxt": "^0.5.1",
     "@prisma/client": "5.11.0",
     "@radix-icons/vue": "^1.0.0",
@@ -19,9 +21,11 @@
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "jsonwebtoken": "^9.0.2",
+    "lucide-vue-next": "^0.364.0",
     "nuxt": "^3.11.1",
     "radix-vue": "^1.5.3",
     "reflect-metadata": "^0.2.2",
+    "sharp": "^0.33.3",
     "short-uuid": "^4.2.2",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
@@ -30,11 +34,24 @@
     "vue-sonner": "^1.1.2"
   },
   "devDependencies": {
+    "@nuxtjs/color-mode": "^3.3.3",
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
+    "ipx": "^3.0.1",
     "prisma": "^5.11.0",
     "sass": "^1.72.0",
-    "shadcn-nuxt": "^0.10.2"
+    "shadcn-nuxt": "^0.10.2",
+    "typescript": "^5.4.3"
+  },
+  "pnpm": {
+    "supportedArchitectures": {
+      "os": [
+        "win32"
+      ],
+      "cpu": [
+        "x64"
+      ]
+    }
   }
 }
