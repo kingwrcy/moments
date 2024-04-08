@@ -35,7 +35,8 @@ COPY --from=builder /app/start.sh /app/start.sh
 
 RUN npm init -y
 RUN npm install -g prisma
+RUN chmod +x /app/start.sh
 
 EXPOSE 3000
 
-ENTRYPOINT  [ "/app/start.sh" ]
+CMD /app/start.sh
