@@ -25,9 +25,9 @@ FROM node:lts-alpine
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV DATABASE_URL="file:/app/data.sqlite"
+ENV DATABASE_URL="file:/app/data/db.sqlite"
 
-RUN mkdir -p /app/assets/upload
+RUN mkdir -p /app/data/upload
 
 COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/prisma /app/prisma
