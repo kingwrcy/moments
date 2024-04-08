@@ -1,5 +1,5 @@
 <script setup>
-import { Fancybox } from '@fancyapps/ui';
+import { Fancybox } from '@fancyapps/ui/dist/index.esm.js';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 
 const props = defineProps({
