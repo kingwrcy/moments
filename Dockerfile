@@ -1,5 +1,5 @@
 # Nuxt 3 builder
-FROM node:lts as builder
+FROM node:lts-alpine as builder
 
 WORKDIR /app
 
@@ -17,15 +17,14 @@ RUN npx prisma generate
 RUN npm run build
 
 # Nuxt 3 production
-FROM node:lts
+FROM node:lts-alpine
 
 WORKDIR /app
 
 COPY --from=builder /app/.output  /app/.output
 COPY --from=builder /app/prisma  /app/prisma
 
-RUN npm init -y
-RUN npm install prisma --save-dev
+RUN npm install -g prisma
 
 # 运行数据库迁移
 RUN npx prisma migrate deploy
