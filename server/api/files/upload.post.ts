@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
   const filetype = file.type.split("/")[1];
 
   const filename = short.generate() + "." + filetype;
-  await fs.writeFile(`D:\\projects\\moments\\assets\\upload\\${filename}`, file.data);
+  await fs.writeFile(`${process.cwd()}/assets/upload/${filename}`, file.data);
 
   return {
     success: true,

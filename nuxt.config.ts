@@ -25,6 +25,6 @@ export default defineNuxtConfig({
     },
   },
   image: {
-    dir: "assets/upload"
+    dir: `${process.cwd()}/assets/upload`
   }
 });

@@ -23,4 +23,4 @@ logs
 .env.*
 !.env.example
 
-assets/upload
+assets/upload/*

@@ -8,7 +8,6 @@ const props = defineProps({
 const container = ref(null);
 
 onMounted(() => {
-  console.log(container.value.children)
   Array.from(container.value.children).map((el) => {
     el.setAttribute('data-fancybox', 'gallery');
   });

@@ -17,5 +17,4 @@
 import { Toaster } from '@/components/ui/sonner'
 import {Sun,MoonStar} from 'lucide-vue-next'
 const colorMode = useColorMode()
-console.log(colorMode.value)
 </script>
