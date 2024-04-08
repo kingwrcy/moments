@@ -30,7 +30,7 @@ RUN npm install prisma --save-dev
 # 运行数据库迁移
 RUN npx prisma migrate deploy
 
-RUN mkdir /app/assets/upload
+RUN mkdir -p /app/assets/upload
 
 ENV NODE_ENV=production
 
