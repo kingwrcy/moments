@@ -28,7 +28,7 @@ RUN npm init -y
 RUN npm install prisma --save-dev
 
 # 运行数据库迁移
-RUN npx prisma migrate deplpoy
+RUN npx prisma migrate deploy
 
 RUN mkdir /app/assets/upload
 
