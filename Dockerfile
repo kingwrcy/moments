@@ -31,12 +31,11 @@ RUN mkdir -p /app/data/upload
 
 COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/prisma /app/prisma
+COPY --from=builder /app/start.sh /app/start.sh
 
 RUN npm init -y
 RUN npm install -g prisma
-# 运行数据库迁移
-RUN npx prisma migrate deploy
 
 EXPOSE 3000
 
-CMD [ "node", ".output/server/index.mjs" ]
+ENTRYPOINT  [ "/app/start.sh" ]
