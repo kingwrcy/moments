@@ -1,6 +1,6 @@
 <template>
 
-  <div class="flex flex-row gap-4 text-sm border-x-0 pt-2">
+  <div class="flex flex-row gap-4 text-sm border-x-0 pt-2 bg-white">
     <NuxtImg :src="props.memo.user.avatarUrl" class="w-9 h-9 rounded"/>
     <div class="flex flex-col gap-.5 flex-1">
       <div class="text-[#576b95] cursor-default mb-1">{{ props.memo.user.nickname }}</div>

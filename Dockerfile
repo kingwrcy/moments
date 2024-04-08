@@ -30,6 +30,7 @@ ENV DATABASE_URL="file:/app/data.sqlite"
 RUN mkdir -p /app/assets/upload
 
 COPY --from=builder /app/.output /app/.output
+COPY --from=builder /app/prisma /app/prisma
 
 RUN npm init -y
 RUN npm install -g prisma

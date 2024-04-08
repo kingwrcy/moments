@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 pb-2 border-b bg-slate-50">
+  <div class="p-4 pb-2 border-b bg-white">
     <div class="flex flex-row my-2 ">
     <div class="flex flex-1 gap-2 ">
       <Label for="imgUpload">

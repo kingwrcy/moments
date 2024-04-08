@@ -1,5 +1,5 @@
 <template>
-  <div class="relative mb-8">
+  <div class="relative mb-8 bg-white">
     <div class="absolute top-0 left-0 w-full bg-white/80" v-if="showBack()">
       <img src="~/assets/img/back.svg" class="w-10 h-10 px-1 py-2 cursor-pointer" alt="返回" title="返回"
         @click="navigateTo('/')">

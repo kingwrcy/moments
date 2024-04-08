@@ -2,20 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  @font-face {
-    font-family: 'MiSans';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url(https://yoyo.s3.bitiful.net/misan-normal.ttf);
-  }
-}
 
 html,
-body {
-  /* font-family: "MiSans", sans-serif, "微软雅黑"; */
-  font-family: sans-serif;
+body,#__nuxt {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',sans-serif;
+  height:100%;
 }
 
 
