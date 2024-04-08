@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 mkdir -p /app/data/upload
 npx prisma migrate deploy

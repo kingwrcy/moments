@@ -1,10 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxt/image",'@nuxtjs/color-mode'],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "shadcn-nuxt",
+    "@nuxt/image",
+    "@nuxtjs/color-mode",
+  ],
   css: ["~/assets/css/index.css"],
   colorMode: {
-    classSuffix: ''
+    classSuffix: "",
   },
   shadcn: {
     /**
@@ -25,6 +30,6 @@ export default defineNuxtConfig({
     },
   },
   image: {
-    dir: `/app/data/upload`
-  }
+    dir: "/app/data/upload",
+  },
 });
