@@ -15,18 +15,20 @@ export default defineEventHandler(async (event) => {
   if (!file.type.startsWith("image")) {
     return {
       success: false,
-      message: "只支持上传图片文件",      
+      message: "只支持上传图片文件",
       filename: "",
     };
   }
   const filetype = file.type.split("/")[1];
 
   const filename = short.generate() + "." + filetype;
-  await fs.writeFile(`/app/data/upload/${filename}`, file.data);
+  
+  const filepath = `${process.env.UPLOAD_DIR}/${filename}`;
+  await fs.writeFile(filepath, file.data);
 
   return {
     success: true,
-    filename,
+    filename: "/upload/" + filename,
     message: "上传文件成功!",
   };
 });

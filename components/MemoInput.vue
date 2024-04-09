@@ -113,9 +113,9 @@
     <iframe class="w-full h-[250px] my-2" v-if="bilibiliIfrUrl" :src="bilibiliIfrUrl" scrolling="no" border="0"
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
-    <div class="grid grid-cols-3 my-1 gap-2" v-if="imgs && imgs.length > 0">
+    <div class="grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
       <div v-for="(img, index) in imgs" :key="index" class="relative">
-        <NuxtImg format="avif,webp" :src="`/${img}`" class="rounded" />
+        <NuxtImg format="avif,webp" :src="`${img}`" class="rounded" />
         <Trash2 color="#379d1b" :size="15" class="absolute top-1 right-1 cursor-pointer"
           @click="imgs.splice(index, 1)" />
       </div>

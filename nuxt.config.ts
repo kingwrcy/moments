@@ -1,12 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig({
+export default defineNuxtConfig({ 
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
     "@nuxt/image",
     "@nuxtjs/color-mode",
-  ],
+  ],  
   css: ["~/assets/css/index.css"],
   colorMode: {
     classSuffix: "",
@@ -28,8 +28,5 @@ export default defineNuxtConfig({
         target: "esnext",
       },
     },
-  },
-  image: {
-    dir: "/app/data/upload",
-  },
+  }  
 });
