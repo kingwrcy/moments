@@ -7,10 +7,19 @@ type SaveSettingsReq = {
   avatarUrl?: string;
   slogan?: string;
   coverUrl?: string;
+  enableS3:boolean
+  domain:string,
+  bucket:string,
+  region:string,
+  accessKey:string,
+  secretKey:string,
+  endpoint:string,
+  thumbnailSuffix:string,
+  suffix:string,
 };
 
 export default defineEventHandler(async (event) => {
-  const { password, nickname, avatarUrl, slogan, coverUrl } = (await readBody(
+  const { password, nickname, avatarUrl, slogan, coverUrl,...rest } = (await readBody(
     event
   )) as SaveSettingsReq;
 
@@ -29,7 +38,7 @@ export default defineEventHandler(async (event) => {
     where: {
       id: 1,
     },
-    data: updated,
+    data: {...updated,...rest},
   });
   return {
     success: true,

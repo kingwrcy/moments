@@ -3,12 +3,12 @@
     <div class="flex flex-col gap-2">
       <Label for="coverUrl" class="font-bold">顶部图片</Label>
       <Input type="file" id="coverUrl" autocomplete="off" @change="(e: Event) => { uploadImgs(e, 'coverUrl') }" />
-      <NuxtImg class="w-full h-[250px]" v-if="state.avatarUrl" :src="state.coverUrl" alt="" />
+      <img class="w-full h-[250px]" v-if="state.avatarUrl" :src="state.coverUrl" alt="" />
     </div>
     <div class="flex flex-col gap-2">
       <Label for="avatarUrl" class="font-bold">头像</Label>
       <Input type="file" id="avatarUrl" @change="(e: Event) => { uploadImgs(e, 'avatarUrl') }" />
-      <NuxtImg :src="state.avatarUrl" alt="avatar" class="w-[70px] h-[70px] rounded-xl" v-if="state.avatarUrl" />
+      <img :src="state.avatarUrl" alt="avatar" class="w-[70px] h-[70px] rounded-xl" v-if="state.avatarUrl" />
     </div>
     <div class="flex flex-col gap-2">
       <Label for="nickname" class="font-bold">昵称</Label>
@@ -23,7 +23,52 @@
 
     <div class="flex flex-col gap-2">
       <Label for="password" class="font-bold">密码</Label>
-      <Input type="password" id="password" placeholder="不修改密码不要填写" autocomplete="off"  v-model="state.password"/>
+      <Input type="password" id="password" placeholder="不修改密码不要填写" autocomplete="off" v-model="state.password" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="enableS3" class="font-bold">启用S3存储</Label>
+      <Switch id="enableS3" v-model:checked="state.enableS3" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="domain" class="font-bold">域名</Label>
+      <Input type="text" id="domain" placeholder="S3 CDN域名" autocomplete="off" v-model="state.domain" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="bucket" class="font-bold">桶名</Label>
+      <Input type="text" id="bucket" placeholder="bucket" autocomplete="off" v-model="state.bucket" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="region" class="font-bold">地区</Label>
+      <Input type="text" id="region" placeholder="" autocomplete="off" v-model="state.region" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="accessKey" class="font-bold">accessKey</Label>
+      <Input type="text" id="accessKey" placeholder="" autocomplete="off" v-model="state.accessKey" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="secretKey" class="font-bold">secretKey</Label>
+      <Input type="text" id="secretKey" placeholder="" autocomplete="off" v-model="state.secretKey" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="endpoint" class="font-bold">S3接口地址</Label>
+      <Input type="text" id="endpoint" placeholder="" autocomplete="off" v-model="state.endpoint" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="thumbnailSuffix" class="font-bold">缩略图后缀</Label>
+      <Input type="text" id="thumbnailSuffix" placeholder="" autocomplete="off" v-model="state.thumbnailSuffix" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="suffix" class="font-bold">大图后缀</Label>
+      <Input type="text" id="suffix" placeholder="" autocomplete="off" v-model="state.suffix" />
     </div>
 
     <div class="flex flex-col gap-2 ">
@@ -34,28 +79,55 @@
 
 <script setup lang="ts">
 import { toast } from 'vue-sonner'
-import {settingsUpdateEvent} from '~/lib/event'
+import { settingsUpdateEvent } from '~/lib/event'
 const token = useCookie('token')
+import { useStorage } from "@vueuse/core";
 
 
 useHead({
   title: '设置-极简朋友圈',
 })
 
+const enableS3 = useStorage("enableS3", false);
+
+
 const state = reactive({
   coverUrl: '',
   avatarUrl: '',
   nickname: '',
   slogan: '',
-  password:'',
+  password: '',
+  enableS3: false,
+  domain: '',
+  bucket: '',
+  region: '',
+  accessKey: '',
+  secretKey: '',
+  endpoint: '',
+  thumbnailSuffix: '',
+  suffix: '',
 })
 
-const { data: res } = await useFetch('/api/user/settings/get')
+const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full')
+
 
 state.coverUrl = res.value?.data?.coverUrl || 'https://images.unsplash.com/photo-1711299253442-de19d4dacaae?q=80&w=3500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 state.avatarUrl = res.value?.data?.avatarUrl || 'https://images.kingwrcy.cn/memo/20240386211829TtcOUOMaXyITlTkxhSjp'
 state.nickname = res.value?.data?.nickname || 'Jerry'
 state.slogan = res.value?.data?.slogan || '星垂平野阔，月涌大江流。'
+state.enableS3 = res.value?.data?.enableS3 || false
+state.domain = res.value?.data?.domain || ''
+state.bucket = res.value?.data?.bucket || ''
+state.region = res.value?.data?.region || ''
+state.accessKey = res.value?.data?.accessKey || ''
+state.secretKey = res.value?.data?.secretKey || ''
+state.endpoint = res.value?.data?.endpoint || ''
+state.thumbnailSuffix = res.value?.data?.thumbnailSuffix || ''
+state.suffix = res.value?.data?.suffix || ''
+
+if (state.enableS3) {
+  enableS3.value = true
+}
 
 
 const uploadImgs = async (event: Event, id: string) => {
@@ -63,50 +135,58 @@ const uploadImgs = async (event: Event, id: string) => {
   if (!file) {
     return
   }
-  const formData = new FormData()
-  formData.append('file', file)
-  const res = await $fetch('/api/files/upload', {
-    method: 'POST',
-    body: formData
-  })
-  if (res.success) {
-    (event.target as HTMLInputElement).value = ''
-    if (id === 'coverUrl') {
-      state.coverUrl = res.filename
-    } else if (id === 'avatarUrl') {
-      state.avatarUrl = res.filename
+
+  await useUpload(file, async (res) => {
+    if (res.success) {
+      (event.target as HTMLInputElement).value = ''
+      if (id === 'coverUrl') {
+        state.coverUrl = res.filename
+      } else if (id === 'avatarUrl') {
+        state.avatarUrl = res.filename
+      }
+    } else {
+      toast.warning(res.message || '上传失败')
     }
-  } else {
-    toast.warning(res.message || '上传失败')
-  }
+  })
+  // const formData = new FormData()
+  // formData.append('file', file)
+  // const res = await $fetch('/api/files/upload', {
+  //   method: 'POST',
+  //   body: formData
+  // })
+  // if (res.success) {
+  //   (event.target as HTMLInputElement).value = ''
+  //   if (id === 'coverUrl') {
+  //     state.coverUrl = res.filename
+  //   } else if (id === 'avatarUrl') {
+  //     state.avatarUrl = res.filename
+  //   }
+  // } else {
+  //   toast.warning(res.message || '上传失败')
+  // }
 }
 
 const saveSettings = async () => {
   const { success } = await $fetch('/api/user/settings/save', {
     method: 'POST',
-    body: JSON.stringify({
-      coverUrl: state.coverUrl,
-      avatarUrl: state.avatarUrl,
-      nickname: state.nickname,
-      slogan: state.slogan,
-      password:state.password
-    })
+    body: JSON.stringify(state)
   })
-  if (success) {    
-    if(state.password){
+  if (success) {
+
+    if (state.enableS3) {
+      enableS3.value = true
+    }
+    if (state.password) {
       token.value = ''
       toast.success('密码修改成功,请重新登录')
       navigateTo('/login')
-    }else{
+    } else {
       toast.success('保存成功')
     }
     state.password = ''
     settingsUpdateEvent.emit()
   }
 }
-
-
-
 </script>
 
 <style scoped></style>

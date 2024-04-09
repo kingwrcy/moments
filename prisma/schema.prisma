@@ -47,4 +47,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   memos     Memo[]
+  enableS3 Boolean @default(false)
+  domain String?
+  bucket String?
+  region String?
+  accessKey String?
+  secretKey String?
+  endpoint String?
+  thumbnailSuffix String?
+  suffix String?
 }

@@ -115,7 +115,7 @@
 
     <div class="grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
       <div v-for="(img, index) in imgs" :key="index" class="relative">
-        <NuxtImg format="avif,webp" :src="`${img}`" class="rounded" />
+        <img format="avif,webp" :src="`${img}`" class="rounded" />
         <Trash2 color="#379d1b" :size="15" class="absolute top-1 right-1 cursor-pointer"
           @click="imgs.splice(index, 1)" />
       </div>

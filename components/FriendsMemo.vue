@@ -1,7 +1,7 @@
 <template>
 
   <div class="flex flex-row gap-4 text-sm border-x-0 pt-2 bg-white">
-    <NuxtImg :src="props.memo.user.avatarUrl" class="w-9 h-9 rounded"/>
+    <img :src="props.memo.user.avatarUrl" class="w-9 h-9 rounded"/>
     <div class="flex flex-col gap-.5 flex-1">
       <div class="text-[#576b95] cursor-default mb-1">{{ props.memo.user.nickname }}</div>
       <div class="text-sm friend-md" ref="el" v-html="props.memo.content.replaceAll(/\n/g, '<br/>')"> </div>
@@ -20,7 +20,7 @@
             infinite: false,
           },
         }">
-            <NuxtImg loading="lazy" placeholder format="avif,webp" :src="`${img}`" class="cursor-pointer rounded"
+            <img loading="lazy" :src="`${img}`" class="cursor-pointer rounded"
               v-for="(img, index) in props.memo.imgs?.split(',')" :key="index" />
         </FancyBox>
       </div>
