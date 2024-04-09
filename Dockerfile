@@ -26,7 +26,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV DATABASE_URL="file:/app/data/db.sqlite"
-ENV UPLOAD_DIR="file:/app/.output/public/upload"
+ENV UPLOAD_DIR="/app/.output/public/upload"
 
 COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/prisma /app/prisma
