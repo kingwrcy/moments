@@ -24,7 +24,12 @@ export default defineEventHandler(async (event) => {
   const filename = short.generate() + "." + filetype;
   
   const filepath = `${process.env.UPLOAD_DIR}/${filename}`;
-  await fs.writeFile(filepath, file.data);
+  console.log('filepath is : ',filepath)
+  try{
+    await fs.writeFile(filepath, file.data);
+  }catch(e){
+    console.log('writeFile error is : ',e)
+  }
 
   return {
     success: true,
