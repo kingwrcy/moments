@@ -1,9 +1,9 @@
 <template>
 
-  <div class="flex flex-row gap-4 text-sm border-x-0 pt-2 bg-white">
+  <div class="flex flex-row gap-4 text-sm border-x-0 pt-2 ">
     <img :src="props.memo.user.avatarUrl" class="w-9 h-9 rounded"/>
     <div class="flex flex-col gap-.5 flex-1">
-      <div class="text-[#576b95] cursor-default mb-1">{{ props.memo.user.nickname }}</div>
+      <div class="text-[#576b95] cursor-default mb-1 dark:text-white">{{ props.memo.user.nickname }}</div>
       <div class="text-sm friend-md" ref="el" v-html="props.memo.content.replaceAll(/\n/g, '<br/>')"> </div>
 
       <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86
@@ -20,7 +20,7 @@
             infinite: false,
           },
         }">
-            <img loading="lazy" :src="`${img}`" class="cursor-pointer rounded"
+            <img loading="lazy" :src="getImgUrl(img)" class="cursor-pointer rounded"
               v-for="(img, index) in props.memo.imgs?.split(',')" :key="index" />
         </FancyBox>
       </div>
@@ -75,7 +75,7 @@
           </div>
         </div>
       </div>
-      <div class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-[#262626] flex flex-col gap-1  ">
+      <div class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-slate-400 flex flex-col gap-1  ">
         <div class="flex flex-row py-2 px-4 gap-2 items-center text-sm" v-if="props.memo.favCount > 0">
           <Heart :size=14 />
           <div class="text-[#576b95]"><span class="mx-1">{{ props.memo.favCount }}</span>位访客赞过</div>
@@ -115,6 +115,7 @@ import 'dayjs/locale/zh-cn';
 import { Heart, HeartCrack, MessageSquareMore, Trash2, FilePenLine } from 'lucide-vue-next'
 import { memoUpdateEvent } from '@/lib/event'
 import { toast } from 'vue-sonner';
+import { getImgUrl } from '~/lib/utils';
 import {
   AlertDialog,
   AlertDialogAction,

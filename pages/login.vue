@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 flex justify-center min-h-[500px w-full]">
-    <div class="bg-white p-8 rounded shadow-md max-w-sm w-full">
+    <div class="p-8 rounded shadow-md max-w-sm w-full">
       <div class="mb-4">
         <Label for="username" class="block text-gray-700 mb-2">用户名</Label>
         <Input v-model="state.username" autocomplete="off" type="text" id="username" />

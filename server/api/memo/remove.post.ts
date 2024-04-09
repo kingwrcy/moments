@@ -21,11 +21,13 @@ export default defineEventHandler(async (event) => {
 
   if (memo && memo.imgs) {
     memo.imgs.split(",").forEach(async (img) => {
-      try {
-        await fs.rm(`${process.env.UPLOAD_DIR}/${img}`);
-      } catch (e) {
-        console.log("RM file error is : ", e);
-      }
+      if(img.startsWith('/upload')){
+        try {
+          await fs.rm(`${process.env.UPLOAD_DIR}/${img.replaceAll('/upload/','')}`);
+        } catch (e) {
+          console.log("RM file error is : ", e);
+        }
+      }      
     });
   }
   return {

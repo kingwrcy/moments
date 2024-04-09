@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap gap-0.5 text-lg bg-white rounded border p-2 shadow-lg">
+  <div class="flex flex-wrap gap-0.5 text-lg rounded border p-2 shadow-lg">
     <div v-for="(item,index) in emoji" :key="index" class="cursor-pointer" @click="emit('emojiSelected',item)">{{ item }}</div>
   </div>
 </template>

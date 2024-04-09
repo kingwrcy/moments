@@ -31,7 +31,8 @@
       <Switch id="enableS3" v-model:checked="state.enableS3" />
     </div>
 
-    <div class="flex flex-col gap-2">
+    <template v-if="state.enableS3">
+      <div class="flex flex-col gap-2">
       <Label for="domain" class="font-bold">域名</Label>
       <Input type="text" id="domain" placeholder="S3 CDN域名" autocomplete="off" v-model="state.domain" />
     </div>
@@ -62,14 +63,15 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <Label for="thumbnailSuffix" class="font-bold">缩略图后缀</Label>
+      <Label for="thumbnailSuffix" class="font-bold">后缀</Label>
       <Input type="text" id="thumbnailSuffix" placeholder="" autocomplete="off" v-model="state.thumbnailSuffix" />
     </div>
 
-    <div class="flex flex-col gap-2">
+    <!-- <div class="flex flex-col gap-2">
       <Label for="suffix" class="font-bold">大图后缀</Label>
       <Input type="text" id="suffix" placeholder="" autocomplete="off" v-model="state.suffix" />
-    </div>
+    </div> -->
+    </template>
 
     <div class="flex flex-col gap-2 ">
       <Button @click="saveSettings">保存</Button>
@@ -124,10 +126,7 @@ state.secretKey = res.value?.data?.secretKey || ''
 state.endpoint = res.value?.data?.endpoint || ''
 state.thumbnailSuffix = res.value?.data?.thumbnailSuffix || ''
 state.suffix = res.value?.data?.suffix || ''
-
-if (state.enableS3) {
-  enableS3.value = true
-}
+enableS3.value = state.enableS3
 
 
 const uploadImgs = async (event: Event, id: string) => {
@@ -148,22 +147,6 @@ const uploadImgs = async (event: Event, id: string) => {
       toast.warning(res.message || '上传失败')
     }
   })
-  // const formData = new FormData()
-  // formData.append('file', file)
-  // const res = await $fetch('/api/files/upload', {
-  //   method: 'POST',
-  //   body: formData
-  // })
-  // if (res.success) {
-  //   (event.target as HTMLInputElement).value = ''
-  //   if (id === 'coverUrl') {
-  //     state.coverUrl = res.filename
-  //   } else if (id === 'avatarUrl') {
-  //     state.avatarUrl = res.filename
-  //   }
-  // } else {
-  //   toast.warning(res.message || '上传失败')
-  // }
 }
 
 const saveSettings = async () => {
@@ -172,10 +155,7 @@ const saveSettings = async () => {
     body: JSON.stringify(state)
   })
   if (success) {
-
-    if (state.enableS3) {
-      enableS3.value = true
-    }
+    enableS3.value = state.enableS3
     if (state.password) {
       token.value = ''
       toast.success('密码修改成功,请重新登录')
