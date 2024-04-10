@@ -6,7 +6,7 @@
       <Footer />
     </div>
     <div class="fixed right-10 bottom-10">
-      <LogIn  :size="30" class="cursor-pointer my-4"  color="#9FC84A"
+      <LogIn  :size="30" class="cursor-pointer my-4"  color="#9FC84A" v-if="!token"
         @click="navigateTo('/login')" />
       <Sun color="#FDE047" :size="30" class="cursor-pointer" v-if="colorMode.value === 'dark'"
         @click="colorMode.value = 'light'" />
@@ -24,6 +24,7 @@ const colorMode = useColorMode()
 
 const {data:res} = await useFetch('/api/user/settings/get')
 useState<User>('userinfo', () => (res.value?.data as any as User))
+const token = useCookie('token')
 
 
 useHead({

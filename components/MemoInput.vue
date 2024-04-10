@@ -101,7 +101,7 @@
 
 
 
-      <Textarea autocomplete="new-text" v-model="content" rows="2" placeholder="今天发点什么呢?" class=" dark:bg-slate-500"></Textarea>
+      <Textarea autocomplete="new-text" v-model="content" rows="4" placeholder="今天发点什么呢?" class=" dark:bg-slate-500"></Textarea>
       <div class="absolute right-2 bottom-1 cursor-pointer text-xl" @click="toggleShowEmoji" ref="showEmojiRef">😊</div>
     </div>
 
