@@ -12,8 +12,8 @@ jobs:
         id: version_step
         run: |
           echo "##[set-output name=version;]VERSION=${GITHUB_REF#$"refs/tags/v"}"
-          echo "##[set-output name=version_tag;]kingwrcy/mblog-backend:${GITHUB_REF#$"refs/tags/v"}"
-          echo "##[set-output name=latest_tag;]kingwrcy/mblog-backend:latest"        
+          echo "##[set-output name=version_tag;]kingwrcy/moments:${GITHUB_REF#$"refs/tags/v"}"
+          echo "##[set-output name=latest_tag;]kingwrcy/moments:latest"        
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx

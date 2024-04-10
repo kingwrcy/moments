@@ -1,5 +1,5 @@
 # Nuxt 3 builder
-FROM node:lts-alpine as builder
+FROM node:20.12.1-alpine as builder
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ ENV NODE_ENV=production
 RUN npm run build
 
 # Nuxt 3 production
-FROM node:lts-alpine
+FROM node:20.12.1-alpine
 
 WORKDIR /app
 
