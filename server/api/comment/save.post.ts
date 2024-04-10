@@ -14,7 +14,6 @@ export default defineEventHandler(async (event) => {
   const { memoId, content, replyTo, username, email, website } =
     (await readBody(event)) as SaveCommentReq;
   const userId = event.context.userId;
-  console.log(userId,userId ?true:false)
   await prisma.comment.create({
     data: {
       content,

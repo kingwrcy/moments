@@ -6,9 +6,9 @@
     </div>
     <Emoji v-if="showEmoji" class="mt-2" @emoji-selected="emojiSelected"/>
     <div class="flex flex-row items-center justify-end mt-2 gap-2 ">
-      <Input placeholder="昵称,必填" type="text"  v-model="info.username" class="dark:bg-slate-500  py-0.5"></Input>
-      <Input placeholder="主页,可空" type="text" v-model="info.website" class="dark:bg-slate-500  py-0.5"> </Input>
-      <Input placeholder="邮箱,可空" type="text" v-model="info.email" class="dark:bg-slate-500  py-0.5"></Input>
+      <Input placeholder="昵称,必填" type="text"  v-model="info.username" class="dark:bg-slate-500 text-xs sm:text-sm  py-0.5"></Input>
+      <Input placeholder="主页,可空" type="text" v-model="info.website" class="dark:bg-slate-500 text-xs sm:text-sm  py-0.5"> </Input>
+      <Input placeholder="邮箱,可空" type="text" v-model="info.email" class="dark:bg-slate-500 text-xs sm:text-sm py-0.5"></Input>
       <Button size="sm" @click="saveComment">发表评论</Button>
     </div>
   </div>

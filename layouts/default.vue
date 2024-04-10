@@ -5,27 +5,17 @@
       <slot />
       <Footer />
     </div>
-    <div class="fixed right-10 bottom-10">
-      <LogIn  :size="30" class="cursor-pointer my-4"  color="#9FC84A" v-if="!token"
-        @click="navigateTo('/login')" />
-      <Sun color="#FDE047" :size="30" class="cursor-pointer" v-if="colorMode.value === 'dark'"
-        @click="colorMode.value = 'light'" />
-      <MoonStar color="#FDE047" :size="30" class="cursor-pointer" v-else @click="colorMode.value = 'dark'" />
-    </div>
+
   </div>
   <Toaster position="top-center" rich-colors />
 </template>
 
 <script setup lang="ts">
-import { Toaster } from '@/components/ui/sonner'
-import { Sun, MoonStar, LogIn } from 'lucide-vue-next'
+import { Toaster } from '@/components/ui/sonner';
 import type { User } from '~/lib/types';
-const colorMode = useColorMode()
 
-const {data:res} = await useFetch('/api/user/settings/get')
+const { data: res } = await useFetch('/api/user/settings/get')
 useState<User>('userinfo', () => (res.value?.data as any as User))
-const token = useCookie('token')
-
 
 useHead({
   link: [

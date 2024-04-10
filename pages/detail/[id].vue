@@ -19,13 +19,13 @@ const route = useRoute()
 const id = route.params.id
 
 const memo = ref<Memo>()
-const { success, data: res } = await useFetch('/api/memo/detail', {
+const {data} = await useFetch('/api/memo/detail', {
   method: 'POST',
   body: JSON.stringify({ id: parseInt(id as string) })
 })
 
-if (success) {
-  memo.value = res.value?.data! as any as Memo
+if (data.value?.success) {
+  memo.value = data.value?.data! as any as Memo
 }
 </script>
 
