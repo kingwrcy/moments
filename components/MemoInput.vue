@@ -34,7 +34,8 @@
           <PopoverContent as-child @interact-outside="music163Open = false">
             <div class="">
               <div class=" text-xs my-2 flex justify-between"><span>嵌入网易云音乐</span>
-                <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video" class="text-gray-500 underline">如何获取?</NuxtLink>
+                <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
+                  class="text-gray-500 underline">如何获取?</NuxtLink>
               </div>
               <Input class="my-2" placeholder="请输入网易云音乐代码" v-model="music163Url" />
               <Button size="sm" @click="importMusic">提交</Button>
@@ -60,7 +61,8 @@
           <PopoverContent as-child @interact-outside="bilibiliOpen = false">
             <div class="">
               <div class=" text-xs my-2 flex justify-between"><span>嵌入B站视频</span>
-                <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video" class="text-gray-500 underline">如何获取?</NuxtLink>
+                <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
+                  class="text-gray-500 underline">如何获取?</NuxtLink>
               </div>
               <Input class="my-2" placeholder="请输入B站视频代码" v-model="bilibiliUrl" />
               <Button size="sm" @click="importBiliBili">提交</Button>
@@ -101,7 +103,8 @@
 
 
 
-      <Textarea autocomplete="new-text" v-model="content" rows="4" placeholder="今天发点什么呢?" class=" dark:bg-slate-500"></Textarea>
+      <Textarea @paste="pasteImg" autocomplete="new-text" v-model="content" rows="4" placeholder="今天发点什么呢?"
+        class=" dark:bg-slate-500"></Textarea>
       <div class="absolute right-2 bottom-1 cursor-pointer text-xl" @click="toggleShowEmoji" ref="showEmojiRef">😊</div>
     </div>
 
@@ -199,6 +202,21 @@ const token = useCookie('token')
 const logout = () => {
   token.value = ''
   navigateTo('/', { replace: true })
+}
+
+
+const pasteImg = async (event: ClipboardEvent) => {
+  var items = event.clipboardData?.files
+  if (!items || items.length === 0) {
+    return;
+  }
+  await useUpload(items[0], async (res) => {
+    if (res.success) {
+      imgs.value = [...imgs.value, res.filename]
+    } else {
+      toast.warning(res.message || '上传失败')
+    }
+  })
 }
 
 const uploadImgs = async (event: Event) => {

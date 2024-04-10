@@ -15,7 +15,7 @@
       <div title="返回" v-if="showBack()" @click="navigateTo('/')">
         <ArrowLeft color="#9FC84A" :size="20" class="cursor-pointer" />
       </div>
-      <div title="登录" v-if="token">
+      <div title="登录" v-if="!token">
         <LogIn :size="20" class="cursor-pointer" color="#9FC84A" @click="navigateTo('/login')" />
       </div>
 
