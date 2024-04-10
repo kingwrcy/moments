@@ -7,21 +7,21 @@ type SaveSettingsReq = {
   avatarUrl?: string;
   slogan?: string;
   coverUrl?: string;
-  enableS3:boolean
-  domain:string,
-  bucket:string,
-  region:string,
-  accessKey:string,
-  secretKey:string,
-  endpoint:string,
-  thumbnailSuffix:string,
-  suffix:string,
+  enableS3: boolean;
+  domain: string;
+  bucket: string;
+  region: string;
+  accessKey: string;
+  secretKey: string;
+  endpoint: string;
+  thumbnailSuffix: string;
+  title: string;
+  favicon: string;
 };
 
 export default defineEventHandler(async (event) => {
-  const { password, nickname, avatarUrl, slogan, coverUrl,...rest } = (await readBody(
-    event
-  )) as SaveSettingsReq;
+  const { password, nickname, avatarUrl, slogan, coverUrl, ...rest } =
+    (await readBody(event)) as SaveSettingsReq;
 
   const updated = {} as SaveSettingsReq;
   if (password) updated.password = bcrypt.hashSync(password, 10);
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
     where: {
       id: 1,
     },
-    data: {...updated,...rest},
+    data: { ...updated, ...rest },
   });
   return {
     success: true,

@@ -10,9 +10,15 @@ export default defineEventHandler(async (event) => {
       avatarUrl: true,
       slogan: true,
       coverUrl: true,
+      favicon: true,
+      title: true,
     },
   });
+  if (!data) {
+    throw createError({ status: 404, message: "Not Found" });
+  }
   return {
-    success: true,data
+    success: true,
+    data,
   };
 });

@@ -55,5 +55,6 @@ model User {
   secretKey String?
   endpoint String?
   thumbnailSuffix String?
-  suffix String?
+  favicon String?
+  title String @default("极简朋友圈")
 }

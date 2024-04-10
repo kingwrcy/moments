@@ -1,6 +1,15 @@
 <template>
   <div class="p-4 flex flex-col gap-4">
     <div class="flex flex-col gap-2">
+      <Label for="title" class="font-bold">网站标题</Label>
+      <Input type="text" id="title" placeholder="网站标题" autocomplete="off" v-model="state.title" />
+    </div>
+    <div class="flex flex-col gap-2">
+      <Label for="favicon" class="font-bold">Favicon</Label>
+      <Input type="file" id="favicon" autocomplete="off" @change="(e: Event) => { uploadImgs(e, 'favicon') }" />
+      <img class="max-w-[50px] max-h-[50px]" v-if="state.favicon" :src="state.favicon" alt="" />
+    </div>
+    <div class="flex flex-col gap-2">
       <Label for="coverUrl" class="font-bold">顶部图片</Label>
       <Input type="file" id="coverUrl" autocomplete="off" @change="(e: Event) => { uploadImgs(e, 'coverUrl') }" />
       <img class="w-full h-[250px]" v-if="state.avatarUrl" :src="state.coverUrl" alt="" />
@@ -33,44 +42,41 @@
 
     <template v-if="state.enableS3">
       <div class="flex flex-col gap-2">
-      <Label for="domain" class="font-bold">域名</Label>
-      <Input type="text" id="domain" placeholder="S3 CDN域名" autocomplete="off" v-model="state.domain" />
-    </div>
+        <Label for="domain" class="font-bold">域名</Label>
+        <Input type="text" id="domain" placeholder="S3 CDN域名" autocomplete="off" v-model="state.domain" />
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <Label for="bucket" class="font-bold">桶名</Label>
-      <Input type="text" id="bucket" placeholder="bucket" autocomplete="off" v-model="state.bucket" />
-    </div>
+      <div class="flex flex-col gap-2">
+        <Label for="bucket" class="font-bold">桶名</Label>
+        <Input type="text" id="bucket" placeholder="bucket" autocomplete="off" v-model="state.bucket" />
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <Label for="region" class="font-bold">地区</Label>
-      <Input type="text" id="region" placeholder="" autocomplete="off" v-model="state.region" />
-    </div>
+      <div class="flex flex-col gap-2">
+        <Label for="region" class="font-bold">地区</Label>
+        <Input type="text" id="region" placeholder="" autocomplete="off" v-model="state.region" />
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <Label for="accessKey" class="font-bold">accessKey</Label>
-      <Input type="text" id="accessKey" placeholder="" autocomplete="off" v-model="state.accessKey" />
-    </div>
+      <div class="flex flex-col gap-2">
+        <Label for="accessKey" class="font-bold">accessKey</Label>
+        <Input type="text" id="accessKey" placeholder="" autocomplete="off" v-model="state.accessKey" />
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <Label for="secretKey" class="font-bold">secretKey</Label>
-      <Input type="text" id="secretKey" placeholder="" autocomplete="off" v-model="state.secretKey" />
-    </div>
+      <div class="flex flex-col gap-2">
+        <Label for="secretKey" class="font-bold">secretKey</Label>
+        <Input type="text" id="secretKey" placeholder="" autocomplete="off" v-model="state.secretKey" />
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <Label for="endpoint" class="font-bold">S3接口地址</Label>
-      <Input type="text" id="endpoint" placeholder="" autocomplete="off" v-model="state.endpoint" />
-    </div>
+      <div class="flex flex-col gap-2">
+        <Label for="endpoint" class="font-bold">S3接口地址</Label>
+        <Input type="text" id="endpoint" placeholder="" autocomplete="off" v-model="state.endpoint" />
+      </div>
 
-    <div class="flex flex-col gap-2">
-      <Label for="thumbnailSuffix" class="font-bold">后缀</Label>
-      <Input type="text" id="thumbnailSuffix" placeholder="" autocomplete="off" v-model="state.thumbnailSuffix" />
-    </div>
+      <div class="flex flex-col gap-2">
+        <Label for="thumbnailSuffix" class="font-bold">后缀</Label>
+        <Input type="text" id="thumbnailSuffix" placeholder="" autocomplete="off" v-model="state.thumbnailSuffix" />
+      </div>
 
-    <!-- <div class="flex flex-col gap-2">
-      <Label for="suffix" class="font-bold">大图后缀</Label>
-      <Input type="text" id="suffix" placeholder="" autocomplete="off" v-model="state.suffix" />
-    </div> -->
+
     </template>
 
     <div class="flex flex-col gap-2 ">
@@ -84,10 +90,12 @@ import { toast } from 'vue-sonner'
 import { settingsUpdateEvent } from '~/lib/event'
 const token = useCookie('token')
 import { useStorage } from "@vueuse/core";
+import type { User } from '~/lib/types';
 
+const userinfo = useState<User>('userinfo')
 
 useHead({
-  title: '设置-极简朋友圈',
+  title: '设置-'+(userinfo.value.title || '极简朋友圈'),
 })
 
 const enableS3 = useStorage("enableS3", false);
@@ -107,12 +115,14 @@ const state = reactive({
   secretKey: '',
   endpoint: '',
   thumbnailSuffix: '',
-  suffix: '',
+  title: '',
+  favicon: "",
 })
 
 const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full')
 
-
+state.title = res.value?.data?.title || '极简朋友圈'
+state.favicon = res.value?.data?.favicon || '/upload/favicon.png'
 state.coverUrl = res.value?.data?.coverUrl || 'https://images.unsplash.com/photo-1711299253442-de19d4dacaae?q=80&w=3500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 state.avatarUrl = res.value?.data?.avatarUrl || 'https://images.kingwrcy.cn/memo/20240386211829TtcOUOMaXyITlTkxhSjp'
 state.nickname = res.value?.data?.nickname || 'Jerry'
@@ -125,7 +135,6 @@ state.accessKey = res.value?.data?.accessKey || ''
 state.secretKey = res.value?.data?.secretKey || ''
 state.endpoint = res.value?.data?.endpoint || ''
 state.thumbnailSuffix = res.value?.data?.thumbnailSuffix || ''
-state.suffix = res.value?.data?.suffix || ''
 enableS3.value = state.enableS3
 
 
@@ -142,6 +151,8 @@ const uploadImgs = async (event: Event, id: string) => {
         state.coverUrl = res.filename
       } else if (id === 'avatarUrl') {
         state.avatarUrl = res.filename
+      } else if (id === 'favicon') {
+        state.favicon = res.filename
       }
     } else {
       toast.warning(res.message || '上传失败')
@@ -162,6 +173,7 @@ const saveSettings = async () => {
       navigateTo('/login')
     } else {
       toast.success('保存成功')
+      location.reload()
     }
     state.password = ''
     settingsUpdateEvent.emit()

@@ -1,30 +1,32 @@
 <template>
-  <div >
+  <div>
     <div class="p-4">
-      <FriendsMemo :memo="memo" v-if="memo" :show-more="false"/>
+      <FriendsMemo :memo="memo" v-if="memo" :show-more="false" />
     </div>
-    
-    
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Memo } from '~/lib/types';
+import type { User } from '~/lib/types';
 
-  const route = useRoute()
-  const id = route.params.id
+const userinfo = useState<User>('userinfo')
 
-  const memo = ref<Memo>()
-  const res = await $fetch('/api/memo/detail',{
-    method: 'POST',
-    body: JSON.stringify({id:parseInt(id as string)})
-  })
+useHead({
+  title: userinfo.value.title || '极简朋友圈',
+})
+const route = useRoute()
+const id = route.params.id
 
-  if(res.success){
-    memo.value = res.data! as Memo
-  }
+const memo = ref<Memo>()
+const { success, data: res } = await useFetch('/api/memo/detail', {
+  method: 'POST',
+  body: JSON.stringify({ id: parseInt(id as string) })
+})
+
+if (success) {
+  memo.value = res.value?.data! as any as Memo
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

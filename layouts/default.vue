@@ -19,5 +19,20 @@
 <script setup lang="ts">
 import { Toaster } from '@/components/ui/sonner'
 import { Sun, MoonStar, LogIn } from 'lucide-vue-next'
+import type { User } from '~/lib/types';
 const colorMode = useColorMode()
+
+const {data:res} = await useFetch('/api/user/settings/get')
+useState<User>('userinfo', () => (res.value?.data as any as User))
+
+
+useHead({
+  link: [
+    {
+      rel: 'shortcut icon',
+      type: 'image/png',
+      href: res.value?.data?.favicon || '/favicon.png',
+    },
+  ],
+})
 </script>

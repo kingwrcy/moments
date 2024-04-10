@@ -37,4 +37,6 @@ export type User = {
   id: number;
   avatarUrl: string;
   coverUrl: string;
+  favicon:string;
+  title:string;
 }
