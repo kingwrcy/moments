@@ -122,9 +122,9 @@ const state = reactive({
 const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full')
 
 state.title = res.value?.data?.title || '极简朋友圈'
-state.favicon = res.value?.data?.favicon || '/upload/favicon.png'
-state.coverUrl = res.value?.data?.coverUrl || 'https://images.unsplash.com/photo-1711299253442-de19d4dacaae?q=80&w=3500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-state.avatarUrl = res.value?.data?.avatarUrl || 'https://images.kingwrcy.cn/memo/20240386211829TtcOUOMaXyITlTkxhSjp'
+state.favicon = res.value?.data?.favicon || '/avatar.webp'
+state.coverUrl = res.value?.data?.coverUrl || ''
+state.avatarUrl = res.value?.data?.avatarUrl || '/cover.webp'
 state.nickname = res.value?.data?.nickname || 'Jerry'
 state.slogan = res.value?.data?.slogan || '星垂平野阔，月涌大江流。'
 state.enableS3 = res.value?.data?.enableS3 || false

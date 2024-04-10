@@ -7,12 +7,14 @@ type SaveCommentReq = {
   email?: string;
   website?: string;
   username: string;
-  author:Boolean
+  author: Boolean;
 };
 
 export default defineEventHandler(async (event) => {
-  const { memoId, content, replyTo, username, email, website,author } =
+  const { memoId, content, replyTo, username, email, website } =
     (await readBody(event)) as SaveCommentReq;
+  const userId = event.context.userId;
+  console.log(userId,userId ?true:false)
   await prisma.comment.create({
     data: {
       content,
@@ -21,7 +23,7 @@ export default defineEventHandler(async (event) => {
       username,
       email,
       website,
-      author:author.valueOf(),
+      author: userId !== undefined
     },
   });
   return {

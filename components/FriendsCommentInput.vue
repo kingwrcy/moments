@@ -28,7 +28,6 @@ const showEmoji = ref(false)
 const keyframes = { transform: 'rotate(360deg)' }
 const props = defineProps<{ memoId: number, reply?: string }>()
 const showEmojiRef = ref<HTMLElement>()
-const token =  useCookie('token')
 const info = useStorage('anonymous', {
   email:'',
   website:'',
@@ -60,7 +59,7 @@ const saveComment = async () => {
       content: content.value,
       memoId: props.memoId,      
       replyTo: props.reply,
-      author:token.value != '',
+      author:false,
       email:info.value.email,
       website:info.value.website,
       username:info.value.username
