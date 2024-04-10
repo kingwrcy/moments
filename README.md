@@ -8,6 +8,9 @@
 - 支持暗黑模式
 - 数据库采用sqlite,可随时备份
 
+
+默认用户名密码:admin/a123456,登录进去后后台可以自己修改密码.
+
 ## Docker启动
 Docker启动看[这里](https://github.com/kingwrcy/moments/blob/master/docker-start.sh)
 
