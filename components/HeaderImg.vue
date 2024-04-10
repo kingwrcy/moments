@@ -4,7 +4,7 @@
     <div class="absolute right-2 bottom-[-40px]">
       <div class="flex flex-col ">
         <div class="flex flex-row items-center gap-4 justify-end">
-          <div class="text-lg font-bold text-white">Jerry</div>
+          <div class="text-lg font-bold text-white">{{ res?.data?.nickname }}</div>
           <img :src="getImgUrl(res?.data?.avatarUrl!)" class="w-[70px] h-[70px] rounded-xl" />
         </div>
         <div class="text-gray truncate w-full text-end text-xs mt-2">{{ res?.data?.slogan }}</div>
