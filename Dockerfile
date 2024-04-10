@@ -26,13 +26,13 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV DATABASE_URL="file:/app/data/db.sqlite"
-ENV UPLOAD_DIR="/app/.output/public/upload"
+ENV UPLOAD_DIR="/app/data/upload"
 
 COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/prisma /app/prisma
 COPY --from=builder /app/start.sh /app/start.sh
 
-RUN mkdir -p /app/.output/public/upload
+RUN mkdir -p /app/data/upload
 
 RUN npm init -y
 RUN npm install -g prisma
