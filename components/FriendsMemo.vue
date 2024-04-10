@@ -1,27 +1,27 @@
 <template>
 
-  <div class="flex flex-row gap-4 text-sm border-x-0 pt-2 ">
-    <img :src="props.memo.user.avatarUrl" class="w-9 h-9 rounded"/>
+  <div class="flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 ">
+    <img :src="props.memo.user.avatarUrl" class="w-9 h-9 rounded" />
     <div class="flex flex-col gap-.5 flex-1">
       <div class="text-[#576b95] cursor-default mb-1 dark:text-white">{{ props.memo.user.nickname }}</div>
       <div class="text-sm friend-md" ref="el" v-html="props.memo.content.replaceAll(/\n/g, '<br/>')"> </div>
 
       <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86
-      :src="props.memo.music163Url" v-if="props.memo.music163Url"></iframe>
+        :src="props.memo.music163Url" v-if="props.memo.music163Url"></iframe>
 
-      <iframe class="w-full h-[250px] my-2" v-if="props.memo.bilibiliUrl"
-        :src="props.memo.bilibiliUrl"
-        scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+      <iframe class="w-full h-[250px] my-2" v-if="props.memo.bilibiliUrl" :src="props.memo.bilibiliUrl" scrolling="no"
+        border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 
       <div v-if="props.memo.imgs">
-        <FancyBox class="grid grid-cols-3 my-1 gap-2" :options="{
-          Carousel: {
-            infinite: false,
-          },
-        }">
-            <img loading="lazy" :src="getImgUrl(img)" class="cursor-pointer rounded"
-              v-for="(img, index) in props.memo.imgs?.split(',')" :key="index" />
+        <FancyBox class="grid my-1 gap-2" :style="`grid-template-columns: repeat(${gridCols}, minmax(0, 1fr))`"
+          :options="{
+            Carousel: {
+              infinite: false,
+            },
+          }">
+          <img loading="lazy" :src="getImgUrl(img)" class="max-h-[200px] cursor-pointer rounded"
+            v-for="(img, index) in props.memo.imgs?.split(',')" :key="index" />
         </FancyBox>
       </div>
       <div class="text-[#576b95] cursor-pointer" v-if="hh > 96 && !showAll" @click="showMore">全文</div>
@@ -36,7 +36,7 @@
         </div>
         <div class="text-xs absolute top-[-8px] right-[30px] bg-[#4c4c4c] rounded text-white p-2" v-if="showToolbar"
           ref="toolbarRef">
-          <div class="flex flex-row gap-4">
+          <div class="flex flex-row gap-4">       
             <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token" @click="editMemo">
               <FilePenLine :size=14 />
               <div>编辑</div>
@@ -85,7 +85,8 @@
             <div class="flex flex-col gap-2 text-sm" v-for="(comment, index) in props.memo.comments" :key="index">
               <div class="">
                 <span class="text-[#576b95] text-nowrap">{{ comment.username ?? '匿名' }}
-                  <b v-if="comment.author" class="border text-xs border-[#C64A4A] rounded px-0.5 text-[#C64A4A]">作者</b></span>
+                  <b v-if="comment.author"
+                    class="border text-xs border-[#C64A4A] rounded px-0.5 text-[#C64A4A]">作者</b></span>
                 <span v-if="comment.replyTo" class="text-nowrap mx-1">回复<span class="text-[#576b95] ml-1">{{
                   comment.replyTo }}</span> </span>
                 <span class="mr-0.5">:</span>
@@ -151,6 +152,11 @@ let hh = ref(0)
 const { height } = useElementSize(el)
 const likeList = useStorage<Array<number>>('likeList', [])
 
+const gridCols = computed(() => {
+  const imgLen = (props.memo.imgs || '').split(',').length;
+  return imgLen >= 3 ? 3 : imgLen
+})
+
 const like = async () => {
   showToolbar.value = false
   const contain = likeList.value.find((id) => id === props.memo.id)
@@ -203,6 +209,8 @@ const toggleUserComment = (index: number) => {
   showUserCommentArray.value[index] = !current
   showCommentInput.value = false
 }
+
+const pin2Top = ()=>{}
 
 onClickOutside(toolbarRef, () => showToolbar.value = false)
 

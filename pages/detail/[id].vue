@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="p-4">
+    <div class="p-2 sm:p-4">
       <FriendsMemo :memo="memo" v-if="memo" :show-more="false" />
     </div>
   </div>

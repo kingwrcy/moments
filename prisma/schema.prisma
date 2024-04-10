@@ -22,39 +22,39 @@ model Comment {
 }
 
 model Memo {
-  id           Int                    @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   content      String?
   imgs         String?
-  favCount     Int @default(0)
-  commentCount Int @default(0)
+  favCount     Int       @default(0)
+  commentCount Int       @default(0)
   userId       Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   comments     Comment[]
-  user         User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  music163Url String?
-  bilibiliUrl String?
+  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  music163Url  String?
+  bilibiliUrl  String?
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique(map: "sqlite_autoindex_users_2")
-  nickname  String?
-  password  String
-  avatarUrl String?
-  slogan    String?
-  coverUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  memos     Memo[]
-  enableS3 Boolean @default(false)
-  domain String?
-  bucket String?
-  region String?
-  accessKey String?
-  secretKey String?
-  endpoint String?
+  id              Int      @id @default(autoincrement())
+  username        String   @unique(map: "sqlite_autoindex_users_2")
+  nickname        String?
+  password        String
+  avatarUrl       String?
+  slogan          String?
+  coverUrl        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  memos           Memo[]
+  enableS3        Boolean  @default(false)
+  domain          String?
+  bucket          String?
+  region          String?
+  accessKey       String?
+  secretKey       String?
+  endpoint        String?
   thumbnailSuffix String?
-  favicon String?
-  title String @default("极简朋友圈")
+  favicon         String?
+  title           String   @default("极简朋友圈")
 }

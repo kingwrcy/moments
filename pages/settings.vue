@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 flex flex-col gap-4">
+  <div class="flex flex-col gap-2 p-2 sm:p-4">
     <div class="flex flex-col gap-2">
       <Label for="title" class="font-bold">网站标题</Label>
       <Input type="text" id="title" placeholder="网站标题" autocomplete="off" v-model="state.title" />

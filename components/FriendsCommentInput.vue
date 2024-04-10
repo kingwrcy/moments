@@ -5,11 +5,11 @@
       <div class="absolute right-2 bottom-1 cursor-pointer text-xl" @click="toggleShowEmoji" ref="showEmojiRef">😊</div>
     </div>
     <Emoji v-if="showEmoji" class="mt-2" @emoji-selected="emojiSelected"/>
-    <div class="flex flex-row items-center justify-end mt-2 gap-2 ">
-      <Input placeholder="昵称,必填" type="text"  v-model="info.username" class="dark:bg-slate-500 text-xs sm:text-sm  py-0.5"></Input>
+    <div class="flex flex-row items-center justify-end mt-2 gap-2">
+      <Input placeholder="昵称,必填" type="text"  v-model="info.username" class=" dark:bg-slate-500 text-xs sm:text-sm  py-0.5"></Input>
       <Input placeholder="主页,可空" type="text" v-model="info.website" class="dark:bg-slate-500 text-xs sm:text-sm  py-0.5"> </Input>
-      <Input placeholder="邮箱,可空" type="text" v-model="info.email" class="dark:bg-slate-500 text-xs sm:text-sm py-0.5"></Input>
-      <Button size="sm" @click="saveComment">发表评论</Button>
+      <Input placeholder="邮箱,可空" type="text" v-model="info.email" class="hidden sm:block dark:bg-slate-500 text-xs sm:text-sm py-0.5"></Input>
+      <Button size="sm" @click="saveComment" :disabled="pending">发表评论</Button>
     </div>
   </div>
 </template>
@@ -43,6 +43,8 @@ const emojiSelected = (emoji: string) => {
   showEmoji.value = false
 }
 
+const pending = ref(false)
+
 const saveComment = async () => {
 
   if (!content.value) {
@@ -53,6 +55,7 @@ const saveComment = async () => {
     toast.warning('用户名必填')
     return
   }
+  pending.value = true
   const res = await $fetch('/api/comment/save', {
     method: 'POST',
     body: JSON.stringify({
@@ -73,6 +76,7 @@ const saveComment = async () => {
   } else {
     toast.warning('评论失败')
   }
+  pending.value = false
 }
 
 onMounted(async () => {

@@ -3,7 +3,7 @@
 
     <MemoInput v-if="token" @memo-added="refresh" />
 
-    <div class="flex flex-col divide-y divide-gray-100/50 p-4 gap-2">
+    <div class="flex flex-col divide-y divide-gray-100/50 p-2 sm:p-4 gap-2">
       <div v-if="(data?.data as any as Memo[]).length === 0 && !token" class="text-center">
         <div class="my-2 text-sm">什么也没有,赶紧去登录发表Moments吧!</div>
         <Button @click="navigateTo('/login')">去登录</Button>

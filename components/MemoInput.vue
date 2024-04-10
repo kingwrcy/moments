@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 pb-2 border-b dark:border-white">
+  <div class="p-2 sm:p-4 pb-2 border-b dark:border-white">
     <div class="flex flex-row my-2 ">
       <div class="flex flex-1 gap-2 ">
         <Label for="imgUpload">
@@ -34,7 +34,7 @@
           <PopoverContent as-child @interact-outside="music163Open = false">
             <div class="">
               <div class=" text-xs my-2 flex justify-between"><span>嵌入网易云音乐</span>
-                <NuxtLink to="https://www.baidu.com" class="text-gray-500 underline">如何获取?</NuxtLink>
+                <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video" class="text-gray-500 underline">如何获取?</NuxtLink>
               </div>
               <Input class="my-2" placeholder="请输入网易云音乐代码" v-model="music163Url" />
               <Button size="sm" @click="importMusic">提交</Button>
@@ -60,7 +60,7 @@
           <PopoverContent as-child @interact-outside="bilibiliOpen = false">
             <div class="">
               <div class=" text-xs my-2 flex justify-between"><span>嵌入B站视频</span>
-                <NuxtLink to="https://www.baidu.com" class="text-gray-500 underline">如何获取?</NuxtLink>
+                <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video" class="text-gray-500 underline">如何获取?</NuxtLink>
               </div>
               <Input class="my-2" placeholder="请输入B站视频代码" v-model="bilibiliUrl" />
               <Button size="sm" @click="importBiliBili">提交</Button>
@@ -74,9 +74,9 @@
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger as-child>
-              <NuxtLink to="/settings">
+              <a href="/settings">
                 <Settings :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" />
-              </NuxtLink>
+              </a>
             </TooltipTrigger>
             <TooltipContent>
               <p>进入设置</p>
