@@ -10,6 +10,7 @@ export type Memo = {
   user: User;
   music163Url?: string;
   bilibiliUrl?: string;
+  location?: string;
   comments: Array<Comment>;
   _count: {
     comments: number;

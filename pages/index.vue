@@ -26,6 +26,7 @@ useHead({
 
 
 const { data, refresh } = await useFetch('/api/memo/list', {
+  key:'memoList',
   method: 'POST',
   body: JSON.stringify({
     page: 1,

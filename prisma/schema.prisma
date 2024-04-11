@@ -34,6 +34,7 @@ model Memo {
   user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   music163Url  String?
   bilibiliUrl  String?
+  location     String?
 }
 
 model User {

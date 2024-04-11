@@ -119,7 +119,7 @@ const state = reactive({
   favicon: "",
 })
 
-const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full')
+const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full',{key:'settings'})
 
 state.title = res.value?.data?.title || '极简朋友圈'
 state.favicon = res.value?.data?.favicon || '/avatar.webp'

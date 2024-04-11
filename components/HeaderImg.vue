@@ -41,7 +41,7 @@ const route = useRoute()
 const showBack = () => {
   return route.path.startsWith('/detail') || route.path.startsWith('/settings')
 }
-const { data: res, refresh } = await useFetch('/api/user/settings/get')
+const { data: res, refresh } = await useAsyncData('userinfo', async () => await $fetch('/api/user/settings/get'))
 
 settingsUpdateEvent.on(async () => {
   await refresh()

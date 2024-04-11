@@ -100,9 +100,6 @@
 
     </div>
     <div class="relative">
-
-
-
       <Textarea @paste="pasteImg" autocomplete="new-text" v-model="content" rows="4" placeholder="今天发点什么呢?"
         class=" dark:bg-slate-500"></Textarea>
       <div class="absolute right-2 bottom-1 cursor-pointer text-xl" @click="toggleShowEmoji" ref="showEmojiRef">😊</div>
@@ -123,9 +120,20 @@
           @click="imgs.splice(index, 1)" />
       </div>
     </div>
-    <div class="flex flex-row justify-end mt-2 items-center gap-2">
-
-
+    <div class="flex flex-row justify-between mt-2 items-center gap-2 ">
+      <div class="text-sm flex flex-row gap-1 flex-1 items-center">
+        <Popover>
+          <PopoverTrigger>
+            <div class="text-[#576b95] text-sm cursor-pointer">{{ fmtLocation }}</div>
+          </PopoverTrigger>
+          <PopoverContent class="w-80">
+            <div class="flex flex-row gap-2 text-sm">
+              <Input v-model="location" placeholder="空格分割,火星都行!" />
+              <Button variant="outline" @click="location = ''">清空</Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
       <Button @click="submitMemo">提交</Button>
     </div>
   </div>
@@ -160,6 +168,13 @@ const toggleShowEmoji = () => {
   showEmoji.value = !showEmoji.value
   useAnimate(showEmojiRef.value, keyframes, { duration: 1000, easing: 'ease-in-out' })
 }
+const location = ref('')
+const fmtLocation = computed(() => {
+  if (location.value) {
+    return location.value.split(' ').join(' · ')
+  }
+  return '自定义位置?'
+})
 const content = ref('')
 const id = ref(-1)
 const music163Url = ref('')
@@ -170,7 +185,7 @@ const bilibiliUrl = ref('')
 const bilibiliIfrUrl = ref('')
 const bilibiliOpen = ref(false)
 
-// const music163Ifr = ref<HTMLIFrameElement>()
+
 const imgs = ref<string[]>([])
 const submitMemo = async () => {
   const res = await $fetch('/api/memo/save', {
@@ -180,7 +195,8 @@ const submitMemo = async () => {
       content: content.value,
       imgUrls: imgs.value,
       music163Url: music163IfrUrl.value,
-      bilibiliUrl: bilibiliIfrUrl.value
+      bilibiliUrl: bilibiliIfrUrl.value,
+      location: location.value
     })
   })
   if (res.success) {
@@ -192,6 +208,7 @@ const submitMemo = async () => {
     music163Url.value = ''
     bilibiliIfrUrl.value = ''
     bilibiliUrl.value = ''
+    location.value = ''
     emit('memoAdded')
   } else {
     toast.warning('提交失败')
@@ -272,6 +289,7 @@ memoUpdateEvent.on((event: Memo) => {
   if (event.imgs) {
     imgs.value = event.imgs?.split(',')
   }
+  location.value = event.location || ''
 })
 </script>
 

@@ -6,6 +6,7 @@ type SaveMemoReq = {
   imgUrls?: string[];
   music163Url?: string;
   bilibiliUrl?: string;
+  location?: string;
 };
 
 export default defineEventHandler(async (event) => {
@@ -20,12 +21,14 @@ export default defineEventHandler(async (event) => {
       userId: event.context.userId,
       music163Url: body.music163Url,
       bilibiliUrl: body.bilibiliUrl,
+      location: body.location,
     },
     update: {
       imgs: body.imgUrls?.join(","),
       content: body.content,
       music163Url: body.music163Url,
-      bilibiliUrl: body.bilibiliUrl,      
+      bilibiliUrl: body.bilibiliUrl,
+      location: body.location,
     },
   });
   return {

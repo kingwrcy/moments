@@ -20,6 +20,7 @@ const id = route.params.id
 
 const memo = ref<Memo>()
 const {data} = await useFetch('/api/memo/detail', {
+  key:`memoDetail-${id}`,
   method: 'POST',
   body: JSON.stringify({ id: parseInt(id as string) })
 })

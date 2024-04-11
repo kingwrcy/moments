@@ -26,6 +26,7 @@
       </div>
       <div class="text-[#576b95] cursor-pointer" v-if="hh > 96 && !showAll" @click="showMore">全文</div>
       <div class="text-[#576b95] cursor-pointer " v-if="showAll" @click="showLess">收起</div>
+      <div class="text-[#576b95] font-medium text-xs mt-2 mb-1">{{props.memo.location?.split(/\s+/g).join(' · ')}}</div>
       <div class="relative flex flex-row justify-between select-none my-1">
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] ">{{
           dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
@@ -77,7 +78,7 @@
       </div>
       <div class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-slate-400 flex flex-col gap-1  ">
         <div class="flex flex-row py-2 px-4 gap-2 items-center text-sm" v-if="props.memo.favCount > 0">
-          <Heart :size=14 />
+          <Heart :size=14 color="#C64A4A"/>
           <div class="text-[#576b95]"><span class="mx-1">{{ props.memo.favCount }}</span>位访客赞过</div>
         </div>
         <template v-if="props.memo.comments.length > 0">
@@ -209,8 +210,6 @@ const toggleUserComment = (index: number) => {
   showUserCommentArray.value[index] = !current
   showCommentInput.value = false
 }
-
-const pin2Top = ()=>{}
 
 onClickOutside(toolbarRef, () => showToolbar.value = false)
 

@@ -14,15 +14,18 @@
 import { Toaster } from '@/components/ui/sonner';
 import type { User } from '~/lib/types';
 
-const { data: res } = await useFetch('/api/user/settings/get')
-useState<User>('userinfo', () => (res.value?.data as any as User))
+const userinfo = useState<User>('userinfo')
+await callOnce(async () => {
+  const { data: res } = await useAsyncData('userinfo', async () => await $fetch('/api/user/settings/get'))
+  userinfo.value = res.value?.data as any as User
+})
 
 useHead({
   link: [
     {
       rel: 'shortcut icon',
       type: 'image/png',
-      href: res.value?.data?.favicon || '/favicon.png',
+      href: userinfo.value?.favicon || '/favicon.png',
     },
   ],
 })
