@@ -19,6 +19,7 @@
     "@radix-icons/vue": "^1.0.0",
     "@vueuse/core": "^10.9.0",
     "bcrypt": "^5.1.1",
+    "cheerio": "^1.0.0-rc.12",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",

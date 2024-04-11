@@ -7,28 +7,34 @@ type SaveMemoReq = {
   music163Url?: string;
   bilibiliUrl?: string;
   location?: string;
+  externalUrl?: string;
+  externalTitle?: string;
+  externalFavicon?: string;
 };
 
 export default defineEventHandler(async (event) => {
   const body = (await readBody(event)) as SaveMemoReq;
+
+  const updated = {
+    imgs: body.imgUrls?.join(","),
+    music163Url: body.music163Url,
+    bilibiliUrl: body.bilibiliUrl,
+    location: body.location,
+    externalUrl: body.externalUrl,
+    externalTitle: body.externalTitle,
+    externalFavicon: body.externalFavicon,
+    content: body.content,
+  };
   await prisma.memo.upsert({
     where: {
       id: body.id ?? -1,
     },
     create: {
-      imgs: body.imgUrls?.join(","),
-      content: body.content,
       userId: event.context.userId,
-      music163Url: body.music163Url,
-      bilibiliUrl: body.bilibiliUrl,
-      location: body.location,
+      ...updated,
     },
     update: {
-      imgs: body.imgUrls?.join(","),
-      content: body.content,
-      music163Url: body.music163Url,
-      bilibiliUrl: body.bilibiliUrl,
-      location: body.location,
+      ...updated,
     },
   });
   return {

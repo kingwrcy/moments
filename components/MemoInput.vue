@@ -2,6 +2,38 @@
   <div class="p-2 sm:p-4 pb-2 border-b dark:border-white">
     <div class="flex flex-row my-2 ">
       <div class="flex flex-1 gap-2 ">
+
+        <Popover :open="linkOpen">
+          <PopoverTrigger as="div">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <Link :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="linkOpen = true" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>插入链接</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+          </PopoverTrigger>
+          <PopoverContent as-child @interact-outside="linkOpen = false">
+            <div class="flex flex-col gap-2">
+              <div class=" text-xs my-2 flex justify-between"><span>插入链接</span>
+              </div>
+              <Input class="my-2" placeholder="请输入链接地址" v-model="externalUrl" />
+              <template v-if="externalFetchError">
+                <Input class="my-2" placeholder="请输入链接标题" v-model="externalTitle" />
+                <Input class="my-2" placeholder="请输入链接图标,选填" v-model="externalFavicon" />
+              </template>
+              <div class="text-sm my-1" v-if="externalPending">获取信息中...</div>
+              <Button size="sm" @click="addLink">提交</Button>
+              <Button size="sm" class="ml-2" variant="secondary" @click="clearExternalUrl()">清空并关闭</Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+
         <Label for="imgUpload">
           <TooltipProvider>
             <Tooltip>
@@ -35,7 +67,8 @@
             <div class="">
               <div class=" text-xs my-2 flex justify-between"><span>嵌入网易云音乐</span>
                 <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
-                  class="text-gray-500 underline">如何获取?</NuxtLink>
+                  class="text-gray-500 underline">
+                  如何获取?</NuxtLink>
               </div>
               <Input class="my-2" placeholder="请输入网易云音乐代码" v-model="music163Url" />
               <Button size="sm" @click="importMusic">提交</Button>
@@ -62,7 +95,8 @@
             <div class="">
               <div class=" text-xs my-2 flex justify-between"><span>嵌入B站视频</span>
                 <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
-                  class="text-gray-500 underline">如何获取?</NuxtLink>
+                  class="text-gray-500 underline">
+                  如何获取?</NuxtLink>
               </div>
               <Input class="my-2" placeholder="请输入B站视频代码" v-model="bilibiliUrl" />
               <Button size="sm" @click="importBiliBili">提交</Button>
@@ -101,7 +135,7 @@
     </div>
     <div class="relative">
       <Textarea @paste="pasteImg" autocomplete="new-text" v-model="content" rows="4" placeholder="今天发点什么呢?"
-        class=" dark:bg-slate-500"></Textarea>
+        class=" dark:text-[#C0BEBF]"></Textarea>
       <div class="absolute right-2 bottom-1 cursor-pointer text-xl" @click="toggleShowEmoji" ref="showEmojiRef">😊</div>
     </div>
 
@@ -112,6 +146,14 @@
 
     <iframe class="w-full h-[250px] my-2" v-if="bilibiliIfrUrl" :src="bilibiliIfrUrl" scrolling="no" border="0"
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+    <div class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
+      v-if="externalFavicon && externalTitle">
+      <div class="flex-1 flex flex-row gap-2 items-center"><img class="w-8 h-8" :src="externalFavicon" alt="">
+        <a :href="externalUrl" target="_blank" class="text-[#576b95]">{{ externalTitle }}</a>
+      </div>
+      <CircleX class="w-5 h-5" color="red" @click="clearExternalUrl" />
+    </div>
 
     <div class="grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
       <div v-for="(img, index) in imgs" :key="index" class="relative">
@@ -147,7 +189,7 @@ import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
 import type { Memo } from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
-import { Image, Music4, Settings, Trash2, LogOut, Youtube } from 'lucide-vue-next'
+import { Image, Music4, Settings, Trash2, LogOut, Youtube, Link, Loader, CircleX } from 'lucide-vue-next'
 
 import {
   Tooltip,
@@ -185,6 +227,50 @@ const bilibiliUrl = ref('')
 const bilibiliIfrUrl = ref('')
 const bilibiliOpen = ref(false)
 
+const linkOpen = ref(false)
+const externalUrl = ref('')
+const externalTitle = ref('')
+const externalFavicon = ref('')
+const externalPending = ref(false)
+const externalFetchError = ref(false)
+
+const clearExternalUrl = () => {
+  externalUrl.value = ''
+  externalTitle.value = ''
+  externalFavicon.value = ''
+  linkOpen.value = false
+}
+const addLink = async () => {
+  if(externalFetchError.value && externalTitle.value === ''){
+    toast.warning('请填写标题和图标')
+    return
+  }
+  if(externalFetchError.value && externalTitle.value !== ''){
+    externalFetchError.value = false
+    linkOpen.value = false
+    externalPending.value = false
+    externalFavicon.value = externalFavicon.value || '/favicon.png'
+    return
+  }
+  externalPending.value = true
+  externalFetchError.value = false
+  const { data: res } = await useAsyncData('external_' + externalUrl.value, async () => {
+    return await $fetch('/api/memo/readExternal', {
+      method: 'POST',
+      body: JSON.stringify({ url: externalUrl.value })
+    })
+  })
+  if (res.value?.success) {
+    externalTitle.value = res.value?.title || '无法获取标题'
+    externalFavicon.value = res.value?.favicon || '/favicon.png'
+    linkOpen.value = false
+    externalPending.value = false
+  } else {
+    toast.warning(res.value?.message || '获取失败')
+    externalPending.value = false
+    externalFetchError.value = true
+  }
+}
 
 const imgs = ref<string[]>([])
 const submitMemo = async () => {
@@ -196,7 +282,10 @@ const submitMemo = async () => {
       imgUrls: imgs.value,
       music163Url: music163IfrUrl.value,
       bilibiliUrl: bilibiliIfrUrl.value,
-      location: location.value
+      location: location.value,
+      externalFavicon: externalFavicon.value,
+      externalTitle: externalTitle.value,
+      externalUrl: externalUrl.value
     })
   })
   if (res.success) {
@@ -209,6 +298,9 @@ const submitMemo = async () => {
     bilibiliIfrUrl.value = ''
     bilibiliUrl.value = ''
     location.value = ''
+    externalFavicon.value = ''
+    externalTitle.value = ''
+    externalUrl.value = ''
     emit('memoAdded')
   } else {
     toast.warning('提交失败')
@@ -290,6 +382,9 @@ memoUpdateEvent.on((event: Memo) => {
     imgs.value = event.imgs?.split(',')
   }
   location.value = event.location || ''
+  externalFavicon.value = event.externalFavicon || ''
+  externalTitle.value = event.externalTitle || ''
+  externalUrl.value = event.externalUrl || ''
 })
 </script>
 

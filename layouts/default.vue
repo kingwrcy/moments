@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-full bg-[#f1f5f9] dark:bg-slate-800 rounded-md">
-    <div class="lg:w-[567px] mx-auto shadow-2xl bg-white dark:bg-slate-600">
+  <div class="w-full h-full bg-[#f1f5f9] dark:bg-slate-800 rounded-md dark:text-[#C0BEBF]">
+    <div class="lg:w-[567px] mx-auto shadow-2xl bg-white dark:bg-[#181818]">
       <HeaderImg />
       <slot />
       <Footer />

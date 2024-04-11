@@ -22,19 +22,22 @@ model Comment {
 }
 
 model Memo {
-  id           Int       @id @default(autoincrement())
-  content      String?
-  imgs         String?
-  favCount     Int       @default(0)
-  commentCount Int       @default(0)
-  userId       Int
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  comments     Comment[]
-  user         User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  music163Url  String?
-  bilibiliUrl  String?
-  location     String?
+  id              Int       @id @default(autoincrement())
+  content         String?
+  imgs            String?
+  favCount        Int       @default(0)
+  commentCount    Int       @default(0)
+  userId          Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  comments        Comment[]
+  user            User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  music163Url     String?
+  bilibiliUrl     String?
+  location        String?
+  externalUrl     String?
+  externalTitle   String?
+  externalFavicon String @default("/favicon.png")
 }
 
 model User {

@@ -11,6 +11,9 @@ export type Memo = {
   music163Url?: string;
   bilibiliUrl?: string;
   location?: string;
+  externalUrl?: string;
+  externalTitle?: string;
+  externalFavicon?: string;
   comments: Array<Comment>;
   _count: {
     comments: number;
