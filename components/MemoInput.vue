@@ -19,7 +19,7 @@
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="linkOpen = false">
             <div class="flex flex-col gap-2">
-              <div class=" text-xs my-2 flex justify-between"><span>插入链接</span>
+              <div class="text-xs my-2 flex justify-between"><span>插入链接</span>
               </div>
               <Input class="my-2" placeholder="请输入链接地址" v-model="externalUrl" />
               <template v-if="externalFetchError">
@@ -150,9 +150,11 @@
     <div class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
       v-if="externalFavicon && externalTitle">
       <div class="flex-1 flex flex-row gap-2 items-center"><img class="w-8 h-8" :src="externalFavicon" alt="">
-        <a :href="externalUrl" target="_blank" class="text-[#576b95]">{{ externalTitle }}</a>
+        <div class="text-sm text-[#576b95] cursor-pointer" v-if="!externalTitleEditing" title="点击编辑标题" @click="externalTitleEditing = true">{{ externalTitle }}</div>
+        <Input placeholder="请输入链接标题" v-model="externalTitle" v-if="externalTitleEditing" />
       </div>
-      <CircleX class="w-5 h-5" color="red" @click="clearExternalUrl" />
+      <Check class="w-5 h-5 mr-2 cursor-pointer" color="green" v-if="externalTitleEditing"  @click="externalTitleEditing = false" />
+      <CircleX class="w-5 h-5 cursor-pointer" color="red" @click="clearExternalUrl" />
     </div>
 
     <div class="grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
@@ -189,7 +191,7 @@ import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
 import type { Memo } from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
-import { Image, Music4, Settings, Trash2, LogOut, Youtube, Link, Loader, CircleX } from 'lucide-vue-next'
+import { Image, Music4, Settings, Trash2, LogOut, Youtube, Link, Loader, CircleX, Check } from 'lucide-vue-next'
 
 import {
   Tooltip,
@@ -233,12 +235,14 @@ const externalTitle = ref('')
 const externalFavicon = ref('')
 const externalPending = ref(false)
 const externalFetchError = ref(false)
+const externalTitleEditing = ref(false)
 
 const clearExternalUrl = () => {
   externalUrl.value = ''
   externalTitle.value = ''
   externalFavicon.value = ''
   linkOpen.value = false
+  externalFetchError.value = false
 }
 const addLink = async () => {
   if(externalFetchError.value && externalTitle.value === ''){

@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
       success: false,
       title: "",
       favicon: "",
-      message: "无法打开网页，请检查网址是否正确或网络是否正常",
+      message: "无法打开网页.手动填写标题吧!",
     };
   }
 
