@@ -32,7 +32,7 @@
       </div>
       <div class="text-[#576b95] cursor-pointer" v-if="hh > 96 && !showAll" @click="showMore">全文</div>
       <div class="text-[#576b95] cursor-pointer " v-if="showAll" @click="showLess">收起</div>
-      <div class="text-[#576b95] font-medium text-xs mt-2 mb-1">{{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
+      <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none">{{props.memo.location?.split(/\s+/g).join(' · ')}}</div>
       <div class="relative flex flex-row justify-between select-none my-1">
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] ">{{
           dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
