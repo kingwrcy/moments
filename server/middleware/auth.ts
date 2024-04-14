@@ -7,6 +7,8 @@ const needLoginUrl = [
   "/api/files/s3Presigned",
   "/api/files/upload",
   "/api/memo/remove",
+  "/api/user/settings/save",
+  "/api/user/settings/full",
 ];
 
 export default defineEventHandler(async (event) => {
@@ -26,24 +28,23 @@ export default defineEventHandler(async (event) => {
     } catch (error) {}
   }
 
-  if (!needLoginUrl.includes(url.pathname)) {
-    return;
-  }
-  if (!token) {
+  if (needLoginUrl.includes(url.pathname) && !token) {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
     });
   }
 
-  try {
-    const result = jwt.verify(token, jwtKey);
-    const payload = result as JwtPayload;
-    event.context.userId = payload.userId;
-  } catch (error) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: "Unauthorized",
-    });
+  if (needLoginUrl.includes(url.pathname) && token) {
+    try {
+      const result = jwt.verify(token, jwtKey);
+      const payload = result as JwtPayload;
+      event.context.userId = payload.userId;
+    } catch (error) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: "Unauthorized",
+      });
+    }
   }
 });
