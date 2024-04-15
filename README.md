@@ -1,5 +1,14 @@
 # 极简朋友圈
 
+S3兼容的对象存储配置方法:
+
+[Cloudflare R2配置](https://jerry.mblog.club/moments-r2-config)  
+
+[阿里云OSS配置](https://jerry.mblog.club/moments-config-aliyun)
+
+![缤纷云](https://yoyo.s3.bitiful.net/2024/04/12/6618b41d6b65c.png?fmt=webp)
+
+
 [在线DEMO](https://m.mblog.club),欢迎体验.
 
 - 支持匿名评论/点赞
@@ -66,3 +75,11 @@ npx prisma studio
 比如我这里使用的是[缤纷云](https://www.bitiful.com/),配置如下:
 
 ![缤纷云](https://yoyo.s3.bitiful.net/2024/04/12/6618b41d6b65c.png?fmt=webp)
+
+## 重置密码
+
+目前没有别的办法重置密码,只有修改数据库.见[编辑SQLITE数据库](https://github.com/kingwrcy/moments?tab=readme-ov-file#%E7%BC%96%E8%BE%91sqlite%E6%95%B0%E6%8D%AE%E5%BA%93).
+
+打开[bcrypt-generator](https://bcrypt-generator.com/)或者其他类似的bcrypt在线加密的网站,加密你的密码.
+
+复制加密后的密码,编辑数据库,更新User表pwd字段,更新完后记得关掉5555端口的映射,停止`npx prisma studio`命令.
