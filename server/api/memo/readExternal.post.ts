@@ -31,11 +31,14 @@ export default defineEventHandler(async (event) => {
   }
 
   let href = "";
+  const urlObject =  new URL(url)
   if (icons.length > 0) {
-    href = icons.attr("href") || "";
+    href = icons.attr("href") || '';
+  }else{
+    href = urlObject.origin+'/favicon.ico';
   }
   if (!href.startsWith("http")) {
-    href = new URL(url).origin + (href.startsWith('/') ? href : '/'+href);
+    href = urlObject.origin + (href.startsWith('/') ? href : '/'+href);
   }
 
   return {

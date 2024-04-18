@@ -1,5 +1,12 @@
 # 极简朋友圈
 
+S3兼容的对象存储配置方法:
+
+[Cloudflare R2配置](https://jerry.mblog.club/moments-r2-config)  
+
+[阿里云OSS配置](https://jerry.mblog.club/moments-config-aliyun)
+
+
 [在线DEMO](https://m.mblog.club),欢迎体验.
 
 - 支持匿名评论/点赞
@@ -10,8 +17,9 @@
 - 支持暗黑模式
 - 数据库采用sqlite,可随时备份
 
+有其他需求欢迎提issues.
 
-默认用户名密码:admin/a123456,登录进去后后台可以自己修改密码.
+默认用户名密码:`admin/a123456`,登录进去后后台可以自己修改密码.
 
 ## Docker启动
 Docker首次启动看[这里](https://github.com/kingwrcy/moments/blob/master/docker-start.sh)
@@ -66,3 +74,13 @@ npx prisma studio
 比如我这里使用的是[缤纷云](https://www.bitiful.com/),配置如下:
 
 ![缤纷云](https://yoyo.s3.bitiful.net/2024/04/12/6618b41d6b65c.png?fmt=webp)
+
+## 重置密码
+
+目前没有别的办法重置密码,只有修改数据库.见[编辑SQLITE数据库](https://github.com/kingwrcy/moments?tab=readme-ov-file#%E7%BC%96%E8%BE%91sqlite%E6%95%B0%E6%8D%AE%E5%BA%93).
+
+或者任何能正常打开SQLITE数据库的工具都行,数据库见前面的环境变量部分.
+
+打开[bcrypt-generator](https://bcrypt-generator.com/)或者其他类似的bcrypt在线加密的网站,加密你的密码.
+
+复制加密后的密码,编辑数据库,更新User表pwd字段,更新完后记得关掉5555端口的映射,执行`npx prisma studio`命令停止5555端口.

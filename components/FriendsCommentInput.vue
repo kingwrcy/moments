@@ -1,7 +1,7 @@
 <template>
   <div class="p-2 rounded text-sm ">
     <div class="relative">
-      <Textarea autocomplete="new-text" rows="3" v-model="content" class="dark:bg-slate-500 border-separate" :placeholder="placeholder" </Textarea>
+      <Textarea ref="textareaRef" autocomplete="new-text" rows="3" v-model="content" class="dark:bg-slate-500 border-separate" :placeholder="placeholder" </Textarea>
       <div class="absolute right-2 bottom-1 cursor-pointer text-xl" @click="toggleShowEmoji" ref="showEmojiRef">😊</div>
     </div>
     <Emoji v-if="showEmoji" class="mt-2" @emoji-selected="emojiSelected"/>
@@ -20,7 +20,9 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import {useAnimate, useStorage} from '@vueuse/core'
+import { insertTextAtCursor } from '~/lib/utils';
 
+const textareaRef = ref()
 const content = ref('')
 const placeholder = ref('发表评论')
 const emit = defineEmits(['commentAdded'])
@@ -39,8 +41,10 @@ const toggleShowEmoji = ()=>{
   useAnimate(showEmojiRef.value, keyframes, { duration: 1000, easing: 'ease-in-out' })
 }
 const emojiSelected = (emoji: string) => {
-  content.value += emoji
-  showEmoji.value = false
+  const target = textareaRef.value?.getRef() as HTMLTextAreaElement
+  insertTextAtCursor(emoji, target)
+  content.value = target.value!
+  // showEmoji.value = false
 }
 
 const pending = ref(false)
