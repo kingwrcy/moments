@@ -10,8 +10,9 @@
       </div>
       <FriendsMemo :memo="memo" v-for="(memo, index) in data?.data as any as Memo[]" :key="index" :show-more="true"
         @memo-update="refresh" />
+        
     </div>
-
+    <div class="cursor-pointer text-center text-sm opacity-70  my-4" @click="loadMore()" v-if="state.hasNext">点击加载更多...</div>
   </div>
 </template>
 
@@ -25,13 +26,34 @@ useHead({
 })
 
 
+const state = reactive({
+  memoList: Array<Memo>(),
+  page: 1,
+  hasNext:false
+})
+
+
 const { data, refresh } = await useFetch('/api/memo/list', {
-  key:'memoList',
+  key: 'memoList',
   method: 'POST',
   body: JSON.stringify({
-    page: 1,
+    page: state.page,
   })
 })
+state.memoList = data.value?.data as any as Memo[]
+state.hasNext = data.value?.hasNext || false
+
+const loadMore = async () => {
+  const {data,hasNext} = await $fetch('/api/memo/list', {
+    key: 'memoList',
+    method: 'POST',
+    body: JSON.stringify({
+      page: ++state.page,
+    })
+  })
+  state.memoList.push(...data as any as Memo[])
+  state.hasNext = hasNext
+}
 
 </script>
 

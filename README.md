@@ -1,5 +1,9 @@
 # 极简朋友圈
 
+![moments github action status](https://img.shields.io/github/actions/workflow/status/kingwrcy/moments/deploy.yml)
+[![docker pull](https://img.shields.io/docker/pulls/kingwrcy/moments)](https://hub.docker.com/repository/docker/kingwrcy/moments)
+
+
 S3兼容的对象存储配置方法:
 
 [Cloudflare R2配置](https://jerry.mblog.club/moments-r2-config)  
