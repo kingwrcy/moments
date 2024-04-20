@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 p-2 sm:p-4">
+  <div class="flex flex-col gap-4 p-2 sm:p-4">
     <div class="flex flex-col gap-2">
       <Label for="title" class="font-bold">网站标题</Label>
       <Input type="text" id="title" placeholder="网站标题" autocomplete="off" v-model="state.title" />
@@ -40,6 +40,21 @@
     <div class="flex flex-col gap-2">
       <Label for="password" class="font-bold">密码</Label>
       <Input type="password" id="password" placeholder="不修改密码不要填写" autocomplete="off" v-model="state.password" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="css" class="font-bold">自定义CSS</Label>
+      <Textarea id="css" v-model="state.css" rows="3"></Textarea>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="js" class="font-bold">自定义JS</Label>
+      <Textarea id="js" v-model="state.js" rows="3"></Textarea>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label for="beianNo" class="font-bold">备案号</Label>
+      <Input type="text" id="beianNo" placeholder="备案号,没有可不填写" autocomplete="off" v-model="state.beianNo" />
     </div>
 
     <div class="flex flex-col gap-2">
@@ -124,24 +139,30 @@ const state = reactive({
   thumbnailSuffix: '',
   title: '',
   favicon: "",
+  css:"",
+  js:"",
+  beianNo:""
 })
 
 const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full',{key:'settings'})
-
-state.title = res.value?.data?.title || '极简朋友圈'
-state.favicon = res.value?.data?.favicon || '/avatar.webp'
-state.coverUrl = res.value?.data?.coverUrl || ''
-state.avatarUrl = res.value?.data?.avatarUrl || '/cover.webp'
-state.nickname = res.value?.data?.nickname || 'Jerry'
-state.slogan = res.value?.data?.slogan || '星垂平野阔，月涌大江流。'
-state.enableS3 = res.value?.data?.enableS3 || false
-state.domain = res.value?.data?.domain || ''
-state.bucket = res.value?.data?.bucket || ''
-state.region = res.value?.data?.region || ''
-state.accessKey = res.value?.data?.accessKey || ''
-state.secretKey = res.value?.data?.secretKey || ''
-state.endpoint = res.value?.data?.endpoint || ''
-state.thumbnailSuffix = res.value?.data?.thumbnailSuffix || ''
+const data = res.value?.data
+state.title = data?.title || '极简朋友圈'
+state.favicon = data?.favicon || '/avatar.webp'
+state.coverUrl = data?.coverUrl || ''
+state.avatarUrl = data?.avatarUrl || '/cover.webp'
+state.nickname = data?.nickname || 'Jerry'
+state.slogan = data?.slogan || '星垂平野阔，月涌大江流。'
+state.enableS3 = data?.enableS3 || false
+state.domain = data?.domain || ''
+state.bucket = data?.bucket || ''
+state.region = data?.region || ''
+state.accessKey = data?.accessKey || ''
+state.secretKey = data?.secretKey || ''
+state.endpoint = data?.endpoint || ''
+state.thumbnailSuffix = data?.thumbnailSuffix || ''
+state.css = data?.css || ''
+state.js = data?.js || ''
+state.beianNo = data?.beianNo || ''
 enableS3.value = state.enableS3
 
 

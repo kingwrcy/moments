@@ -1,16 +1,19 @@
 <template>
   <div class="wrapper w-full h-full bg-[#f1f5f9] dark:bg-slate-800 rounded-md dark:text-[#C0BEBF]">
     <ScrollArea class="h-full" type="hover">
-    <div class="main lg:w-[567px] mx-auto shadow-2xl bg-white dark:bg-[#181818]">
-      <HeaderImg />
-      <slot />
-      <Footer />
-    </div>
-    <ScrollBar orientation="vertical" />
+      <div class="main lg:w-[567px] mx-auto shadow-2xl bg-white dark:bg-[#181818]">
+        <HeaderImg />
+        <slot />
+        <Footer />
+      </div>
+      <ScrollBar orientation="vertical" />
     </ScrollArea>
   </div>
 
   <Toaster position="top-center" rich-colors />
+
+
+
 </template>
 
 <script setup lang="ts">
@@ -22,6 +25,7 @@ const userinfo = useState<User>('userinfo')
 await callOnce(async () => {
   const { data: res } = await useAsyncData('userinfo', async () => await $fetch('/api/user/settings/get'))
   userinfo.value = res.value?.data as any as User
+
 })
 
 useHead({
@@ -32,5 +36,16 @@ useHead({
       href: userinfo.value?.favicon || '/favicon.png',
     },
   ],
+  style: [
+    {
+      textContent: userinfo.value?.css || '',
+    }
+  ],
+  script: [
+    {
+      type: 'text/javascript',
+      textContent: userinfo.value?.js || '',
+    }
+  ]
 })
 </script>

@@ -17,6 +17,9 @@ type SaveSettingsReq = {
   thumbnailSuffix: string;
   title: string;
   favicon: string;
+  css:string;
+  js:string;
+  beianNo:string;
 };
 
 export default defineEventHandler(async (event) => {

@@ -12,6 +12,9 @@ export default defineEventHandler(async (event) => {
       coverUrl: true,
       favicon: true,
       title: true,
+      css:true,
+      js:true,
+      beianNo:true,
     },
   });
   if (!data) {
