@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full h-full bg-[#f1f5f9] dark:bg-slate-800 rounded-md dark:text-[#C0BEBF]">
+  <div class="wrapper w-full h-full bg-[#f1f5f9] dark:bg-slate-800 rounded-md dark:text-[#C0BEBF]">
     <ScrollArea class="h-full" type="hover">
-    <div class="lg:w-[567px] mx-auto shadow-2xl bg-white dark:bg-[#181818]">
+    <div class="main lg:w-[567px] mx-auto shadow-2xl bg-white dark:bg-[#181818]">
       <HeaderImg />
       <slot />
       <Footer />

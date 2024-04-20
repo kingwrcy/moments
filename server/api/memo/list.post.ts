@@ -6,8 +6,8 @@ type ListMemoReq = {
 
 export default defineEventHandler(async (event) => {
   const { page } = (await readBody(event)) as ListMemoReq;
-  const size = 5;
-  const data = await prisma.memo.findMany({
+  const size = 10;
+  let data = await prisma.memo.findMany({
     include: {
       user: {
         select: {
@@ -23,13 +23,16 @@ export default defineEventHandler(async (event) => {
         orderBy: {
           createdAt: "desc",
         },
-        take:size,
+        take: size,
       },
       _count: {
-        select:{
-          comments:true
-        }
-      }
+        select: {
+          comments: true,
+        },
+      },
+    },
+    where: {
+      pinned: false,
     },
     orderBy: {
       createdAt: "desc",
@@ -37,6 +40,40 @@ export default defineEventHandler(async (event) => {
     skip: (page - 1) * size,
     take: size,
   });
+  if (page === 1) {
+    const pinnedMemo = await prisma.memo.findFirst({
+      include: {
+        user: {
+          select: {
+            username: true,
+            nickname: true,
+            slogan: true,
+            id: true,
+            avatarUrl: true,
+            coverUrl: true,
+          },
+        },
+        comments: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: size,
+        },
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+      where: {
+        pinned: true,
+      },
+    });
+    if (pinnedMemo) {
+      // @ts-ignore
+      data = [pinnedMemo, ...data];
+    }
+  }
   const total = await prisma.memo.count();
   const totalPage = Math.ceil(total / size);
   return {

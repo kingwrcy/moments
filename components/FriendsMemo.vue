@@ -1,10 +1,13 @@
 <template>
 
-  <div class="flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 ">
-    <img :src="props.memo.user.avatarUrl" class="w-9 h-9 rounded" />
+  <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 ">
+    <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" />
     <div class="flex flex-col gap-.5 flex-1">
-      <div class="text-[#576b95] cursor-default mb-1 dark:text-white">{{ props.memo.user.nickname }}</div>
-      <div class="text-sm friend-md" ref="el" v-html="props.memo.content.replaceAll(/\n/g, '<br/>')"> </div>
+      <div class="flex flex-row justify-between items-center">
+        <div class="username text-[#576b95] cursor-default mb-1 dark:text-white">{{ props.memo.user.nickname }}</div>
+        <Pin :size=14 v-if="props.memo.pinned" />
+      </div>
+      <div class="memo-content text-sm friend-md" ref="el" v-html="props.memo.content.replaceAll(/\n/g, '<br/>')"> </div>
 
       <div class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
         v-if="props.memo.externalFavicon && props.memo.externalTitle">
@@ -33,17 +36,22 @@
       <div class="text-[#576b95] cursor-pointer" v-if="hh > 96 && !showAll" @click="showMore">全文</div>
       <div class="text-[#576b95] cursor-pointer " v-if="showAll" @click="showLess">收起</div>
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none">{{props.memo.location?.split(/\s+/g).join(' · ')}}</div>
-      <div class="relative flex flex-row justify-between select-none my-1">
+      <div class="toolbar relative flex flex-row justify-between select-none my-1">
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] ">{{
           dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
             '') }}</div>
         <div @click="showToolbar = !showToolbar"
-          class="mb-2 px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
+          class="toolbar-icon mb-2 px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
           <img src="~/assets/img/dian.svg" class="w-3 h-3" />
         </div>
         <div class="text-xs absolute top-[-8px] right-[30px] bg-[#4c4c4c] rounded text-white p-2" v-if="showToolbar"
           ref="toolbarRef">
           <div class="flex flex-row gap-4">
+            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token "
+              @click="pinned(); showToolbar = false">
+              <Pin :size=14 />
+              <div>{{ (props.memo.pinned ? '取消' :'') + '置顶'}}</div>
+            </div>
             <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token" @click="editMemo">
               <FilePenLine :size=14 />
               <div>编辑</div>
@@ -74,6 +82,7 @@
               <HeartCrack :size=14 v-else />
               <div>{{ likeList.findIndex((id) => id === props.memo.id) >= 0 ? '取消' : '赞' }}</div>
             </div>
+            
             <div class="flex flex-row gap-2 cursor-pointer items-center"
               @click="showCommentInput = !showCommentInput; showUserCommentArray = []; showToolbar = false">
               <MessageSquareMore :size=14 />
@@ -120,7 +129,7 @@ import { useElementSize, onClickOutside, watchOnce, useStorage } from '@vueuse/c
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
-import { Heart, HeartCrack, MessageSquareMore, Trash2, FilePenLine } from 'lucide-vue-next'
+import { Heart, HeartCrack, MessageSquareMore, Trash2, FilePenLine, Pin } from 'lucide-vue-next'
 import { memoUpdateEvent } from '@/lib/event'
 import { toast } from 'vue-sonner';
 import { getImgUrl } from '~/lib/utils';
@@ -180,6 +189,21 @@ const like = async () => {
     } else {
       likeList.value.push(props.memo.id)
     }
+    emit('memo-update')
+  }
+}
+
+const pinned = async ()=>{
+  showToolbar.value = false
+  const res = await $fetch('/api/memo/pinned', {
+    method: 'POST',
+    body: JSON.stringify({
+      memoId: props.memo.id,
+      pinned:!(props.memo.pinned)
+    })
+  })
+  if (res.success) {
+    toast.success('操作成功')
     emit('memo-update')
   }
 }

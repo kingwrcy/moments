@@ -37,7 +37,8 @@ model Memo {
   location        String?
   externalUrl     String?
   externalTitle   String?
-  externalFavicon String @default("/favicon.png")
+  externalFavicon String    @default("/favicon.png")
+  pinned          Boolean   @default(false)
 }
 
 model User {
@@ -61,4 +62,7 @@ model User {
   thumbnailSuffix String?
   favicon         String?
   title           String   @default("极简朋友圈")
+  css             String?
+  js              String?
+  beianNo         String?
 }

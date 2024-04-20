@@ -15,6 +15,7 @@ export type Memo = {
   externalTitle?: string;
   externalFavicon?: string;
   comments: Array<Comment>;
+  pinned:boolean,
   _count: {
     comments: number;
   };
@@ -43,4 +44,7 @@ export type User = {
   coverUrl: string;
   favicon:string;
   title:string;
+  css:string;
+  js:string;
+  beianNo:string;
 }
