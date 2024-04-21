@@ -1,6 +1,6 @@
 <template>
 
-  <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 ">
+  <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 " >
     <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" />
     <div class="flex flex-col gap-.5 flex-1">
       <div class="flex flex-row justify-between items-center">
@@ -98,19 +98,8 @@
         </div>
         <template v-if="props.memo.comments.length > 0">
           <div class="px-4 py-2 flex flex-col gap-1">
-            <div class="flex flex-col gap-2 text-sm" v-for="(comment, index) in props.memo.comments" :key="index">
-              <div class="dark:text-[#9F9F9F]">
-                <span class="text-[#576b95] text-nowrap">{{ comment.username ?? '匿名' }}
-                  <b v-if="comment.author"
-                    class="border text-xs border-[#C64A4A] rounded px-0.5 text-[#C64A4A]">作者</b></span>
-                <span v-if="comment.replyTo" class="text-nowrap mx-1">回复<span class="text-[#576b95] ml-1">{{
-                  comment.replyTo }}</span> </span>
-                <span class="mr-0.5">:</span>
-                <span :title="`点击回复${comment.username}`" class="break-all cursor-pointer"
-                  @click="toggleUserComment(index)">{{ comment.content }}</span>
-              </div>
-              <FriendsCommentInput @commentAdded="refreshComment" :memoId="props.memo.id" :commentId="comment.id"
-                :reply="comment.username" v-if="showUserCommentArray[index]" />
+            <div class="relative flex flex-col gap-2 text-sm" v-for="(comment, index) in props.memo.comments" :key="index">     
+              <Comment :comment="comment" @memo-update="refreshComment" />
             </div>
             <div v-if="props.memo._count.comments > 5 && props.showMore" class="text-[#576b95] cursor-pointer"
               @click="navigateTo(`/detail/${props.memo.id}`)">查看更多...</div>
@@ -234,12 +223,7 @@ const refreshComment = async () => {
   showCommentInput.value = false
 }
 
-const toggleUserComment = (index: number) => {
-  const current = showUserCommentArray.value[index]
-  showUserCommentArray.value = []
-  showUserCommentArray.value[index] = !current
-  showCommentInput.value = false
-}
+
 
 onClickOutside(toolbarRef, () => showToolbar.value = false)
 

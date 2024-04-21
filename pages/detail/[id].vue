@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="p-2 sm:p-4">
-      <FriendsMemo :memo="memo" v-if="memo" :show-more="false" />
+      <FriendsMemo :memo="data?.data as any as Memo" v-if="data?.data" :show-more="false" @memo-update="refresh" />
     </div>
   </div>
 </template>
@@ -18,16 +18,13 @@ useHead({
 const route = useRoute()
 const id = route.params.id
 
-const memo = ref<Memo>()
-const {data} = await useFetch('/api/memo/detail', {
+const {data,refresh} = await useFetch('/api/memo/detail', {
   key:`memoDetail-${id}`,
   method: 'POST',
   body: JSON.stringify({ id: parseInt(id as string) })
 })
 
-if (data.value?.success) {
-  memo.value = data.value?.data! as any as Memo
-}
+
 </script>
 
 <style scoped></style>
