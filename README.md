@@ -88,3 +88,9 @@ npx prisma studio
 打开[bcrypt-generator](https://bcrypt-generator.com/)或者其他类似的bcrypt在线加密的网站,加密你的密码.
 
 复制加密后的密码,编辑数据库,更新User表pwd字段,更新完后记得关掉5555端口的映射,执行`npx prisma studio`命令停止5555端口.
+
+## 打赏
+
+如果你觉得这个项目对你有帮助,可以对我打赏,感谢!
+
+![1713695645770.png](https://yoyo.s3.bitiful.net/2024/04/21/6624eb9a4fd18.png)
