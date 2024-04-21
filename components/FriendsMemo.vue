@@ -1,6 +1,6 @@
 <template>
 
-  <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 " >
+  <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 p-2 sm:p-4" :class="{'bg-slate-100 dark:bg-neutral-700':props.memo.pinned}">
     <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" />
     <div class="flex flex-col gap-.5 flex-1">
       <div class="flex flex-row justify-between items-center">
