@@ -1,7 +1,8 @@
 <template>
   <div class="p-2 rounded text-sm ">
     <div class="relative">
-      <Textarea @keyup.ctrl.enter="saveComment" ref="textareaRef" autocomplete="new-text" rows="3" v-model="content" class="dark:bg-slate-500 border-separate" :placeholder="placeholder" </Textarea>
+      <Textarea @keyup.ctrl.enter="saveComment" ref="textareaRef" autocomplete="new-text" rows="3" v-model="content"
+        class="dark:bg-slate-500 border-separate" :placeholder="placeholder" </Textarea>
       <div class="absolute right-2 bottom-1 cursor-pointer text-xl" @click="toggleShowEmoji" ref="showEmojiRef">😊</div>
     </div>
     <Emoji v-if="showEmoji" class="mt-2" @emoji-selected="emojiSelected"/>
@@ -19,7 +20,7 @@ import { toast } from 'vue-sonner';
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import {useAnimate, useStorage} from '@vueuse/core'
+import { useAnimate, useStorage } from '@vueuse/core'
 import { insertTextAtCursor } from '~/lib/utils';
 
 const textareaRef = ref()
@@ -31,16 +32,18 @@ const keyframes = { transform: 'rotate(360deg)' }
 const props = defineProps<{ memoId: number, reply?: string }>()
 const showEmojiRef = ref<HTMLElement>()
 const info = useStorage('anonymous', {
-  email:'',
-  website:'',
-  username:''
+  email: '',
+  website: '',
+  username: ''
 })
+
+
 
 onMounted(() => {
   textareaRef.value?.getRef().focus()
 })
 
-const toggleShowEmoji = ()=>{
+const toggleShowEmoji = () => {
   showEmoji.value = !showEmoji.value
   useAnimate(showEmojiRef.value, keyframes, { duration: 1000, easing: 'ease-in-out' })
 }
@@ -68,18 +71,18 @@ const saveComment = async () => {
     method: 'POST',
     body: JSON.stringify({
       content: content.value,
-      memoId: props.memoId,      
+      memoId: props.memoId,
       replyTo: props.reply,
-      author:false,
-      email:info.value.email,
-      website:info.value.website,
-      username:info.value.username
+      author: false,
+      email: info.value.email,
+      website: info.value.website,
+      username: info.value.username
     })
   })
 
   if (res.success) {
     toast.success('评论成功')
-    content.value=''
+    content.value = ''
     emit('commentAdded')
   } else {
     toast.warning('评论失败')
