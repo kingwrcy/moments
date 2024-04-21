@@ -227,6 +227,11 @@ const externalPending = ref(false)
 const externalFetchError = ref(false)
 const externalTitleEditing = ref(false)
 
+
+onMounted(() => {
+  textareaRef.value?.getRef().focus()
+})
+
 const clearExternalUrl = () => {
   externalUrl.value = ''
   externalTitle.value = ''

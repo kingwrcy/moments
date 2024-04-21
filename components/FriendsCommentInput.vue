@@ -36,6 +36,10 @@ const info = useStorage('anonymous', {
   username:''
 })
 
+onMounted(() => {
+  textareaRef.value?.getRef().focus()
+})
+
 const toggleShowEmoji = ()=>{
   showEmoji.value = !showEmoji.value
   useAnimate(showEmojiRef.value, keyframes, { duration: 1000, easing: 'ease-in-out' })

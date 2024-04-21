@@ -4,6 +4,8 @@
 [![docker pull](https://img.shields.io/docker/pulls/kingwrcy/moments)](https://hub.docker.com/repository/docker/kingwrcy/moments)
 
 
+[tg交流群](https://t.me/simple_moments)
+
 S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存储到对象存储时才需要配置,默认图片存在本地,可备份):
 
 [Cloudflare R2配置](https://jerry.mblog.club/moments-r2-config)  
