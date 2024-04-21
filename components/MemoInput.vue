@@ -1,8 +1,7 @@
 <template>
   <div class="p-2 sm:p-4 pb-2 border-b dark:border-white">
     <div class="flex flex-row my-2 ">
-      <div class="flex flex-1 gap-2 ">
-
+      <div class="flex flex-1 gap-2 ">       
         <Popover :open="linkOpen">
           <PopoverTrigger as="div">
             <TooltipProvider>
@@ -15,7 +14,6 @@
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="linkOpen = false">
             <div class="flex flex-col gap-2">
@@ -134,7 +132,7 @@
 
     </div>
     <div class="relative">
-      <Textarea ref="textareaRef" @paste="pasteImg" autocomplete="new-text" v-model="content" rows="4"
+      <Textarea ref="textareaRef" @paste="pasteImg" autocomplete="new-text" v-model="content" rows="4" @keyup.ctrl.enter="submitMemo()"
         placeholder="今天发点什么呢?" class=" dark:text-[#C0BEBF]"></Textarea>
       <div class="absolute right-2 bottom-1 cursor-pointer text-xl" @click="toggleShowEmoji" ref="showEmojiRef">😊</div>
     </div>
@@ -193,19 +191,8 @@ import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
 import type { Memo } from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
-import { Image, Music4, Settings, Trash2, LogOut, Youtube, Link, Loader, CircleX, Check, ShowerHead } from 'lucide-vue-next'
+import { Image, Music4, Settings, Trash2, LogOut,  Link, Youtube, CircleX, Check } from 'lucide-vue-next'
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 const textareaRef = ref()
 const showEmojiRef = ref<HTMLElement>()
 const keyframes = { transform: 'rotate(360deg)' }
