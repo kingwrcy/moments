@@ -1,6 +1,6 @@
 <template>
   <div class="header relative mb-8 ">
-    <img class="header-img w-full  max-h-[300px]" :src="getImgUrl(res?.data?.coverUrl!)" alt="" />
+    <img class="header-img w-full  " :src="getImgUrl(res?.data?.coverUrl!)" alt="" />
     <div class="absolute right-2 bottom-[-40px]">
       <div class="userinfo flex flex-col">
         <div class="flex flex-row items-center gap-4 justify-end">

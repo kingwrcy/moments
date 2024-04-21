@@ -23,7 +23,7 @@
       <Input type="file" id="coverUrl" autocomplete="off" @change="(e: Event) => { uploadImgs(e, 'coverUrl') }" />
       <Label for="coverUrl-input" class="font-medium">或者输入在线地址</Label>
       <Input type="text" id="coverUrl-input" placeholder="或者填入在线地址" autocomplete="off" v-model="state.coverUrl" />
-      <img class="w-full h-[250px]" v-if="state.avatarUrl" :src="state.coverUrl" alt="" />
+      <img class="w-full " v-if="state.avatarUrl" :src="state.coverUrl" alt="" />
     </div>
 
     <div class="flex flex-col gap-2">
