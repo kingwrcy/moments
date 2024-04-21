@@ -47,7 +47,6 @@ import { Trash2 } from 'lucide-vue-next'
 import { toast } from 'vue-sonner';
 
 const emit = defineEmits(['memo-update','comment-started'])
-const showUserCommentArray = useState<Array<boolean>>('showUserCommentArray')
 
 const token = useCookie('token')
 const props = withDefaults(
@@ -56,6 +55,7 @@ const props = withDefaults(
     index: number
   }>(), {}
 )
+const showUserCommentArray = useState<Array<boolean>>('showUserCommentArray_'+props.comment.memoId)
 
 
 const refreshComment = async () => {
