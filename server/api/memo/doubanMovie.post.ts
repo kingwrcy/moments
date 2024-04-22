@@ -1,29 +1,24 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { load } from "cheerio";
 import dayjs from "dayjs";
-import prisma from "~/lib/db";
-import short from "short-uuid";
 import fs from "fs/promises";
-import https from "https";
+import short from "short-uuid";
+import prisma from "~/lib/db";
 type Request = {
   id: number;
 };
-
-const regex = /\d{4}-\d{1,2}/;
 
 export default defineEventHandler(async (event) => {
   const { id } = (await readBody(event)) as Request;
   const userId = event.context.userId;
   let res: any;
-  let url = `https://book.douban.com/subject/${id}/`;
-
+  let url = `https://movie.douban.com/subject/${id}/`;
 
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
     },
   });
-
 
   try {
     res = await $fetch(url, {
@@ -37,11 +32,12 @@ export default defineEventHandler(async (event) => {
       message: "获取豆瓣读书信息异常,请重试",
       desc: "",
       image: "",
-      author: "",
-      isbn: "",
+      director: "",
       rating: "",
-      pubDate: "",
-      id:0,
+      releaseDate: "",
+      id: 0,
+      runtime:"",
+      actors:"",
       url,
     };
   }
@@ -52,10 +48,11 @@ export default defineEventHandler(async (event) => {
   let title = "";
   let desc = "";
   let image = "";
-  let isbn = "";
-  let author = "";
+  let director = "";
   let rating = "";
-  let pubDate = "";
+  let releaseDate = "";
+  let actors = "";
+  let runtime = "";
   metas.each((i, el) => {
     const property = $(el).attr("property");
     if (property === "og:title") {
@@ -64,30 +61,26 @@ export default defineEventHandler(async (event) => {
       desc = $(el).attr("content") || "";
     } else if (property === "og:image") {
       image = $(el).attr("content") || "";
-    } else if (property === "book:author") {
-      author = $(el).attr("content") || "";
-    } else if (property === "book:isbn") {
-      isbn = $(el).attr("content") || "";
+    } else if (property === "video:director") {
+      director = $(el).attr("content") || "";
+    } else if (property === "video:actor") {
+      actors += ($(el).attr("content") || "") + "/";
     }
   });
 
-  const keywords = $("meta[name='keywords']").attr("content") || "";
-  const match = keywords.match(regex);
-  if (match) {
-    pubDate = match[0];
-  }
-
+  releaseDate =
+    $("span[property='v:initialReleaseDate']").attr("content") || "";
+  runtime = $("span[property='v:runtime']").attr("content") || "";
   rating = $("strong.rating_num").text() || "未知评分";
 
   if (image && image.startsWith("http")) {
-
     const body = (await $fetch(image, {
       method: "GET",
       headers: {
         userAgent:
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
       },
-    })) as any as Response;  
+    })) as any as Response;
 
     const data = await body.arrayBuffer();
     const fileBuffer = Buffer.from(data);
@@ -127,13 +120,14 @@ export default defineEventHandler(async (event) => {
     title,
     desc,
     image,
-    author,
-    isbn,
+    director,
     url,
     rating,
-    pubDate,
-    id,
+    releaseDate,
+    actors,
     message: "",
+    id,
+    runtime,
     success: true,
   };
 });

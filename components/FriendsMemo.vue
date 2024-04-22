@@ -24,6 +24,7 @@
         border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
       <DoubanBook :book="memoExt.doubanBook" v-if="memoExt.doubanBook" />
+      <DoubanMovie :movie="memoExt.doubanMovie" v-if="memoExt.doubanMovie" />
 
       <div v-if="props.memo.imgs">
         <FancyBox class="grid my-1 gap-2" :style="`grid-template-columns: repeat(${gridCols}, minmax(0, 1fr))`"
@@ -36,7 +37,7 @@
             v-for="(img, index) in props.memo.imgs?.split(',')" :key="index" />
         </FancyBox>
       </div>
-      <div class="text-[#576b95] cursor-pointer" v-if="hh > 96 && !showAll" @click="showMore">全文</div>
+      <div class="text-[#576b95] cursor-pointer" v-if="hh > maxHeight && !showAll" @click="showMore">全文</div>
       <div class="text-[#576b95] cursor-pointer " v-if="showAll" @click="showLess">收起</div>
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none">
         {{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
@@ -148,6 +149,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits(['memo-update'])
+const maxHeight = ref(24*4)
 
 const showAll = ref(false)
 const showToolbar = ref(false)
@@ -231,21 +233,22 @@ const refreshComment = async () => {
 
 onClickOutside(toolbarRef, () => showToolbar.value = false)
 
+
 const showMore = () => {
   showAll.value = true
-  el.value.classList.remove('line-clamp-4')
+  el.value.classList.remove(`line-clamp-${maxHeight.value/24}`)
 }
 const showLess = () => {
   showAll.value = false
-  el.value.classList.add('line-clamp-4')
+  el.value.classList.add(`line-clamp-${maxHeight.value/24}`)
 }
 
 
 
 watchOnce(height, () => {
   hh.value = height.value
-  if (height.value > 96) {
-    el.value.classList.add('line-clamp-4')
+  if (height.value > maxHeight.value) {
+    el.value.classList.add(`line-clamp-${maxHeight.value/24}`)
   }
 })
 

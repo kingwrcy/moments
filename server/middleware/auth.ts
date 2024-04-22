@@ -10,6 +10,7 @@ const needLoginUrl = [
   "/api/user/settings/save",
   "/api/user/settings/full",
   "/api/memo/doubanBook",
+  "/api/memo/doubanMovie",
 ];
 
 export default defineEventHandler(async (event) => {

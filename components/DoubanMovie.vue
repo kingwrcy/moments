@@ -1,27 +1,31 @@
 <template>
       <div class="douban-card-block">
-        <a class="douban-card" :href="book?.url" target="_blank">
-          <div  class="douban-card-bgimg" :style="`background-image: url('${book?.image}')`">
+        <a class="douban-card" :href="movie?.url" target="_blank">
+          <div  class="douban-card-bgimg" :style="`background-image: url('${movie?.image}')`">
           </div>
           <div class="douban-card-left">
-            <div class="douban-card-img" :style="`background-image: url('${book?.image}')`">
+            <div class="douban-card-img" :style="`background-image: url('${movie?.image}')`">
             </div>
           </div>
           <div class="douban-card-right" >
-            <div class="douban-card-item"><span>书名: </span><strong>{{ book?.title }}</strong></div>
-            <div class="douban-card-item"><span>作者: </span><span>{{ book?.author }}</span></div>
-            <div class="douban-card-item"><span>出版年份: </span><span>{{ book?.pubDate }}</span></div>
-            <div class="douban-card-item"><span>评分: </span><span>{{ book?.rating }}</span></div>
+            <div class="douban-card-item"><span>电影名: </span><strong>{{ movie?.title }}</strong></div>
+            <div class="douban-card-item line-clamp-1"><span>主演: </span><span >{{ movie?.actors }}</span></div>
+            <div class="douban-card-item"><span>导演: </span><span>{{ movie?.director }}</span></div>
+            <div class="douban-card-item"><span>上映时间: </span><span>{{ movie?.releaseDate }}</span></div>
+            <div class="douban-card-item">
+              <span>评分: </span><span>{{ movie?.rating }}</span>
+              <span class="ml-4">时长: </span><span>{{ movie?.runtime }}分钟</span>
+            </div>
           </div>
         </a>
       </div>
 </template>
 
 <script setup lang="ts">
-import type { DoubanBook } from '~/lib/types';
+import type { DoubanMovie } from '~/lib/types';
 const props = withDefaults(
   defineProps<{
-    book: DoubanBook | undefined,
+    movie: DoubanMovie | undefined,
   }>(), {}
 )
 </script>
@@ -90,7 +94,7 @@ const props = withDefaults(
 
 .douban-card-left .douban-card-status {
   height: 130px;
-  width: 80px;
+  width: 100px;
   text-align: center;
   font-weight: bold;
   position: absolute;

@@ -58,8 +58,23 @@ export type DoubanBook = {
   rating: string;
   url: string;
   pubDate: string;
+  id:number;
+};
+
+export type DoubanMovie = {
+  title: string;
+  desc: string;
+  image: string;
+  director: string;
+  rating: string;
+  url: string;
+  releaseDate: string;
+  actors:string;
+  runtime:string;
+  id:number
 };
 
 export type MemoExt = {
   doubanBook: DoubanBook;
+  doubanMovie: DoubanMovie;
 };

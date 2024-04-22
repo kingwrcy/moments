@@ -120,7 +120,7 @@
           <PopoverContent as-child @interact-outside="doubanOpen = false">
             <div class="">
               <div class=" text-xs my-2 flex justify-between">引入豆瓣读书和豆瓣电影</div>
-              <RadioGroup :default-value="douban.type" class="flex flex-row gap-2 text-sm">
+              <RadioGroup :default-value="douban.type" class="flex flex-row gap-2 text-sm" v-model="douban.type">
                 <div class="flex items-center space-x-2">
                   <RadioGroupItem id="book" value="book" />
                   <Label for="book">豆瓣读书</Label>
@@ -131,7 +131,10 @@
                 </div>
               </RadioGroup>
               <Input class="my-2" placeholder="请输入豆瓣读书/电影的ID" v-model="douban.id" />
-              <Button size="sm" @click="importDouban">提交</Button>
+              <Button size="sm" @click="importDouban" :disabled="doubanSubmitting">
+                <Loader2 class="w-4 h-4 mr-2 animate-spin" v-if="doubanSubmitting" />提交
+              </Button>
+              <span class="text-xs ml-2 text-gray-400" v-if="doubanSubmitting">请耐心等待下载豆瓣图片并上传!</span>
             </div>
           </PopoverContent>
         </Popover>
@@ -181,6 +184,7 @@
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
     <DoubanBook :book="doubanBook" v-if="doubanBook" />
+    <DoubanMovie :movie="doubanMovie" v-if="doubanMovie" />
 
     <div class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
       v-if="externalFavicon && externalTitle">
@@ -226,9 +230,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
-import type { DoubanBook, Memo } from '~/lib/types';
+import type { DoubanBook, DoubanMovie, Memo, MemoExt } from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
-import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check } from 'lucide-vue-next'
+import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check, Loader2 } from 'lucide-vue-next'
 
 const textareaRef = ref()
 const showEmojiRef = ref<HTMLElement>()
@@ -257,11 +261,14 @@ const bilibiliIfrUrl = ref('')
 const bilibiliOpen = ref(false)
 const doubanOpen = ref(false)
 
+const doubanSubmitting = ref(false)
+
 const douban = reactive({
   id: '',
   type: 'book'
 })
 const doubanBook = ref<DoubanBook>()
+const doubanMovie = ref<DoubanMovie>()
 
 const linkOpen = ref(false)
 const externalUrl = ref('')
@@ -330,7 +337,8 @@ const submitMemo = async () => {
       externalTitle: externalTitle.value,
       externalUrl: externalUrl.value,
       ext: {
-        doubanBook: doubanBook.value
+        doubanBook: doubanBook.value,
+        doubanMovie: doubanMovie.value,
       }
     })
   })
@@ -349,6 +357,9 @@ const submitMemo = async () => {
     externalUrl.value = ''
     showEmoji.value = false
     doubanBook.value = undefined
+    doubanMovie.value = undefined
+    douban.id = ''
+    douban.type = 'book'
     emit('memoAdded')
   } else {
     toast.warning('提交失败')
@@ -362,19 +373,17 @@ const logout = () => {
 }
 
 const fetchDoubanBook = async () => {
-//   return {
-//   "title": "杜甫的历史图景：盛世",
-//   "desc": "“如果将唐史研究比为一场考试，那么杜甫几乎是在把答案展示给你看，只不过他的手势和暗号需要解读。”\n对于诗圣杜甫，从来不缺少研究。但宋代以来，诸家对杜甫生命历程的划分多侧重后半段，关于杜甫的前半生很少有...",
-//   "image": "https://img9.doubanio.com/view/subject/l/public/s34747734.jpg",
-//   "author": "王炳文",
-//   "isbn": "9787553819624",
-//   "url": "https://book.douban.com/subject/36717469/",
-//   "rating": " 9.1 ",
-//   "pubDate": "2024-3",
-//   "message": "",
-//   "success": true
-// }
   return await $fetch('/api/memo/doubanBook', {
+    method: 'POST',
+    body: JSON.stringify({
+      id: douban.id,
+      type: douban.type
+    })
+  })
+}
+
+const fetchDoubanMovie = async () => {
+  return await $fetch('/api/memo/doubanMovie', {
     method: 'POST',
     body: JSON.stringify({
       id: douban.id,
@@ -388,14 +397,21 @@ const importDouban = async () => {
     toast.warning('请输入豆瓣读书/电影的ID')
     return
   }
+  doubanSubmitting.value = true
   if (douban.type === 'book') {
     const res = await fetchDoubanBook();
     if (res.success) {
       doubanBook.value = res
       doubanOpen.value = false
     }
+  } else if (douban.type === 'movie') {
+    const res = await fetchDoubanMovie();
+    if (res.success) {
+      doubanMovie.value = res
+      doubanOpen.value = false
+    }
   }
-
+  doubanSubmitting.value = false
 }
 
 
@@ -474,6 +490,9 @@ memoUpdateEvent.on((event: Memo) => {
   externalFavicon.value = event.externalFavicon || ''
   externalTitle.value = event.externalTitle || ''
   externalUrl.value = event.externalUrl || ''
+  const memoExt = JSON.parse(event.ext || '{}') as MemoExt
+  doubanBook.value = memoExt.doubanBook
+  doubanMovie.value = memoExt.doubanMovie
 })
 </script>
 
