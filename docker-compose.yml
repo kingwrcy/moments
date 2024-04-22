@@ -6,5 +6,7 @@ services:
       - "3000:3000"
     volumes:
       - moments-data:/app/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 volumes:
   moments-data:

@@ -172,7 +172,7 @@
           </PopoverTrigger>
           <PopoverContent class="w-80">
             <div class="flex flex-row gap-2 text-sm">
-              <Input v-model="location" placeholder="空格分割,火星都行!" />
+              <Input v-model="location" placeholder="空格分隔,火星都行!" />
               <Button variant="outline" @click="location = ''">清空</Button>
             </div>
           </PopoverContent>
