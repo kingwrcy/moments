@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col gap-4 p-2 sm:p-4">
     <div class="flex flex-col gap-2">
+      <Label for="title" class="font-bold">管理员账号</Label>
+      <Input type="text" id="title" placeholder="管理员账号" autocomplete="off" v-model="state.username" />
+    </div>
+    <div class="flex flex-col gap-2">
       <Label for="title" class="font-bold">网站标题</Label>
       <Input type="text" id="title" placeholder="网站标题" autocomplete="off" v-model="state.title" />
     </div>
@@ -124,6 +128,7 @@ const enableS3 = useStorage("enableS3", false);
 
 
 const state = reactive({
+  username:'',
   coverUrl: '',
   avatarUrl: '',
   nickname: '',
@@ -146,6 +151,7 @@ const state = reactive({
 
 const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full',{key:'settings'})
 const data = res.value?.data
+state.username = data?.username || 'admin'
 state.title = data?.title || '极简朋友圈'
 state.favicon = data?.favicon || '/avatar.webp'
 state.coverUrl = data?.coverUrl || ''

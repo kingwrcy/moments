@@ -2,6 +2,7 @@ import prisma from "~/lib/db";
 import bcrypt from "bcrypt";
 
 type SaveSettingsReq = {
+  username?: string;
   password?: string;
   nickname?: string;
   avatarUrl?: string;
@@ -23,11 +24,12 @@ type SaveSettingsReq = {
 };
 
 export default defineEventHandler(async (event) => {
-  const { password, nickname, avatarUrl, slogan, coverUrl, ...rest } =
+  const { username,password, nickname, avatarUrl, slogan, coverUrl, ...rest } =
     (await readBody(event)) as SaveSettingsReq;
 
   const updated = {} as SaveSettingsReq;
   if (password) updated.password = bcrypt.hashSync(password, 10);
+  updated.username = username || "admin";
   updated.nickname = nickname || "Jerry";
   updated.avatarUrl =
     avatarUrl ||
