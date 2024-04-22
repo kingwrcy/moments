@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col gap-4 p-2 sm:p-4">
     <div class="flex flex-col gap-2">
+      <Label for="title" class="text-right text-gray-400 text-xs my-2" v-if="version">版本号:{{ version }}</Label>
+      
+    </div>
+    <div class="flex flex-col gap-2">
       <Label for="title" class="font-bold">管理员账号</Label>
       <Input type="text" id="title" placeholder="管理员账号" autocomplete="off" v-model="state.username" />
     </div>
@@ -117,6 +121,8 @@ import { settingsUpdateEvent } from '~/lib/event'
 const token = useCookie('token')
 import { useStorage } from "@vueuse/core";
 import type { User } from '~/lib/types';
+
+const version = process.env.VERSION||''
 
 const userinfo = useState<User>('userinfo')
 

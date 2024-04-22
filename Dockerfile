@@ -1,6 +1,8 @@
 # Nuxt 3 builder
 FROM node:20.12.1-alpine as builder
 
+ARG VERSION
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -13,6 +15,8 @@ COPY . .
 
 # 生成Prisma客户端
 RUN npx prisma generate
+
+RUN echo $VERSION > /app/version
 
 ENV NODE_ENV=production
 
@@ -27,10 +31,12 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV DATABASE_URL="file:/app/data/db.sqlite"
 ENV UPLOAD_DIR="/app/data/upload"
+ENV MOMENTS_VERSION=$VERSION
 
 COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/prisma /app/prisma
 COPY --from=builder /app/start.sh /app/start.sh
+COPY --from=builder /app/version /app/version
 
 RUN mkdir -p /app/data/upload
 
