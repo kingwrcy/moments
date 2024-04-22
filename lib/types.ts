@@ -15,12 +15,12 @@ export type Memo = {
   externalTitle?: string;
   externalFavicon?: string;
   comments: Array<Comment>;
-  pinned:boolean,
+  pinned: boolean;
+  ext: string;
   _count: {
     comments: number;
   };
 };
-
 
 export type Comment = {
   id: number;
@@ -32,8 +32,8 @@ export type Comment = {
   createdAt: string;
   updatedAt: string;
   memoId: number;
-  author?:Boolean
-}
+  author?: Boolean;
+};
 
 export type User = {
   username: string;
@@ -42,9 +42,24 @@ export type User = {
   id: number;
   avatarUrl: string;
   coverUrl: string;
-  favicon:string;
-  title:string;
-  css:string;
-  js:string;
-  beianNo:string;
-}
+  favicon: string;
+  title: string;
+  css: string;
+  js: string;
+  beianNo: string;
+};
+
+export type DoubanBook = {
+  title: string;
+  desc: string;
+  image: string;
+  author: string;
+  isbn: string;
+  rating: string;
+  url: string;
+  pubDate: string;
+};
+
+export type MemoExt = {
+  doubanBook: DoubanBook;
+};

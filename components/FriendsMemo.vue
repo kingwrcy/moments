@@ -23,14 +23,15 @@
       <iframe class="w-full h-[250px] my-2" v-if="props.memo.bilibiliUrl" :src="props.memo.bilibiliUrl" scrolling="no"
         border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
+      <DoubanBook :book="memoExt.doubanBook" v-if="memoExt.doubanBook" />
 
       <div v-if="props.memo.imgs">
         <FancyBox class="grid my-1 gap-2" :style="`grid-template-columns: repeat(${gridCols}, minmax(0, 1fr))`"
           :options="{
-            Carousel: {
-              infinite: false,
-            },
-          }">
+      Carousel: {
+        infinite: false,
+      },
+    }">
           <img loading="lazy" :src="getImgUrl(img)" class="max-h-[200px] cursor-pointer rounded"
             v-for="(img, index) in props.memo.imgs?.split(',')" :key="index" />
         </FancyBox>
@@ -41,8 +42,8 @@
         {{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
       <div class="toolbar relative flex flex-row justify-between select-none my-1">
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] ">{{
-          dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
-            '') }}</div>
+      dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
+        '') }}</div>
         <div @click="showToolbar = !showToolbar"
           class="toolbar-icon mb-2 px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
           <img src="~/assets/img/dian.svg" class="w-3 h-3" />
@@ -104,7 +105,8 @@
           <div class="px-4 py-2 flex flex-col gap-1">
             <div class="relative flex flex-col gap-2 text-sm" v-for="(comment, index) in props.memo.comments"
               :key="index">
-              <Comment :comment="comment" @memo-update="refreshComment" :index="index" @comment-started="showCommentInput=false" />
+              <Comment :comment="comment" @memo-update="refreshComment" :index="index"
+                @comment-started="showCommentInput = false" />
             </div>
             <div v-if="props.memo._count.comments > 5 && props.showMore" class="text-[#576b95] cursor-pointer"
               @click="navigateTo(`/detail/${props.memo.id}`)">查看更多...</div>
@@ -116,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Memo } from '@/lib/types';
+import type { Memo, MemoExt } from '@/lib/types';
 import { useElementSize, onClickOutside, watchOnce, useStorage } from '@vueuse/core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -147,16 +149,17 @@ const props = withDefaults(
 
 const emit = defineEmits(['memo-update'])
 
-
 const showAll = ref(false)
 const showToolbar = ref(false)
 const showCommentInput = ref(false)
 const toolbarRef = ref(null)
-const showUserCommentArray = useState<Array<boolean>>('showUserCommentArray_'+props.memo.id, () => [])
+const showUserCommentArray = useState<Array<boolean>>('showUserCommentArray_' + props.memo.id, () => [])
 const el = ref<any>(null)
 let hh = ref(0)
 const { height } = useElementSize(el)
 const likeList = useStorage<Array<number>>('likeList', [])
+
+const memoExt = computed(() => JSON.parse(props.memo.ext || '{}') as MemoExt)
 
 const gridCols = computed(() => {
   const imgLen = (props.memo.imgs || '').split(',').length;

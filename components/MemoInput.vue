@@ -1,7 +1,7 @@
 <template>
   <div class="p-2 sm:p-4 pb-2 border-b dark:border-white">
     <div class="flex flex-row my-2 ">
-      <div class="flex flex-1 gap-2 ">       
+      <div class="flex flex-1 gap-2 items-center">
         <Popover :open="linkOpen">
           <PopoverTrigger as="div">
             <TooltipProvider>
@@ -101,6 +101,41 @@
             </div>
           </PopoverContent>
         </Popover>
+
+        <Popover :open="doubanOpen">
+          <PopoverTrigger as="div">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <img class="w-[18px] h-[18px]" src="https://img1.doubanio.com/favicon.ico"
+                    @click="doubanOpen = true" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>引入豆瓣读书和豆瓣电影</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+          </PopoverTrigger>
+          <PopoverContent as-child @interact-outside="doubanOpen = false">
+            <div class="">
+              <div class=" text-xs my-2 flex justify-between">引入豆瓣读书和豆瓣电影</div>
+              <RadioGroup :default-value="douban.type" class="flex flex-row gap-2 text-sm">
+                <div class="flex items-center space-x-2">
+                  <RadioGroupItem id="book" value="book" />
+                  <Label for="book">豆瓣读书</Label>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <RadioGroupItem id="movie" value="movie" />
+                  <Label for="movie">豆瓣电影</Label>
+                </div>
+              </RadioGroup>
+              <Input class="my-2" placeholder="请输入豆瓣读书/电影的ID" v-model="douban.id" />
+              <Button size="sm" @click="importDouban">提交</Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+
       </div>
 
 
@@ -132,8 +167,8 @@
 
     </div>
     <div class="relative">
-      <Textarea ref="textareaRef" @paste="pasteImg" autocomplete="new-text" v-model="content" rows="4" @keyup.ctrl.enter="submitMemo()"
-        placeholder="今天发点什么呢?" class=" dark:text-[#C0BEBF]"></Textarea>
+      <Textarea ref="textareaRef" @paste="pasteImg" autocomplete="new-text" v-model="content" rows="4"
+        @keyup.ctrl.enter="submitMemo()" placeholder="今天发点什么呢?" class=" dark:text-[#C0BEBF]"></Textarea>
       <div class="absolute right-2 bottom-1 cursor-pointer text-xl" @click="toggleShowEmoji" ref="showEmojiRef">😊</div>
     </div>
 
@@ -144,6 +179,8 @@
 
     <iframe class="w-full h-[250px] my-2" v-if="bilibiliIfrUrl" :src="bilibiliIfrUrl" scrolling="no" border="0"
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+    <DoubanBook :book="doubanBook" v-if="doubanBook" />
 
     <div class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
       v-if="externalFavicon && externalTitle">
@@ -189,9 +226,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
-import type { Memo } from '~/lib/types';
+import type { DoubanBook, Memo } from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
-import { Image, Music4, Settings, Trash2, LogOut,  Link, Youtube, CircleX, Check } from 'lucide-vue-next'
+import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check } from 'lucide-vue-next'
 
 const textareaRef = ref()
 const showEmojiRef = ref<HTMLElement>()
@@ -218,6 +255,13 @@ const music163Open = ref(false)
 const bilibiliUrl = ref('')
 const bilibiliIfrUrl = ref('')
 const bilibiliOpen = ref(false)
+const doubanOpen = ref(false)
+
+const douban = reactive({
+  id: '',
+  type: 'book'
+})
+const doubanBook = ref<DoubanBook>()
 
 const linkOpen = ref(false)
 const externalUrl = ref('')
@@ -284,7 +328,10 @@ const submitMemo = async () => {
       location: location.value,
       externalFavicon: externalFavicon.value,
       externalTitle: externalTitle.value,
-      externalUrl: externalUrl.value
+      externalUrl: externalUrl.value,
+      ext: {
+        doubanBook: doubanBook.value
+      }
     })
   })
   if (res.success) {
@@ -301,6 +348,7 @@ const submitMemo = async () => {
     externalTitle.value = ''
     externalUrl.value = ''
     showEmoji.value = false
+    doubanBook.value = undefined
     emit('memoAdded')
   } else {
     toast.warning('提交失败')
@@ -311,6 +359,43 @@ const token = useCookie('token')
 const logout = () => {
   token.value = ''
   navigateTo('/', { replace: true })
+}
+
+const fetchDoubanBook = async () => {
+//   return {
+//   "title": "杜甫的历史图景：盛世",
+//   "desc": "“如果将唐史研究比为一场考试，那么杜甫几乎是在把答案展示给你看，只不过他的手势和暗号需要解读。”\n对于诗圣杜甫，从来不缺少研究。但宋代以来，诸家对杜甫生命历程的划分多侧重后半段，关于杜甫的前半生很少有...",
+//   "image": "https://img9.doubanio.com/view/subject/l/public/s34747734.jpg",
+//   "author": "王炳文",
+//   "isbn": "9787553819624",
+//   "url": "https://book.douban.com/subject/36717469/",
+//   "rating": " 9.1 ",
+//   "pubDate": "2024-3",
+//   "message": "",
+//   "success": true
+// }
+  return await $fetch('/api/memo/doubanBook', {
+    method: 'POST',
+    body: JSON.stringify({
+      id: douban.id,
+      type: douban.type
+    })
+  })
+}
+
+const importDouban = async () => {
+  if (douban.id === '' || douban.type === '') {
+    toast.warning('请输入豆瓣读书/电影的ID')
+    return
+  }
+  if (douban.type === 'book') {
+    const res = await fetchDoubanBook();
+    if (res.success) {
+      doubanBook.value = res
+      doubanOpen.value = false
+    }
+  }
+
 }
 
 

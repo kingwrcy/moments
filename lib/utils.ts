@@ -38,3 +38,4 @@ export const insertTextAtCursor = (text: string, textarea: HTMLTextAreaElement |
   // 确保新插入的文本可见
   textarea.scrollTop = textarea.scrollHeight;
 }
+

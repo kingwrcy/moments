@@ -39,6 +39,7 @@ model Memo {
   externalTitle   String?
   externalFavicon String    @default("/favicon.png")
   pinned          Boolean   @default(false)
+  ext             String    @default("{}")
 }
 
 model User {

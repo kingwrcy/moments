@@ -1,4 +1,5 @@
 import prisma from "~/lib/db";
+import { MemoExt } from "~/lib/types";
 
 type SaveMemoReq = {
   id?: number;
@@ -10,6 +11,7 @@ type SaveMemoReq = {
   externalUrl?: string;
   externalTitle?: string;
   externalFavicon?: string;
+  ext:MemoExt
 };
 
 export default defineEventHandler(async (event) => {
@@ -24,6 +26,7 @@ export default defineEventHandler(async (event) => {
     externalTitle: body.externalTitle,
     externalFavicon: body.externalFavicon,
     content: body.content,
+    ext:JSON.stringify(body.ext)
   };
   await prisma.memo.upsert({
     where: {
