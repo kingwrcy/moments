@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-12">
 
     <MemoInput v-if="token" @memo-added="refresh" />
 

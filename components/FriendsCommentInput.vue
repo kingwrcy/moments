@@ -22,9 +22,12 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { useAnimate, useStorage } from '@vueuse/core'
 import { insertTextAtCursor } from '~/lib/utils';
+import type { User } from '~/lib/types';
 
+const userinfo = useState<User>('userinfo')
 const config = useRuntimeConfig()
 const textareaRef = ref()
+const token = useCookie('token')
 const content = ref('')
 const placeholder = ref('发表评论')
 const emit = defineEmits(['commentAdded'])
@@ -42,6 +45,10 @@ const info = useStorage('anonymous', {
 
 onMounted(() => {
   textareaRef.value?.getRef().focus()
+  console.log(userinfo.value,token.value)
+  if(token.value && userinfo.value && userinfo.value.nickname){    
+    info.value.username = userinfo.value.nickname  
+  }
 })
 
 const toggleShowEmoji = () => {

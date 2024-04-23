@@ -255,7 +255,6 @@ const showLess = () => {
 
 watchOnce(height, () => {
   hh.value = height.value
-  console.log('hh.value', hh.value, 'maxHeight', maxHeight.value, props.memo.content)
   if (height.value > maxHeight.value) {
     el.value.classList.add(`line-clamp-${maxLine}`)
   }
