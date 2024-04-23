@@ -10,7 +10,7 @@
           class="border text-xs border-[#C64A4A] rounded mx-0.5 px-0.5 text-[#C64A4A]">作者</b></span>
       <span v-if="comment.replyTo" class="text-nowrap mx-1">回复<span class="text-[#576b95] ml-1"><a
             class="cursor-pointer" v-if="comment.replyTo" target="_blank" :href="comment.website">{{
-              comment.username ?? '匿名' }}</a></span> 
+              comment.replyTo ?? '匿名' }}</a></span> 
               </span>
       <span class="mr-0.5">:</span>
       <span :title="`点击回复${comment.username}`" class="inline w-full break-all cursor-pointer"
@@ -64,8 +64,9 @@ const refreshComment = async () => {
 }
 
 const toggleUserComment = () => {
+  const open = showUserCommentArray.value[props.index]
   showUserCommentArray.value = []
-  showUserCommentArray.value[props.index] = !showUserCommentArray.value[props.index]
+  showUserCommentArray.value[props.index] = !open
   emit('comment-started')
 }
 
