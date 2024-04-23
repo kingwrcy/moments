@@ -62,8 +62,20 @@ const saveComment = async () => {
     toast.warning('先填写评论')
     return
   }
+  if(content.value.length >120){
+    toast.warning('评论超长')
+    return
+  }
   if (!info.value.username) {
     toast.warning('用户名必填')
+    return
+  }
+  if(info.value.username.length >10){
+    toast.warning('用户名')
+    return
+  }
+  if(info.value.website.length >30){
+    toast.warning('网站地址超长')
     return
   }
   pending.value = true
