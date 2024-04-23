@@ -1,9 +1,21 @@
-const animate = require("tailwindcss-animate")
+const animate = require("tailwindcss-animate");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
-  safelist: ["dark"],
+  safelist: [
+    "dark",
+    "line-clamp-1",
+    "line-clamp-2",
+    "line-clamp-3",
+    "line-clamp-4",
+    "line-clamp-5",
+    "line-clamp-6",
+    "line-clamp-7",
+    "line-clamp-8",
+    "line-clamp-9",
+    "line-clamp-10",
+  ],
   prefix: "",
   postcss: {
     plugins: {
@@ -56,7 +68,7 @@ module.exports = {
         },
       },
       borderRadius: {
-      	xl: "calc(var(--radius) + 4px)",
+        xl: "calc(var(--radius) + 4px)",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
@@ -72,10 +84,10 @@ module.exports = {
         },
         "collapsible-down": {
           from: { height: 0 },
-          to: { height: 'var(--radix-collapsible-content-height)' },
+          to: { height: "var(--radix-collapsible-content-height)" },
         },
         "collapsible-up": {
-          from: { height: 'var(--radix-collapsible-content-height)' },
+          from: { height: "var(--radix-collapsible-content-height)" },
           to: { height: 0 },
         },
       },
@@ -88,4 +100,4 @@ module.exports = {
     },
   },
   plugins: [animate],
-}
+};

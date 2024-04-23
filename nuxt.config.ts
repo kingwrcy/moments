@@ -1,11 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig({ 
-  devtools: { enabled: true },
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "shadcn-nuxt",
-    "@nuxtjs/color-mode",
-  ],  
+export default defineNuxtConfig({
+  devtools: { enabled: false },
+  runtimeConfig: {    
+    public: {
+      commentEnable:process.env.MOMENTS_COMMENT_ENABLE || "true",
+      showComment:process.env.MOMENTS_SHOW_COMMENT || "true",
+      commentOrderBy: process.env.MOMENTS_COMMENT_ORDER_BY || "desc",
+      toolbarEnableDouban: process.env.MOMENTS_TOOLBAR_ENABLE_DOUBAN || "true",
+      toolbarEnableMusic163: process.env.MOMENTS_TOOLBAR_ENABLE_MUSIC163 || "true",
+      toolbarEnableVideo: process.env.MOMENTS_TOOLBAR_ENABLE_VIDEO || "true",
+      maxLine: process.env.MOMENTS_MAX_LINE || "4",
+    },
+  },
+  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/color-mode"],
   css: ["~/assets/css/index.css"],
   colorMode: {
     classSuffix: "",
@@ -27,5 +34,5 @@ export default defineNuxtConfig({
         target: "esnext",
       },
     },
-  }  
+  },
 });

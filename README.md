@@ -30,6 +30,10 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 
 默认用户名密码:`admin/a123456`,登录进去后后台可以自己修改密码.
 
+## 支持的环境变量
+
+见[.env](https://github.com/kingwrcy/moments/blob/master/.env)
+
 ## Docker启动
 Docker首次启动看[这里](https://github.com/kingwrcy/moments/blob/master/docker-start.sh)
 

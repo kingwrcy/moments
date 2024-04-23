@@ -23,6 +23,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useAnimate, useStorage } from '@vueuse/core'
 import { insertTextAtCursor } from '~/lib/utils';
 
+
 const textareaRef = ref()
 const content = ref('')
 const placeholder = ref('发表评论')

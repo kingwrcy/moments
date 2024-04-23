@@ -93,7 +93,7 @@
               <div>{{ likeList.findIndex((id) => id === props.memo.id) >= 0 ? '取消' : '赞' }}</div>
             </div>
 
-            <div class="flex flex-row gap-2 cursor-pointer items-center"
+            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="config.public.commentEnable === 'true'"
               @click="showCommentInput = !showCommentInput; showUserCommentArray = []; showToolbar = false">
               <MessageSquareMore :size=14 />
               <div>评论</div>
@@ -107,7 +107,7 @@
           <div class="text-[#576b95]"><span class="mx-1">{{ props.memo.favCount }}</span>位访客赞过</div>
         </div>
         <FriendsCommentInput :memoId="props.memo.id" @commentAdded="refreshComment" v-if="showCommentInput" />
-        <template v-if="props.memo.comments.length > 0">
+        <template v-if="props.memo.comments.length > 0 && config.public.showComment === 'true'">
           <div class="px-4 py-2 flex flex-col gap-1">
             <div class="relative flex flex-col gap-2 text-sm" v-for="(comment, index) in props.memo.comments"
               :key="index">
@@ -152,9 +152,12 @@ const props = withDefaults(
     showMore: boolean
   }>(), {}
 )
+const config = useRuntimeConfig()
 
 const emit = defineEmits(['memo-update'])
-const maxHeight = ref(24 * 4)
+const maxLine = config.public.maxLine
+const maxHeight = ref(24 * parseInt(maxLine))
+
 
 const showAll = ref(false)
 const showToolbar = ref(false)
@@ -241,19 +244,20 @@ onClickOutside(toolbarRef, () => showToolbar.value = false)
 
 const showMore = () => {
   showAll.value = true
-  el.value.classList.remove(`line-clamp-${maxHeight.value / 24}`)
+  el.value.classList.remove(`line-clamp-${maxLine}`)
 }
 const showLess = () => {
   showAll.value = false
-  el.value.classList.add(`line-clamp-${maxHeight.value / 24}`)
+  el.value.classList.add(`line-clamp-${maxLine}`)
 }
 
 
 
 watchOnce(height, () => {
   hh.value = height.value
+  console.log('hh.value', hh.value, 'maxHeight', maxHeight.value, props.memo.content)
   if (height.value > maxHeight.value) {
-    el.value.classList.add(`line-clamp-${maxHeight.value / 24}`)
+    el.value.classList.add(`line-clamp-${maxLine}`)
   }
 })
 

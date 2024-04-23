@@ -5,6 +5,8 @@ type ListMemoReq = {
 };
 
 export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig()
+
   const { page } = (await readBody(event)) as ListMemoReq;
   const size = 10;
   let data = await prisma.memo.findMany({
@@ -20,8 +22,9 @@ export default defineEventHandler(async (event) => {
         },
       },
       comments: {
+        //@ts-ignore
         orderBy: {
-          createdAt: "desc",
+          createdAt: config.public.commentOrderBy,
         },
         take: 5,
       },
