@@ -90,14 +90,29 @@
 
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="bilibiliOpen = false">
-            <div class="">
-              <div class=" text-xs my-2 flex justify-between"><span>嵌入B站视频</span>
-                <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
-                  class="text-gray-500 underline">
-                  如何获取?</NuxtLink>
+            <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2">
+                <div class=" text-xs  flex justify-between"><span>嵌入B站视频</span>
+                  <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
+                    class="text-gray-500 underline">
+                    如何获取?</NuxtLink>
+                </div>
+                <Input class="my-2" placeholder="请输入B站视频代码" v-model="bilibiliUrl" />
               </div>
-              <Input class="my-2" placeholder="请输入B站视频代码" v-model="bilibiliUrl" />
-              <Button size="sm" @click="importBiliBili">提交</Button>
+
+              <div class="flex flex-col gap-2">
+                <div class=" text-xs  flex justify-between"><span>嵌入Youtube视频</span></div>
+                <Input class="my-2" placeholder="请输入Youtube视频链接" v-model="youtubeUrl" />
+              </div>
+
+
+              <div class="flex flex-col gap-2">
+                <div class=" text-xs  flex justify-between"><span>嵌入在线视频</span>
+
+                </div>
+                <Input class="my-2" placeholder="请输入在线视频地址" v-model="videoUrl" />
+              </div>
+              <Button size="sm" @click="importVideo">提交</Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -183,6 +198,11 @@
     <iframe class="w-full h-[250px] my-2" v-if="bilibiliIfrUrl" :src="bilibiliIfrUrl" scrolling="no" border="0"
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
+    <iframe class="w-full h-[250px] my-2" v-if="youtubeIfrUrl" :src="youtubeIfrUrl" scrolling="no" border="0"
+      frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+    <video class="w-full h-[250px] my-2" :src="videoIfrUrl" controls v-if="videoIfrUrl"></video>
+
     <DoubanBook :book="doubanBook" v-if="doubanBook" />
     <DoubanMovie :movie="doubanMovie" v-if="doubanMovie" />
 
@@ -256,6 +276,10 @@ const music163Url = ref('')
 const music163IfrUrl = ref('')
 const music163Open = ref(false)
 
+const youtubeUrl = ref('')
+const youtubeIfrUrl = ref('')
+const videoUrl = ref('')
+const videoIfrUrl = ref('')
 const bilibiliUrl = ref('')
 const bilibiliIfrUrl = ref('')
 const bilibiliOpen = ref(false)
@@ -339,6 +363,8 @@ const submitMemo = async () => {
       ext: {
         doubanBook: doubanBook.value,
         doubanMovie: doubanMovie.value,
+        youtubeUrl: youtubeIfrUrl.value,
+        videoUrl: videoIfrUrl.value
       }
     })
   })
@@ -351,6 +377,10 @@ const submitMemo = async () => {
     music163Url.value = ''
     bilibiliIfrUrl.value = ''
     bilibiliUrl.value = ''
+    videoIfrUrl.value = ''
+    videoUrl.value = ''
+    youtubeIfrUrl.value = ''
+    youtubeUrl.value = ''
     location.value = ''
     externalFavicon.value = ''
     externalTitle.value = ''
@@ -459,17 +489,28 @@ const importMusic = () => {
 }
 
 
-const importBiliBili = () => {
-  if (bilibiliUrl.value === '') {
-    toast.warning('请输入B站视频代码')
+const importVideo = () => {
+  if (bilibiliUrl.value === '' && videoUrl.value === '' && youtubeUrl.value === '') {
+    toast.warning('请输入视频地址/代码')
     return
   }
-  const match = bilibiliUrl.value.match(/src="(.*?)"/)
-  if (match && match.length > 1) {
-    const url = match[1]
-    bilibiliIfrUrl.value = url + '&autoplay=0&high_quality=1&as_wide=1'
-    bilibiliOpen.value = false
+  if (bilibiliUrl.value) {
+    const match = bilibiliUrl.value.match(/src="(.*?)"/)
+    if (match && match.length > 1) {
+      const url = match[1]
+      bilibiliIfrUrl.value = url + '&autoplay=0&high_quality=1&as_wide=1'
+    }
+  } else if (youtubeUrl.value) {
+    const match = youtubeUrl.value.match(/v=([^&#]+)/)
+    if (match && match.length > 1) {
+      const id = match[1]
+      youtubeIfrUrl.value = `https://www.youtube.com/embed/${id}?autoplay=0&frameborder="0"`
+    }
+  } else if (videoUrl.value) {
+    // https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4
+    videoIfrUrl.value = videoUrl.value
   }
+  bilibiliOpen.value = false
 }
 
 
@@ -493,6 +534,8 @@ memoUpdateEvent.on((event: Memo) => {
   const memoExt = JSON.parse(event.ext || '{}') as MemoExt
   doubanBook.value = memoExt.doubanBook
   doubanMovie.value = memoExt.doubanMovie
+  youtubeIfrUrl.value = memoExt.youtubeUrl
+  videoIfrUrl.value = memoExt.videoUrl
 })
 </script>
 

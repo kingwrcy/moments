@@ -77,4 +77,6 @@ export type DoubanMovie = {
 export type MemoExt = {
   doubanBook: DoubanBook;
   doubanMovie: DoubanMovie;
+  youtubeUrl:string;
+  videoUrl:string;
 };

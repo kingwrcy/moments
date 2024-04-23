@@ -23,6 +23,11 @@
       <iframe class="w-full h-[250px] my-2" v-if="props.memo.bilibiliUrl" :src="props.memo.bilibiliUrl" scrolling="no"
         border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
+      <iframe class="w-full h-[250px] my-2" v-if="memoExt.youtubeUrl" :src="memoExt.youtubeUrl" scrolling="no"
+        border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+      <video class="w-full h-[250px] my-2" :src="memoExt.videoUrl" controls v-if="memoExt.videoUrl"></video>
+
       <DoubanBook :book="memoExt.doubanBook" v-if="memoExt.doubanBook" />
       <DoubanMovie :movie="memoExt.doubanMovie" v-if="memoExt.doubanMovie" />
 
@@ -149,7 +154,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits(['memo-update'])
-const maxHeight = ref(24*4)
+const maxHeight = ref(24 * 4)
 
 const showAll = ref(false)
 const showToolbar = ref(false)
@@ -236,11 +241,11 @@ onClickOutside(toolbarRef, () => showToolbar.value = false)
 
 const showMore = () => {
   showAll.value = true
-  el.value.classList.remove(`line-clamp-${maxHeight.value/24}`)
+  el.value.classList.remove(`line-clamp-${maxHeight.value / 24}`)
 }
 const showLess = () => {
   showAll.value = false
-  el.value.classList.add(`line-clamp-${maxHeight.value/24}`)
+  el.value.classList.add(`line-clamp-${maxHeight.value / 24}`)
 }
 
 
@@ -248,7 +253,7 @@ const showLess = () => {
 watchOnce(height, () => {
   hh.value = height.value
   if (height.value > maxHeight.value) {
-    el.value.classList.add(`line-clamp-${maxHeight.value/24}`)
+    el.value.classList.add(`line-clamp-${maxHeight.value / 24}`)
   }
 })
 
