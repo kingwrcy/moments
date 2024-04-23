@@ -14,14 +14,15 @@ export default defineEventHandler(async (event) => {
   const { memoId, content, replyTo, username, email, website } =
     (await readBody(event)) as SaveCommentReq;
   const userId = event.context.userId;
+  const config = useRuntimeConfig()
 
-  if(content.length >120){
+  if(content.length >parseInt(config.public.commentMaxLength)){
     return {success:false}
   }
   if(username.length >10){
     return {success:false}
   }
-  if(website && website.length >30){
+  if(website && website.length >100){
     return {success:false}
   }
 

@@ -5,6 +5,7 @@ declare module 'nuxt/schema' {
     showComment:string
     commentEnable:string
     commentOrderBy:string
+    commentMaxLength:string
     toolbarEnableDouban:string
     toolbarEnableMusic163:string
     toolbarEnableVideo:string

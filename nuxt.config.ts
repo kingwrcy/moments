@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     public: {
       commentEnable:process.env.MOMENTS_COMMENT_ENABLE || "true",
       showComment:process.env.MOMENTS_SHOW_COMMENT || "true",
+      commentMaxLength: process.env.MOMENTS_COMMENT_MAX_LENGTH || "120",
       commentOrderBy: process.env.MOMENTS_COMMENT_ORDER_BY || "desc",
       toolbarEnableDouban: process.env.MOMENTS_TOOLBAR_ENABLE_DOUBAN || "true",
       toolbarEnableMusic163: process.env.MOMENTS_TOOLBAR_ENABLE_MUSIC163 || "true",

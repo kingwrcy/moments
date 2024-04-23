@@ -23,7 +23,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useAnimate, useStorage } from '@vueuse/core'
 import { insertTextAtCursor } from '~/lib/utils';
 
-
+const config = useRuntimeConfig()
 const textareaRef = ref()
 const content = ref('')
 const placeholder = ref('发表评论')
@@ -63,7 +63,7 @@ const saveComment = async () => {
     toast.warning('先填写评论')
     return
   }
-  if(content.value.length >120){
+  if(content.value.length >parseInt(config.public.commentMaxLength)){
     toast.warning('评论超长')
     return
   }
@@ -75,7 +75,7 @@ const saveComment = async () => {
     toast.warning('用户名')
     return
   }
-  if(info.value.website.length >30){
+  if(info.value.website.length >100){
     toast.warning('网站地址超长')
     return
   }
