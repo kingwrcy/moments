@@ -138,7 +138,6 @@
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="doubanOpen = false">
             <div class="">
-              <div class=" text-xs my-2 flex justify-between">引入豆瓣读书和豆瓣电影</div>
               <RadioGroup :default-value="douban.type" class="flex flex-row gap-2 text-sm" v-model="douban.type">
                 <div class="flex items-center space-x-2">
                   <RadioGroupItem id="book" value="book" />

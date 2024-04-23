@@ -25,8 +25,10 @@ const userinfo = useState<User>('userinfo')
 await callOnce(async () => {
   const { data: res } = await useAsyncData('userinfo', async () => await $fetch('/api/user/settings/get'))
   userinfo.value = res.value?.data as any as User
-
 })
+
+const config = useRuntimeConfig()
+
 
 useHead({
   link: [
@@ -48,4 +50,15 @@ useHead({
     }
   ]
 })
+
+if (config.public.recaptchaV3SiteKey) {
+  useHead({
+    script: [
+      {
+        type: 'text/javascript',
+        src: 'https://recaptcha.net/recaptcha/api.js?render=6LdRfcQpAAAAAIy_YmMO07TlqKYMxx_IedeF33uh'
+      }
+    ]
+  })
+}
 </script>

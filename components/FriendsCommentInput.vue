@@ -45,9 +45,8 @@ const info = useStorage('anonymous', {
 
 onMounted(() => {
   textareaRef.value?.getRef().focus()
-  console.log(userinfo.value,token.value)
-  if(token.value && userinfo.value && userinfo.value.nickname){    
-    info.value.username = userinfo.value.nickname  
+  if (token.value && userinfo.value && userinfo.value.nickname) {
+    info.value.username = userinfo.value.nickname
   }
 })
 
@@ -70,7 +69,7 @@ const saveComment = async () => {
     toast.warning('先填写评论')
     return
   }
-  if(content.value.length >parseInt(config.public.commentMaxLength)){
+  if (content.value.length > parseInt(config.public.commentMaxLength)) {
     toast.warning('评论超长')
     return
   }
@@ -78,14 +77,30 @@ const saveComment = async () => {
     toast.warning('用户名必填')
     return
   }
-  if(info.value.username.length >10){
+  if (info.value.username.length > 10) {
     toast.warning('用户名')
     return
   }
-  if(info.value.website.length >100){
+  if (info.value.website.length > 100) {
     toast.warning('网站地址超长')
     return
   }
+
+  if (config.public.recaptchaV3SiteKey) {
+    //@ts-ignore
+    grecaptcha.ready(function () {
+      //@ts-ignore
+      grecaptcha.execute(config.public.recaptchaV3SiteKey, { action: 'submit' }).then(async function (token) {
+        submitComment(token)
+      });
+    });
+  } else {
+    submitComment()
+  }
+
+}
+
+const submitComment = async (token?: string) => {
   pending.value = true
   const res = await $fetch('/api/comment/save', {
     method: 'POST',
@@ -96,7 +111,8 @@ const saveComment = async () => {
       author: false,
       email: info.value.email,
       website: info.value.website,
-      username: info.value.username
+      username: info.value.username,
+      token
     })
   })
 

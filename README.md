@@ -40,6 +40,13 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 
 `/app/.env`文件中的配置优先级最高!
 
+
+## 使用google recaptchaV3(可选)
+
+自行去[google recaptchaV3 admin console](https://www.google.com/recaptcha/admin/create)开通,每月100万次免费调用.
+开通成功后复制网站密钥和通信密钥,填入`/app/.env`文件中
+
+
 ## Docker启动
 Docker首次启动看[这里](https://github.com/kingwrcy/moments/blob/master/docker-start.sh)
 
@@ -82,7 +89,7 @@ npx prisma studio
 执行上面的命令会在容器内部暴露一个5555端口,暴露到主机后可以通过 `http://容器IP:5555` 访问数据库,直接修改/删除/新增数据.
 
 
-## 配置S3
+## 配置S3(可选)
 
 由于使用了[使用预签名 URL 上传对象](https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/userguide/PresignedUrlUploadObject.html)方案来上传图片到S3,简单来说就是前端直接上传文件到S3,不经过服务端.
 

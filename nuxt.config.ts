@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
   runtimeConfig: {    
+    recaptchaV3secretKey: process.env.GOOGLE_RECAPTCHA_SECRET_KEY || "",
     public: {
       commentEnable:process.env.MOMENTS_COMMENT_ENABLE || "true",
       showComment:process.env.MOMENTS_SHOW_COMMENT || "true",
@@ -11,6 +12,7 @@ export default defineNuxtConfig({
       toolbarEnableMusic163: process.env.MOMENTS_TOOLBAR_ENABLE_MUSIC163 || "true",
       toolbarEnableVideo: process.env.MOMENTS_TOOLBAR_ENABLE_VIDEO || "true",
       maxLine: process.env.MOMENTS_MAX_LINE || "4",
+      recaptchaV3SiteKey: process.env.GOOGLE_RECAPTCHA_SITE_KEY || "",
     },
   },
   modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/color-mode"],
