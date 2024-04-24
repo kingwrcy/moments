@@ -2,13 +2,13 @@ import prisma from "~/lib/db";
 
 type ListMemoReq = {
   page: number;
+  size: number;
 };
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
 
-  const { page } = (await readBody(event)) as ListMemoReq;
-  const size = 10;
+  const { page ,size} = (await readBody(event)) as ListMemoReq;
   let data = await prisma.memo.findMany({
     include: {
       user: {

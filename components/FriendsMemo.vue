@@ -93,7 +93,8 @@
               <div>{{ likeList.findIndex((id) => id === props.memo.id) >= 0 ? '取消' : '赞' }}</div>
             </div>
 
-            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="config.public.momentsCommentEnable === 'true'"
+            <div class="flex flex-row gap-2 cursor-pointer items-center"
+              v-if="config.public.momentsCommentEnable === 'true'"
               @click="momentsShowCommentInput = !momentsShowCommentInput; showUserCommentArray = []; showToolbar = false">
               <MessageSquareMore :size=14 />
               <div>评论</div>
@@ -149,7 +150,9 @@ dayjs.extend(relativeTime)
 const props = withDefaults(
   defineProps<{
     memo: Memo,
-    showMore: boolean
+    showMore: boolean,
+    index: number
+
   }>(), {}
 )
 const config = useRuntimeConfig()
@@ -227,7 +230,7 @@ const removeMemo = async () => {
 
 const editMemo = async () => {
   showToolbar.value = false
-  memoUpdateEvent.emit(props.memo)
+  memoUpdateEvent.emit({ ...props.memo, index: props.index })
 }
 
 

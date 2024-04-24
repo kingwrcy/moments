@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
   runtimeConfig: {    
-    googleRecaptchaSecretKey: process.env.NUXT_GOOGLE_RECAPTCHA_SECRET_KEY || "",
+    googleRecaptchaSecretKey: "",
     public: {
       momentsCommentEnable: "true",
       momentsShowComment:"true",
