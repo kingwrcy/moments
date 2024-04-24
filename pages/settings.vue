@@ -1,8 +1,9 @@
 <template>
   <div class="flex flex-col gap-4 p-2 sm:p-4">
     <div class="flex flex-col gap-2">
-      <Label for="version" class="text-right text-gray-400 text-xs my-2" v-if="versionData">版本号:v{{ versionData.version }}</Label>
-      
+      <Label for="version" class="text-right text-gray-400 text-xs my-2" v-if="versionData">版本号:v{{ versionData.version
+        }}</Label>
+
     </div>
     <div class="flex flex-col gap-2">
       <Label for="username" class="font-bold">管理员账号</Label>
@@ -105,10 +106,60 @@
         <Label for="thumbnailSuffix" class="font-bold">后缀</Label>
         <Input type="text" id="thumbnailSuffix" placeholder="" autocomplete="off" v-model="state.thumbnailSuffix" />
       </div>
-
-
     </template>
-
+    <Collapsible >
+      <CollapsibleTrigger>
+        <div class="cursor-pointer font-bold text-sm">点我查看生效的环境变量</div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <table class="w-full border my-2 text-xs" >
+          <thead>
+            <tr class="*:border *:p-2 *:bg-gray-300">
+              <td>配置项(去掉了前缀`NUXT_PUBLIC`)</td>
+              <td>内容</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="*:border *:p-2">
+              <td>MOMENTS_COMMENT_ENABLE(是否可以评论)</td>
+              <td>{{ $config.public.momentsCommentEnable }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>MOMENTS_SHOW_COMMENT(是否展示评论)</td>
+              <td>{{ $config.public.momentsShowComment }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>MOMENTS_COMMENT_MAX_LENGTH(评论最大字数)</td>
+              <td>{{ $config.public.momentsCommentMaxLength }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>MOMENTS_COMMENT_ORDER_BY(评论排序)</td>
+              <td>{{ $config.public.momentsCommentOrderBy }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>MOMENTS_TOOLBAR_ENABLE_DOUBAN(是否显示豆瓣按钮)</td>
+              <td>{{ $config.public.momentsToolbarEnableDouban }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>MOMENTS_TOOLBAR_ENABLE_MUSIC163(是否显示音乐按钮)</td>
+              <td>{{ $config.public.momentsToolbarEnableMusic163 }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>MOMENTS_TOOLBAR_ENABLE_VIDEO(是否显示视频按钮)</td>
+              <td>{{ $config.public.momentsToolbarEnableVideo }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>MOMENTS_MAX_LINE(发言最大行数,超过折叠)</td>
+              <td>{{ $config.public.momentsMaxLine }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>GOOGLE_RECAPTCHA_SITE_KEY(RECAPTCHA网站key)</td>
+              <td>{{ $config.public.googleRecaptchaSiteKey }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </CollapsibleContent>
+    </Collapsible>
     <div class="flex flex-col gap-2 ">
       <Button @click="saveSettings">保存</Button>
     </div>
@@ -122,19 +173,19 @@ const token = useCookie('token')
 import { useStorage } from "@vueuse/core";
 import type { User } from '~/lib/types';
 
-const {data:versionData} = await useAsyncData('version',async ()=>$fetch('/api/version'))
+const { data: versionData } = await useAsyncData('version', async () => $fetch('/api/version'))
 
 const userinfo = useState<User>('userinfo')
 
 useHead({
-  title: '设置-'+(userinfo.value.title || '极简朋友圈'),
+  title: '设置-' + (userinfo.value.title || '极简朋友圈'),
 })
 
 const enableS3 = useStorage("enableS3", false);
 
 
 const state = reactive({
-  username:'',
+  username: '',
   coverUrl: '',
   avatarUrl: '',
   nickname: '',
@@ -150,12 +201,12 @@ const state = reactive({
   thumbnailSuffix: '',
   title: '',
   favicon: "",
-  css:"",
-  js:"",
-  beianNo:""
+  css: "",
+  js: "",
+  beianNo: ""
 })
 
-const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full',{key:'settings'})
+const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full', { key: 'settings' })
 const data = res.value?.data
 state.username = data?.username || 'admin'
 state.title = data?.title || '极简朋友圈'

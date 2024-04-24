@@ -12,8 +12,6 @@
 
   <Toaster position="top-center" rich-colors />
 
-
-
 </template>
 
 <script setup lang="ts">

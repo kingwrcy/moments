@@ -1,16 +1,17 @@
-declare module 'nuxt/schema' {
+declare module "nuxt/schema" {
   interface RuntimeConfig {
+    googleRecaptchaSecretKey: string;
   }
   interface PublicRuntimeConfig {
-    momentsShowComment:string
-    momentsCommentEnable:string
-    momentsCommentOrderBy:string
-    momentsCommentMaxLength:string
-    momentsToolbarEnableDouban:string
-    momentsToolbarEnableMusic163:string
-    momentsToolbarEnableVideo:string
-    momentsMaxLine:string
+    momentsShowComment: boolean;
+    momentsCommentEnable: boolean;
+    momentsCommentOrderBy: string;
+    momentsCommentMaxLength: number;
+    momentsToolbarEnableDouban: boolean;
+    momentsToolbarEnableMusic163: boolean;
+    momentsToolbarEnableVideo: boolean;
+    momentsMaxLine: number;
   }
 }
 // It is always important to ensure you import/export something when augmenting a type
-export {}
+export {};

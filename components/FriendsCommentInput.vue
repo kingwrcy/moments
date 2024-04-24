@@ -69,7 +69,7 @@ const saveComment = async () => {
     toast.warning('先填写评论')
     return
   }
-  if (content.value.length > parseInt(config.public.momentsCommentMaxLength)) {
+  if (content.value.length > config.public.momentsCommentMaxLength) {
     toast.warning('评论超长')
     return
   }

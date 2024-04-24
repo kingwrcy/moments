@@ -94,7 +94,7 @@
             </div>
 
             <div class="flex flex-row gap-2 cursor-pointer items-center"
-              v-if="config.public.momentsCommentEnable === 'true'"
+              v-if="config.public.momentsCommentEnable"
               @click="momentsShowCommentInput = !momentsShowCommentInput; showUserCommentArray = []; showToolbar = false">
               <MessageSquareMore :size=14 />
               <div>评论</div>
@@ -108,7 +108,7 @@
           <div class="text-[#576b95]"><span class="mx-1">{{ props.memo.favCount }}</span>位访客赞过</div>
         </div>
         <FriendsCommentInput :memoId="props.memo.id" @commentAdded="refreshComment" v-if="momentsShowCommentInput" />
-        <template v-if="props.memo.comments.length > 0 && config.public.momentsShowComment === 'true'">
+        <template v-if="props.memo.comments.length > 0 && config.public.momentsShowComment">
           <div class="px-4 py-2 flex flex-col gap-1">
             <div class="relative flex flex-col gap-2 text-sm" v-for="(comment, index) in props.memo.comments"
               :key="index">
@@ -159,7 +159,7 @@ const config = useRuntimeConfig()
 
 const emit = defineEmits(['memo-update'])
 const maxLine = config.public.momentsMaxLine
-const maxHeight = ref(24 * parseInt(maxLine))
+const maxHeight = ref(24 * maxLine)
 
 
 const showAll = ref(false)
