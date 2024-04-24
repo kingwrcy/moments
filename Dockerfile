@@ -37,6 +37,7 @@ COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/prisma /app/prisma
 COPY --from=builder /app/start.sh /app/start.sh
 COPY --from=builder /app/version /app/version
+COPY --from=builder /app/config.properties /app/config
 
 RUN mkdir -p /app/data/upload
 
