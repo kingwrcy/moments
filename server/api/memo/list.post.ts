@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
       comments: {
         //@ts-ignore
         orderBy: {
-          createdAt: config.public.commentOrderBy,
+          createdAt: config.public.momentsCommentOrderBy,
         },
         take: 5,
       },

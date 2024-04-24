@@ -2,13 +2,14 @@ declare module 'nuxt/schema' {
   interface RuntimeConfig {
   }
   interface PublicRuntimeConfig {
-    showComment:string
-    commentEnable:string
-    commentOrderBy:string
-    commentMaxLength:string
-    toolbarEnableDouban:string
-    toolbarEnableMusic163:string
-    toolbarEnableVideo:string
+    momentsShowComment:string
+    momentsCommentEnable:string
+    momentsCommentOrderBy:string
+    momentsCommentMaxLength:string
+    momentsToolbarEnableDouban:string
+    momentsToolbarEnableMusic163:string
+    momentsToolbarEnableVideo:string
+    momentsMaxLine:string
   }
 }
 // It is always important to ensure you import/export something when augmenting a type

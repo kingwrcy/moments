@@ -69,7 +69,7 @@ const saveComment = async () => {
     toast.warning('先填写评论')
     return
   }
-  if (content.value.length > parseInt(config.public.commentMaxLength)) {
+  if (content.value.length > parseInt(config.public.momentsCommentMaxLength)) {
     toast.warning('评论超长')
     return
   }
@@ -86,11 +86,11 @@ const saveComment = async () => {
     return
   }
 
-  if (config.public.recaptchaV3SiteKey) {
+  if (config.public.googleRecaptchaSiteKey) {
     //@ts-ignore
     grecaptcha.ready(function () {
       //@ts-ignore
-      grecaptcha.execute(config.public.recaptchaV3SiteKey, { action: 'submit' }).then(async function (token) {
+      grecaptcha.execute(config.public.googleRecaptchaSiteKey, { action: 'submit' }).then(async function (token) {
         submitComment(token)
       });
     });

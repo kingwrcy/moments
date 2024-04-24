@@ -51,7 +51,7 @@ useHead({
   ]
 })
 
-if (config.public.recaptchaV3SiteKey) {
+if (config.public.googleRecaptchaSiteKey) {
   useHead({
     script: [
       {

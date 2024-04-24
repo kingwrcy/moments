@@ -39,10 +39,10 @@ export default defineEventHandler(async (event) => {
   const { content, email, username, website, token } = request;
 
   const userId = event.context.userId;
-  if (config.recaptchaV3secretKey && !token) {
+  if (config.googleRecaptchaSecretKey && !token) {
     return { success: false, message: "小样儿,你是不是人机?" };
   }
-  if (content.length > parseInt(config.public.commentMaxLength)) {
+  if (content.length > parseInt(config.public.momentsCommentMaxLength)) {
     return { success: false, message: "评论超长了,老板" };
   }
   if (username.length > 10) {
@@ -55,9 +55,9 @@ export default defineEventHandler(async (event) => {
     return { success: false, message: "网站地址也没这么长的啊" };
   }
 
-  if (config.recaptchaV3secretKey) {
+  if (config.googleRecaptchaSecretKey) {
     const response = (await $fetch(
-      `https://recaptcha.net/recaptcha/api/siteverify?secret=${config.recaptchaV3secretKey}&response=${token}`
+      `https://recaptcha.net/recaptcha/api/siteverify?secret=${config.googleRecaptchaSecretKey}&response=${token}`
     )) as any as recaptchaResponse;
     if (response.score > 0.5) {
       await insertComment(userId, request);

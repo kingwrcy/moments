@@ -47,7 +47,7 @@
           <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs">
         </Label>
 
-        <Popover :open="music163Open" v-if="config.public.toolbarEnableMusic163==='true'">
+        <Popover :open="music163Open" v-if="config.public.momentsToolbarEnableMusic163==='true'">
           <PopoverTrigger as="div">
             <TooltipProvider>
               <Tooltip>
@@ -75,7 +75,7 @@
         </Popover>
 
 
-        <Popover :open="bilibiliOpen" v-if="config.public.toolbarEnableVideo==='true'">
+        <Popover :open="bilibiliOpen" v-if="config.public.momentsToolbarEnableVideo==='true'">
           <PopoverTrigger as="div">
             <TooltipProvider>
               <Tooltip>
@@ -117,7 +117,7 @@
           </PopoverContent>
         </Popover>
 
-        <Popover :open="doubanOpen" v-if="config.public.toolbarEnableDouban==='true'">
+        <Popover :open="doubanOpen" v-if="config.public.momentsToolbarEnableDouban==='true'">
           <PopoverTrigger as="div">
             <TooltipProvider>
               <Tooltip>
