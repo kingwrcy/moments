@@ -1,17 +1,17 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
-  runtimeConfig: {    
+  runtimeConfig: {
     googleRecaptchaSecretKey: "",
     public: {
-      momentsCommentEnable: "true",
-      momentsShowComment:"true",
-      momentsCommentMaxLength:  "120",
+      momentsCommentEnable: true,
+      momentsShowComment: true,
+      momentsCommentMaxLength: 120,
       momentsCommentOrderBy: "desc",
-      momentsToolbarEnableDouban:  "true",
-      momentsToolbarEnableMusic163:  "true",
-      momentsToolbarEnableVideo:  "true",
-      momentsMaxLine:  "4",
+      momentsToolbarEnableDouban: true,
+      momentsToolbarEnableMusic163: true,
+      momentsToolbarEnableVideo: true,
+      momentsMaxLine: 4,
       googleRecaptchaSiteKey: "",
     },
   },

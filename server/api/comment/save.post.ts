@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
   if (config.googleRecaptchaSecretKey && !token) {
     return { success: false, message: "小样儿,你是不是人机?" };
   }
-  if (content.length > parseInt(config.public.momentsCommentMaxLength)) {
+  if (content.length > config.public.momentsCommentMaxLength) {
     return { success: false, message: "评论超长了,老板" };
   }
   if (username.length > 10) {
