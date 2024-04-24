@@ -12,7 +12,7 @@ node_modules
 # Logs
 logs
 *.log
-
+.env
 # Misc
 .DS_Store
 .fleet
