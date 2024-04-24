@@ -51,6 +51,9 @@ const insertComment = async (userId: string, request: SaveCommentReq) => {
   });
 };
 
+const emailReg =
+  /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/;
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const request = (await readBody(event)) as SaveCommentReq;
@@ -91,47 +94,58 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  if (!enableAliyunTextJudge) {
-    // 未开启阿里云文本审核
+  if (enableAliyunTextJudge) {
+    // 文本内容检查
+    const aliJudgeResponse1 = (await aliTextJudge(
+      content,
+      "comment_detection"
+    )) as any;
+    if (
+      aliJudgeResponse1.Data &&
+      aliJudgeResponse1.Data.labels &&
+      aliJudgeResponse1.Data.labels !== ""
+    ) {
+      let labelsList = aliJudgeResponse1.Data.labels.split(",");
+
+      return {
+        success: false,
+        message:
+          "评论内容不符合规范：" +
+          labelsList.map((label: string) => staticWord[label]).join(", "),
+      };
+    }
+
+    const aliJudgeResponse2 = (await aliTextJudge(
+      username,
+      "nickname_detection"
+    )) as any;
+    if (
+      aliJudgeResponse2.Data &&
+      aliJudgeResponse2.Data.labels &&
+      aliJudgeResponse2.Data.labels !== ""
+    ) {
+      let labelsList = aliJudgeResponse2.Data.labels.split(",");
+
+      return {
+        success: false,
+        message:
+          "用户名不符合规范：" +
+          labelsList.map((label: string) => staticWord[label]).join(", "),
+      };
+    }
+  }
+
+  await insertComment(userId, request);
+
+  console.log(config.enableNotifyByEmail);
+
+  if (!config.enableNotifyByEmail) {
+    // 未开启邮件通知
     return {
       success: true,
       message: "",
     };
   }
-
-  // 文本内容检查
-  const aliJudgeResponse1 = await aliTextJudge(content, "comment_detection");
-  if (
-    aliJudgeResponse1.Data &&
-    aliJudgeResponse1.Data.labels &&
-    aliJudgeResponse1.Data.labels !== ""
-  ) {
-    let labelsList = aliJudgeResponse1.Data.labels.split(",");
-
-    return {
-      success: false,
-      message:
-        "评论内容不符合规范：" +
-        labelsList.map((label: string) => staticWord[label]).join(", "),
-    };
-  }
-
-  const aliJudgeResponse2 = await aliTextJudge(username, "nickname_detection");
-  if (
-    aliJudgeResponse2.Data &&
-    aliJudgeResponse2.Data.labels &&
-    aliJudgeResponse2.Data.labels !== ""
-  ) {
-    let labelsList = aliJudgeResponse2.Data.labels.split(",");
-
-    return {
-      success: false,
-      message:
-        "用户名不符合规范：" +
-        labelsList.map((label: string) => staticWord[label]).join(", "),
-    };
-  }
-  await insertComment(userId, request);
   let flag = true;
   if (replyToId !== undefined && replyToId !== 0) {
     const comment = await prisma.comment.findUnique({
@@ -139,16 +153,23 @@ export default defineEventHandler(async (event) => {
         id: replyToId,
       },
     });
-    if (comment !== null && comment.email !== null && comment.email !== "") {
+    if (
+      comment !== null &&
+      comment.email !== null &&
+      comment.email !== "" &&
+      emailReg.test(comment.email)
+    ) {
       if (comment.email === config.notifyMail) {
         flag = false;
       }
       // 邮箱通知被回复者
-      await sendEmail({
+      sendEmail({
         email: comment.email,
         subject: "新回复",
         message: `您在moments中的评论有新回复！
                 用户名为:  ${username} 回复了您的评论(${comment.content})，他回复道: ${content}，点击查看: ${config.public.siteUrl}/detail/${memoId}`,
+      }).catch((err) => {
+        console.log(`发送邮件给: ${comment.email} 失败了,原因:{$err.message}`);
       });
     }
   }
@@ -170,11 +191,15 @@ export default defineEventHandler(async (event) => {
     }
 
     // 邮箱通知管理员
-    await sendEmail({
+    sendEmail({
       email: config.notifyMail || "",
       subject: "新评论",
       message: `您的moments有新评论！
             用户名为:  ${username} 在您的moment中发表了评论: ${content}，点击查看: ${siteUrl}/detail/${memoId}`,
+    }).catch((err) => {
+      console.log(
+        `发送邮箱给管理员: ${config.notifyMail} 失败了,原因:{$err.message}`
+      );
     });
   }
   return {
@@ -225,7 +250,11 @@ async function aliTextJudge(
 
   let response;
   try {
-    response = await client.request("TextModeration", params, requestOption);
+    response = (await client.request(
+      "TextModeration",
+      params,
+      requestOption
+    )) as any;
     if (response.Code === 500) {
       client.endpoint = "https://green-cip.cn-beijing.aliyuncs.com";
       response = await client.request("TextModeration", params, requestOption);

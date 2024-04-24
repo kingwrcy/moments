@@ -62,7 +62,7 @@
               <Pin :size=14 />
               <div>{{ (props.memo.pinned ? '取消' : '') + '置顶' }}</div>
             </div>
-            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token" @click="editMemo">
+            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token && !route.path.startsWith('/detail')" @click="editMemo">
               <FilePenLine :size=14 />
               <div>编辑</div>
             </div>
@@ -151,11 +151,12 @@ const props = withDefaults(
   defineProps<{
     memo: Memo,
     showMore: boolean,
-    index: number
+    index?: number
 
   }>(), {}
 )
 const config = useRuntimeConfig()
+const route = useRoute()
 
 const emit = defineEmits(['memo-update'])
 const maxLine = config.public.momentsMaxLine

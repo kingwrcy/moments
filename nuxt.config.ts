@@ -13,7 +13,8 @@ export default defineNuxtConfig({
     mailFromName: "",
     aliyunTextJudgeEnable: false,
     aliyunAccessKeyId: "",
-    aliyunAccessKeySecret: "",
+    aliyunAccessKeySecret: "",    
+    enableNotifyByEmail: false, 
     public: {
       momentsCommentEnable: true,
       momentsShowComment: true,

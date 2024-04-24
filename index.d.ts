@@ -12,6 +12,7 @@ declare module "nuxt/schema" {
     aliyunTextJudgeEnable: boolean;
     aliyunAccessKeyId:string;
     aliyunAccessKeySecret: string;
+    enableNotifyByEmail: boolean;
   }
   interface PublicRuntimeConfig {
     momentsShowComment: boolean;
