@@ -36,6 +36,7 @@
     "vue-sonner": "^1.1.2"
   },
   "devDependencies": {
+    "@alicloud/pop-core": "^1.7.13",
     "@nuxtjs/color-mode": "^3.4.0",
     "@nuxtjs/tailwindcss": "^6.12.0",
     "@types/bcrypt": "^5.0.2",
