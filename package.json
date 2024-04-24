@@ -41,6 +41,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/markdown-it": "^14.0.1",
+    "nodemailer": "^6.9.13",
     "prisma": "^5.11.0",
     "sass": "^1.75.0",
     "shadcn-nuxt": "^0.10.2",
