@@ -7,18 +7,19 @@ type SendEmailOptions = {
 };
 
 export async function sendEmail(options: SendEmailOptions) {
+    const config = useRuntimeConfig()
     const transporter = nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: parseInt(process.env.MAIL_PORT || '587'),
-        secure: process.env.MAIL_SECURE === "true",
+        host: config.mailHost,
+        port: config.mailPort || 587,
+        secure: config.mailSecure || false,
         auth: {
-            user: process.env.MAIL_FROM,
-            pass: process.env.MAIL_PASSWORD,
+            user: config.mailFrom,
+            pass: config.mailPassword,
         },
     });
 
     const mailOptions = {
-        from: `"${process.env.MAIL_NAME}" <${process.env.MAIL_FROM}>`,
+        from: `"${config.mailName}" <${config.mailFrom}>`,
         to: options.email,
         subject: options.subject,
         text: options.message,
@@ -28,7 +29,7 @@ export async function sendEmail(options: SendEmailOptions) {
     try {
         const info = await transporter.sendMail(mailOptions);
         return { success: true, messageId: info.messageId };
-    } catch (error) {
+    } catch (error:any) {
         return { success: false, error: error.message };
     }
 }
