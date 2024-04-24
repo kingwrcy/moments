@@ -156,6 +156,10 @@
               <td>GOOGLE_RECAPTCHA_SITE_KEY(RECAPTCHA网站key)</td>
               <td>{{ $config.public.googleRecaptchaSiteKey }}</td>
             </tr>
+            <tr class="*:border *:p-2">
+              <td>SITE_URL(本站访问地址站点地址)</td>
+              <td>{{ $config.public.siteUrl }}</td>
+            </tr>            
           </tbody>
         </table>
       </CollapsibleContent>

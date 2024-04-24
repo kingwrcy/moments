@@ -33,7 +33,7 @@ const placeholder = ref('发表评论')
 const emit = defineEmits(['commentAdded'])
 const showEmoji = ref(false)
 const keyframes = { transform: 'rotate(360deg)' }
-const props = defineProps<{ memoId: number, reply?: string }>()
+const props = defineProps<{ memoId: number, reply?: string, replyId?: number }>()
 const showEmojiRef = ref<HTMLElement>()
 const info = useStorage('anonymous', {
   email: '',
@@ -108,6 +108,7 @@ const submitComment = async (token?: string) => {
       content: content.value,
       memoId: props.memoId,
       replyTo: props.reply,
+      replyToId: props.replyId,
       author: false,
       email: info.value.email,
       website: info.value.website,
