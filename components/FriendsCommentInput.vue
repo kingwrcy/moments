@@ -121,7 +121,7 @@ const submitComment = async (token?: string) => {
     content.value = ''
     emit('commentAdded')
   } else {
-    toast.warning('评论失败')
+    toast.warning(res.message || '评论失败')
   }
   pending.value = false
 }

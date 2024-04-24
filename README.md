@@ -32,13 +32,7 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 
 ## 自定义其他配置
 
-鉴于萝卜青菜各有所爱,每个人情况不一致,特此使用配置文件配置各项特性化需求,目前支持的所有配置见[这里](https://github.com/kingwrcy/moments/blob/master/.env)
-
-### 使用方法
-
-复制项目根目录下的.env文件,随便你起什么名字,在docker启动时把文件挂载进去,挂载的路径为`/app/.env`
-
-`/app/.env`文件中的配置优先级最高!
+鉴于萝卜青菜各有所爱,每个人情况不一致,特此使用配置文件配置各项特性化需求,目前支持的所有环境变量配置见[这里](https://github.com/kingwrcy/moments/blob/master/.env)
 
 
 ## 使用google recaptchaV3(可选)
