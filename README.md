@@ -32,7 +32,28 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 
 ## 自定义其他配置
 
-鉴于萝卜青菜各有所爱,每个人情况不一致,特此使用配置文件配置各项特性化需求,目前支持的所有环境变量配置见[这里](https://github.com/kingwrcy/moments/blob/master/.env)
+鉴于萝卜青菜各有所爱,每个人情况不一致,特此使用配置文件配置各项特性化需求,目前支持以下环境变量配置见.
+
+<details>
+
+<summary>点我查看</summary>
+
+| KEY  | 默认值 | 描述 |
+| ------------- | ------------- | ------------- |
+| NUXT_PUBLIC_MOMENTS_COMMENT_ENABLE  | true  | 是否开启评论 |
+| NUXT_PUBLIC_MOMENTS_SHOW_COMMENT  | true  | 是否显示评论 |
+| NUXT_PUBLIC_MOMENTS_COMMENT_MAX_LENGTH  | 120  | 评论最大字数 |
+| NUXT_PUBLIC_MOMENTS_COMMENT_ORDER_BY  | desc  | 评论的显示顺序,desc:倒序,asc:顺序 |
+| NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_DOUBAN  | true  | 是否显示引入豆瓣读书/视频按钮 |
+| NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_MUSIC163  | true  | 是否显示引入网易云音乐按钮 |
+| NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_VIDEO  | true  | 是否显示引入youtube,b站,在线视频按钮 |
+| NUXT_PUBLIC_MOMENTS_MAX_LINE  | true  | 单条发言最大行数,最大10行,超过折叠 |
+| NUXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY  | true  | google recaptchaV3 HTML 代码中使用此网站密钥 |
+| NUXT_GOOGLE_RECAPTCHA_SECRET_KEY  | true  | google recaptchaV3 网站和 reCAPTCHA 之间的通信密钥 |
+
+</details>
+
+
 
 
 ## 使用google recaptchaV3(可选)

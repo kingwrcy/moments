@@ -56,7 +56,7 @@ if (config.public.googleRecaptchaSiteKey) {
     script: [
       {
         type: 'text/javascript',
-        src: 'https://recaptcha.net/recaptcha/api.js?render=6LdRfcQpAAAAAIy_YmMO07TlqKYMxx_IedeF33uh'
+        src: 'https://recaptcha.net/recaptcha/api.js?render='+config.public.googleRecaptchaSiteKey
       }
     ]
   })
