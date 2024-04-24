@@ -12,6 +12,8 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 
 [阿里云OSS配置](https://jerry.mblog.club/moments-config-aliyun)
 
+又拍云 不支持[使用预签名 URL 上传对象](https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/userguide/PresignedUrlUploadObject.html),所以不支持又拍云.
+
 
 [在线DEMO](https://m.mblog.club),欢迎体验.
 
@@ -59,7 +61,7 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 ## 使用google recaptchaV3(可选)
 
 自行去[google recaptchaV3 admin console](https://www.google.com/recaptcha/admin/create)开通,每月100万次免费调用.
-开通成功后复制网站密钥和通信密钥,填入`/app/.env`文件中
+开通成功后复制网站密钥和通信密钥,填入上方的环境变量对应的key里面.
 
 
 ## Docker启动
