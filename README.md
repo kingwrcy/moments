@@ -49,9 +49,9 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 | NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_DOUBAN  | true  | 是否显示引入豆瓣读书/视频按钮 |
 | NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_MUSIC163  | true  | 是否显示引入网易云音乐按钮 |
 | NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_VIDEO  | true  | 是否显示引入youtube,b站,在线视频按钮 |
-| NUXT_PUBLIC_MOMENTS_MAX_LINE  | true  | 单条发言最大行数,最大10行,超过折叠 |
-| NUXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY  | true  | google recaptchaV3 HTML 代码中使用此网站密钥 |
-| NUXT_GOOGLE_RECAPTCHA_SECRET_KEY  | true  | google recaptchaV3 网站和 reCAPTCHA 之间的通信密钥 |
+| NUXT_PUBLIC_MOMENTS_MAX_LINE  | 4  | 单条发言最大行数,最大10行,超过折叠 |
+| NUXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY  | 无  | google recaptchaV3 HTML 代码中使用此网站密钥 |
+| NUXT_GOOGLE_RECAPTCHA_SECRET_KEY  | 无  | google recaptchaV3 网站和 reCAPTCHA 之间的通信密钥 |
 
 </details>
 
