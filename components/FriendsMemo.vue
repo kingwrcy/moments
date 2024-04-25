@@ -60,17 +60,17 @@
             <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token"
               @click="pinned(); showToolbar = false">
               <Pin :size=14 />
-              <div>{{ (props.memo.pinned ? '取消' : '') + '置顶' }}</div>
+              <div class="hidden md:block">{{ (props.memo.pinned ? '取消' : '') + '置顶' }}</div>
             </div>
             <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token && !route.path.startsWith('/detail')" @click="editMemo">
               <FilePenLine :size=14 />
-              <div>编辑</div>
+              <div class="hidden md:block">编辑</div>
             </div>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token">
                   <Trash2 :size=14 />
-                  <div>删除</div>
+                  <div class="hidden md:block">删除</div>
                 </div>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -90,14 +90,14 @@
             <div class="flex flex-row gap-2 cursor-pointer items-center" @click="like">
               <Heart :size=14 v-if="likeList.findIndex((id) => id === props.memo.id) < 0" />
               <HeartCrack :size=14 v-else />
-              <div>{{ likeList.findIndex((id) => id === props.memo.id) >= 0 ? '取消' : '赞' }}</div>
+              <div class="hidden md:block">{{ likeList.findIndex((id) => id === props.memo.id) >= 0 ? '取消' : '赞' }}</div>
             </div>
 
             <div class="flex flex-row gap-2 cursor-pointer items-center"
               v-if="config.public.momentsCommentEnable"
               @click="momentsShowCommentInput = !momentsShowCommentInput; showUserCommentArray = []; showToolbar = false">
               <MessageSquareMore :size=14 />
-              <div>评论</div>
+              <div class="hidden md:block">评论</div>
             </div>
           </div>
         </div>
