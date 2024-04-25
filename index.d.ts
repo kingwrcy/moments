@@ -9,12 +9,12 @@ declare module "nuxt/schema" {
     mailPassword: string;
     mailFrom: string;
     mailFromName: string;
-    aliyunTextJudgeEnable: boolean;
     aliyunAccessKeyId:string;
     aliyunAccessKeySecret: string;
-    enableNotifyByEmail: boolean;
   }
   interface PublicRuntimeConfig {
+    aliyunTextJudgeEnable: boolean;
+    notifyByEmailEnable: boolean;
     momentsShowComment: boolean;
     momentsCommentEnable: boolean;
     momentsCommentOrderBy: string;

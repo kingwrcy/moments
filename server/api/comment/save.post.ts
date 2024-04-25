@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const enableAliyunTextJudge =
-    config.aliyunTextJudgeEnable &&
+    config.public.aliyunTextJudgeEnable &&
     config.aliyunAccessKeyId &&
     config.aliyunAccessKeySecret;
 
@@ -137,9 +137,7 @@ export default defineEventHandler(async (event) => {
 
   await insertComment(userId, request);
 
-  console.log(config.enableNotifyByEmail);
-
-  if (!config.enableNotifyByEmail) {
+  if (!config.public.notifyByEmailEnable) {
     // 未开启邮件通知
     return {
       success: true,

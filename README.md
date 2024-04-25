@@ -52,7 +52,19 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 | NUXT_PUBLIC_MOMENTS_MAX_LINE  | 4  | 单条发言最大行数,最大10行,超过折叠 |
 | NUXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY  | 无  | google recaptchaV3 HTML 代码中使用此网站密钥 |
 | NUXT_GOOGLE_RECAPTCHA_SECRET_KEY  | 无  | google recaptchaV3 网站和 reCAPTCHA 之间的通信密钥 |
-
+| NUXT_PUBLIC_SITE_URL  | 无  | 实例的访问地址 |
+| NUXT_ENABLE_NOTIFY_BY_EMAIL  | false  | 是否启用评论通知 |
+| NUXT_NOTIFY_MAIL  | 无  | 管理员邮箱 |
+| NUXT_MAIL_HOST  | 无  | 邮件服务器地址 |
+| NUXT_MAIL_PORT  | 587  | 邮件服务器端口 |
+| NUXT_MAIL_SECURE  | false  | 邮件服务器是否是安全连接 |
+| NUXT_MAIL_NAME  | 无  | 发件邮箱用户名 |
+| NUXT_MAIL_PASSWORD  | 无  | 发件邮箱密码 |
+| NUXT_MAIL_FROM  | 无  | 发件人邮箱 |
+| NUXT_MAIL_FROM_NAME  | 无  | 发件人名称 |
+| NUXT_ALIYUN_TEXT_JUDGE_ENABLE  | false  | 是否启用阿里云文本审核(只针对评论) |
+| NUXT_ALIYUN_ACCESS_KEY_ID  | 无  | 阿里云AK |
+| NUXT_ALIYUN_ACCESS_KEY_SECRET  | 无  | 阿里云SK |
 </details>
 
 

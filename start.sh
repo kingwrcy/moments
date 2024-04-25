@@ -37,5 +37,4 @@ else
     echo "配置文件 $CONFIG_FILE 不存在，忽略读取并导出环境变量的过程"
 fi
 
-echo $NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_DOUBAN
 node /app/.output/server/index.mjs > output.log 2>&1

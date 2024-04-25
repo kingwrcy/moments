@@ -109,7 +109,7 @@
     </template>
     <Collapsible >
       <CollapsibleTrigger>
-        <div class="cursor-pointer font-bold text-sm">点我查看生效的环境变量</div>
+        <div class="cursor-pointer font-bold text-sm flex justify-between items-center"><div>基础设置</div> <ChevronsUpDown :size=16 /></div>
       </CollapsibleTrigger>
       <CollapsibleContent>
         <table class="w-full border my-2 text-xs" >
@@ -159,11 +159,22 @@
             <tr class="*:border *:p-2">
               <td>SITE_URL(本站访问地址站点地址)</td>
               <td>{{ $config.public.siteUrl }}</td>
-            </tr>            
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>NOTIFY_BY_EMAIL_ENABLE(是否开启评论邮件通知)</td>
+              <td>{{ $config.public.notifyByEmailEnable }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
+              <td>ALIYUN_TEXT_JUDGE_ENABLE(是否开启评论内容阿里云鉴权)</td>
+              <td>{{ $config.public.aliyunTextJudgeEnable }}</td>
+            </tr>
           </tbody>
         </table>
       </CollapsibleContent>
+      
     </Collapsible>
+
+    
     <div class="flex flex-col gap-2 ">
       <Button @click="saveSettings">保存</Button>
     </div>
@@ -176,6 +187,7 @@ import { settingsUpdateEvent } from '~/lib/event'
 const token = useCookie('token')
 import { useStorage } from "@vueuse/core";
 import type { User } from '~/lib/types';
+import {ChevronsUpDown} from 'lucide-vue-next'
 
 const { data: versionData } = await useAsyncData('version', async () => $fetch('/api/version'))
 
