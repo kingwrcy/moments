@@ -1,7 +1,7 @@
 <template>
 
   <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 p-2 sm:p-4"
-    :class="{ 'bg-slate-100 dark:bg-neutral-700': props.memo.pinned }">
+    :class="{ 'bg-slate-100 dark:bg-neutral-800': props.memo.pinned }">
     <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" />
     <div class="flex flex-col gap-.5 flex-1">
       <div class="flex flex-row justify-between items-center">
@@ -38,7 +38,7 @@
         infinite: false,
       },
     }">
-          <img loading="lazy" :src="getImgUrl(img)" class="max-h-[200px] cursor-pointer rounded"
+          <img loading="lazy" :src="getImgUrl(img)" class="w-full object-cover h-full aspect-square	 cursor-zoom-in rounded"
             v-for="(img, index) in props.memo.imgs?.split(',')" :key="index" />
         </FancyBox>
       </div>
@@ -177,7 +177,7 @@ const memoExt = computed(() => JSON.parse(props.memo.ext || '{}') as MemoExt)
 
 const gridCols = computed(() => {
   const imgLen = (props.memo.imgs || '').split(',').length;
-  return imgLen >= 3 ? 3 : imgLen
+  return imgLen >= 3 ? 3 : 2
 })
 
 const like = async () => {

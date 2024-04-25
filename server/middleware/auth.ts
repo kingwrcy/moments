@@ -11,6 +11,7 @@ const needLoginUrl = [
   "/api/user/settings/full",
   "/api/memo/doubanBook",
   "/api/memo/doubanMovie",
+  "/api/files/removePreviewImg",
 ];
 
 export default defineEventHandler(async (event) => {
