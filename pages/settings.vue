@@ -15,24 +15,26 @@
     </div>
     <div class="flex flex-col gap-2 border rounded p-2">
       <Label for="avatarUrl" class="font-bold">头像</Label>
-      <Label class="w-full text-left p-2 shadow-sm cursor-pointer border rounded-sm" for="avatarUrl" >选择文件</Label>
-      <Input type="file" id="avatarUrl" @change="(e: Event) => { uploadImgs(e, 'avatarUrl') }" class="hidden"/>
+      <Label class="w-full text-left p-2 shadow-sm cursor-pointer border rounded-sm" for="avatarUrl">选择文件</Label>
+      <Input type="file" id="avatarUrl" @change="(e: Event) => { uploadImgs(e, 'avatarUrl') }" class="hidden" />
       <Label for="avatarUrl-input" class="font-medium">或者输入在线地址</Label>
       <Input type="text" id="avatarUrl-input" placeholder="或者填入在线地址" autocomplete="off" v-model="state.avatarUrl" />
       <img :src="state.avatarUrl" alt="avatar" class="w-[70px] h-[70px] rounded-xl" v-if="state.avatarUrl" />
     </div>
     <div class="flex flex-col gap-2 border rounded p-2">
       <Label for="favicon" class="font-bold">Favicon</Label>
-      <Label class="w-full text-left p-2 shadow-sm cursor-pointer border rounded-sm" for="avatarUrl" >选择文件</Label>
-      <Input type="file" id="favicon" autocomplete="off" @change="(e: Event) => { uploadImgs(e, 'favicon') }" class="hidden"/>
+      <Label class="w-full text-left p-2 shadow-sm cursor-pointer border rounded-sm" for="favicon">选择文件</Label>
+      <Input type="file" id="favicon" autocomplete="off" @change="(e: Event) => { uploadImgs(e, 'favicon') }"
+        class="hidden" />
       <Label for="favicon-input" class="font-medium">或者输入在线地址</Label>
       <Input type="text" id="favicon-input" placeholder="或者填入在线地址" autocomplete="off" v-model="state.favicon" />
       <img class="max-w-[50px] max-h-[50px]" v-if="state.favicon" :src="state.favicon" alt="" />
     </div>
     <div class="flex flex-col gap-2 border rounded p-2">
       <Label for="coverUrl" class="font-bold">顶部图片</Label>
-      <Label class="w-full text-left p-2 shadow-sm cursor-pointer border rounded-sm" for="avatarUrl" >选择文件</Label>
-      <Input type="file" id="coverUrl" autocomplete="off" @change="(e: Event) => { uploadImgs(e, 'coverUrl') }" class="hidden"/>
+      <Label class="w-full text-left p-2 shadow-sm cursor-pointer border rounded-sm" for="coverUrl">选择文件</Label>
+      <Input type="file" id="coverUrl" autocomplete="off" @change="(e: Event) => { uploadImgs(e, 'coverUrl') }"
+        class="hidden" />
       <Label for="coverUrl-input" class="font-medium">或者输入在线地址</Label>
       <Input type="text" id="coverUrl-input" placeholder="或者填入在线地址" autocomplete="off" v-model="state.coverUrl" />
       <img class="w-full " v-if="state.avatarUrl" :src="state.coverUrl" alt="" />
@@ -110,12 +112,15 @@
         <Input type="text" id="thumbnailSuffix" placeholder="" autocomplete="off" v-model="state.thumbnailSuffix" />
       </div>
     </template>
-    <Collapsible >
+    <Collapsible>
       <CollapsibleTrigger>
-        <div class="cursor-pointer font-bold text-sm flex justify-between items-center"><div>基础设置</div> <ChevronsUpDown :size=16 /></div>
+        <div class="cursor-pointer font-bold text-sm flex justify-between items-center">
+          <div>基础设置</div>
+          <ChevronsUpDown :size=16 />
+        </div>
       </CollapsibleTrigger>
       <CollapsibleContent>
-        <table class="w-full border my-2 text-xs" >
+        <table class="w-full border my-2 text-xs">
           <thead>
             <tr class="*:border *:p-2 *:bg-gray-300">
               <td>配置项(去掉了前缀`NUXT_PUBLIC`)</td>
@@ -123,6 +128,10 @@
             </tr>
           </thead>
           <tbody>
+            <tr class="*:border *:p-2">
+              <td>PAGE_SIZE(分页大小)</td>
+              <td>{{ $config.public.pageSize }}</td>
+            </tr>
             <tr class="*:border *:p-2">
               <td>MOMENTS_COMMENT_ENABLE(是否可以评论)</td>
               <td>{{ $config.public.momentsCommentEnable }}</td>
@@ -174,10 +183,10 @@
           </tbody>
         </table>
       </CollapsibleContent>
-      
+
     </Collapsible>
 
-    
+
     <div class="flex flex-col gap-2 ">
       <Button @click="saveSettings">保存</Button>
     </div>
@@ -190,7 +199,7 @@ import { settingsUpdateEvent } from '~/lib/event'
 const token = useCookie('token')
 import { useStorage } from "@vueuse/core";
 import type { User } from '~/lib/types';
-import {ChevronsUpDown} from 'lucide-vue-next'
+import { ChevronsUpDown } from 'lucide-vue-next'
 
 const { data: versionData } = await useAsyncData('version', async () => $fetch('/api/version'))
 

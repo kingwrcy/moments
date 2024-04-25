@@ -22,7 +22,7 @@
 import { type User, type Memo } from '~/lib/types';
 const token = useCookie('token')
 const userinfo = useState<User>('userinfo')
-
+const config = useRuntimeConfig()
 useHead({
   title: userinfo.value.title || '极简朋友圈',
 })
@@ -31,7 +31,7 @@ useHead({
 const state = reactive({
   memoList: Array<Memo>(),
   page: 1,
-  size: 3,
+  size: config.public.pageSize,
   hasNext: false
 })
 

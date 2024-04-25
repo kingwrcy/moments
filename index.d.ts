@@ -24,6 +24,7 @@ declare module "nuxt/schema" {
     momentsToolbarEnableVideo: boolean;
     momentsMaxLine: number;
     siteUrl:string;
+    pageSize:number;
   }
 }
 // It is always important to ensure you import/export something when augmenting a type

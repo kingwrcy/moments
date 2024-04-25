@@ -26,6 +26,7 @@ export default defineNuxtConfig({
       momentsMaxLine: 4,
       googleRecaptchaSiteKey: "",
       siteUrl:"",
+      pageSize:10,
     },
   },
   modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/color-mode"],
