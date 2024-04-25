@@ -31,15 +31,13 @@
       <DoubanBook :book="memoExt.doubanBook" v-if="memoExt.doubanBook" />
       <DoubanMovie :movie="memoExt.doubanMovie" v-if="memoExt.doubanMovie" />
 
-      <div v-if="props.memo.imgs">
-        <FancyBox class="grid my-1 gap-2" :style="`grid-template-columns: repeat(${gridCols}, minmax(0, 1fr))`"
-          :options="{
-      Carousel: {
-        infinite: false,
-      },
-    }">
-          <img loading="lazy" :src="getImgUrl(img)" class="w-full object-cover h-full aspect-square	 cursor-zoom-in rounded"
-            v-for="(img, index) in props.memo.imgs?.split(',')" :key="index" />
+      <div v-if="imgs.length">
+        <FancyBox class="grid my-1 gap-0.5" :style="gridStyle"
+                  :options="{ Carousel: { infinite: false } }">
+          <img loading="lazy" :src="getImgUrl(img)"
+               :class="imgs.length === 1 ? 'cursor-pointer rounded full-cover-image-single' : 'cursor-pointer rounded full-cover-image-mult'"
+               v-for="(img, index) in imgs" :key="index"
+               :style="imgs.length === 1 ? '' : 'object-fit: cover; object-position: center;'" />
         </FancyBox>
       </div>
       <div class="text-[#576b95] cursor-pointer" v-if="hh > maxHeight && !showAll" @click="showMore">全文</div>
@@ -180,6 +178,28 @@ const gridCols = computed(() => {
   return imgLen >= 3 ? 3 : 2
 })
 
+const imgs = computed(() => props.memo.imgs ? props.memo.imgs.split(',') : []);
+const gridStyle = computed(() => {
+  let style = 'align-items: start;'; // 确保内容顶部对齐
+  switch (imgs.value.length) {
+    case 1:
+      style += 'grid-template-columns: 1fr;';
+      break;
+    case 2:
+      style += 'grid-template-columns: 1fr 1fr; aspect-ratio: 2 / 1;';
+      break;
+    case 3:
+      style += 'grid-template-columns: 1fr 1fr 1fr; aspect-ratio: 3 / 1;';
+      break;
+    case 4:
+      style += 'grid-template-columns: 1fr 1fr; aspect-ratio: 1;';
+      break;
+    default:
+      style += 'grid-template-columns: 1fr 1fr 1fr; aspect-ratio: 3 / 1;';
+  }
+  return style;
+});
+
 const like = async () => {
   showToolbar.value = false
   const contain = likeList.value.find((id) => id === props.memo.id)
@@ -265,3 +285,22 @@ watchOnce(height, () => {
 })
 
 </script>
+
+<style>
+.full-cover-image-mult {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: transparent 1px solid;
+}
+
+.full-cover-image-single {
+  object-fit: cover;
+  object-position: center;
+  max-height: 200px;
+  height: auto;
+  width: auto;
+  border: transparent 1px solid;
+}
+</style>
