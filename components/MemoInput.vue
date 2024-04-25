@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 sm:p-4 pb-2 border-b dark:border-white">
+  <div class="p-2 sm:p-4 pb-2 border-b dark:border-[#C0BEBF]/10">
     <div class="flex flex-row my-2 ">
       <div class="flex flex-1 gap-2 items-center">
         <Popover :open="linkOpen">
@@ -122,13 +122,8 @@
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger as-child>
-                  <svg @click="doubanOpen = true" t="1713855207689"
-                    class="focus:outline-0 cursor-pointer w-[18px] h-[18px]" viewBox="0 0 1024 1024" version="1.1"
-                    xmlns="http://www.w3.org/2000/svg" p-id="1920" width="200" height="200">
-                    <path
-                      d="M394.452305 895.552559c-3.533476 2.222621-7.498788 3.2623-11.400654 3.2623-7.131421 0-14.118556-3.518127-18.228153-10.105149l-107.430778-171.915441c-6.299473-10.041704-3.229554-23.344684 6.811126-29.596062 10.057053-6.332219 23.344684-3.27765 29.596062 6.843872l107.495246 171.915441C407.579277 875.981828 404.524708 889.301182 394.452305 895.552559L394.452305 895.552559zM898.797975 898.81486l-773.619486 0c-11.879562 0-21.473057-9.641591-21.473057-21.441335 0-11.879562 9.593496-21.537526 21.473057-21.537526l773.619486 0c11.879562 0 21.505803 9.657964 21.505803 21.537526C920.303778 889.173269 910.677537 898.81486 898.797975 898.81486L898.797975 898.81486zM766.567371 716.794269l-107.399055 171.915441c-4.076852 6.588045-11.112082 10.105149-18.243503 10.105149-3.901867 0-7.867178-1.039679-11.416004-3.2623-10.057053-6.251378-13.078877-19.570731-6.811126-29.596062l107.463524-171.915441c6.315846-10.121522 19.539009-13.175067 29.579689-6.843872C769.797949 693.449585 772.883217 706.752566 766.567371 716.794269L766.567371 716.794269zM748.388337 640.941698l-472.767464 0c-47.39238 0-85.989443-38.518269-85.989443-85.957721l0-171.915441c0-47.424102 38.598086-85.957721 85.989443-85.957721l472.767464 0c47.40773 0 85.957721 38.533618 85.957721 85.957721l0 171.915441C834.346057 602.423429 795.796066 640.941698 748.388337 640.941698L748.388337 640.941698zM791.367197 383.068536c0-23.712051-19.314904-42.97886-42.97886-42.97886l-472.767464 0c-23.712051 0-42.97886 19.266809-42.97886 42.97886l0 171.915441c0 23.728424 19.266809 42.97886 42.97886 42.97886l472.767464 0c23.663956 0 42.97886-19.25146 42.97886-42.97886L791.367197 383.068536 791.367197 383.068536zM855.819115 168.174234l-687.661765 0c-11.879562 0-21.473057-9.561773-21.473057-21.441335s9.593496-21.537526 21.473057-21.537526l687.661765 0c11.879562 0 21.505803 9.657964 21.505803 21.537526S867.698676 168.174234 855.819115 168.174234L855.819115 168.174234z"
-                      p-id="1921"></path>
-                  </svg>
+                  <img src="https://www.douban.com/favicon.ico" @click="doubanOpen = true" t="1713855207689"
+                    class="focus:outline-0 cursor-pointer w-[18px] h-[18px] " />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>引入豆瓣读书和豆瓣电影</p>
@@ -224,9 +219,9 @@
 
     <div class="grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
       <div v-for="(img, index) in imgs" :key="index" class="relative">
-        <img :src="getImgUrl(img)" class="rounded" />
+        <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square" />
         <Trash2 color="#379d1b" :size="15" class="absolute top-1 right-1 cursor-pointer"
-          @click="imgs.splice(index, 1)" />
+          @click="removePreviewImg(index)" />
       </div>
     </div>
     <div class="flex flex-row justify-between mt-2 items-center gap-2 ">
@@ -402,6 +397,16 @@ const submitMemo = async () => {
   } else {
     toast.warning('提交失败')
   }
+}
+
+const removePreviewImg = async (index: number) => {
+  await $fetch('/api/files/removePreviewImg', {
+    method: 'POST',
+    body: JSON.stringify({
+      path: imgs.value[index]
+    })
+  })
+  imgs.value.splice(index, 1)
 }
 
 const token = useCookie('token')
