@@ -3,6 +3,7 @@
 ![moments github action status](https://img.shields.io/github/actions/workflow/status/kingwrcy/moments/deploy.yml)
 [![docker pull](https://img.shields.io/docker/pulls/kingwrcy/moments)](https://hub.docker.com/repository/docker/kingwrcy/moments)
 
+[更新记录](https://github.com/kingwrcy/moments/blob/master/release.md)
 
 [tg交流群](https://t.me/simple_moments)
 
