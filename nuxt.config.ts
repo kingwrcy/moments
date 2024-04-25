@@ -30,7 +30,6 @@ export default defineNuxtConfig({
     },
   },
   modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/color-mode"],
-  css: ["~/assets/css/index.css"],
   colorMode: {
     classSuffix: "",
   },

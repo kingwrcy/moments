@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
           orderBy: {
             createdAt: "desc",
           },
-          take: size,
+          take: 5,
         },
         _count: {
           select: {
