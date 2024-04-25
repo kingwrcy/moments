@@ -1,8 +1,8 @@
 
 
 ### v0.1.0 发布了
-- 支持评论邮件通知
-- 支持评论使用阿里云文本检测
+- 支持评论邮件通知,感谢@randall_anjie的PR
+- 支持评论使用阿里云文本检测,感谢@randall_anjie的PR
 - 支持使用[配置文件](https://github.com/kingwrcy/moments/blob/master/config.properties)配置个性化配置,环境变量优先级高于配置文件
 - 优化多图展示/优化暗色模式的一些显示
 - 修复编辑或新增发言之后翻页无效的bug
