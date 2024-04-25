@@ -4,7 +4,7 @@
   "typescript": true,
   "tailwind": {
     "config": "tailwind.config.ts",
-    "css": "assets/index.css",
+    "css": "assets/css/index.css",
     "baseColor": "stone",
     "cssVariables": true
   },
