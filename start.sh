@@ -5,7 +5,7 @@ npx prisma migrate deploy
 
 export VERSION=$(cat /app/version)
 
-CONFIG_FILE="/app/config"
+CONFIG_FILE="/app/data/config.properties"
 
 if [ -f "$CONFIG_FILE" ]; then
     # 使用进程替换来过滤掉注释行

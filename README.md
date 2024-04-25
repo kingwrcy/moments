@@ -42,7 +42,7 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 配置文件的使用方法:docker启动时把配置文件挂载进去,挂载目录为
 
 ```
-/app/config
+/app/data/config.properties
 ```
 
 你可以先复制[这个文件](https://github.com/kingwrcy/moments/blob/master/config.properties),修改,然后挂载进docker内就可以了.
