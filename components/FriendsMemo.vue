@@ -34,10 +34,9 @@
       <div v-if="imgs.length">
         <FancyBox class="grid my-1 gap-0.5" :style="gridStyle"
                   :options="{ Carousel: { infinite: false } }">
-          <img loading="lazy" :src="getImgUrl(img)"
-               :class="imgs.length === 1 ? 'cursor-pointer rounded full-cover-image-single' : 'cursor-pointer rounded full-cover-image-mult'"
-               v-for="(img, index) in imgs" :key="index"
-               :style="imgs.length === 1 ? '' : 'object-fit: cover; object-position: center;'" />
+          <img loading="lazy" :src="getImgUrl(img)" class="cursor-zoom-in rounded"
+               :class="imgs.length === 1 ? 'full-cover-image-single' : 'full-cover-image-mult'"
+               v-for="(img, index) in imgs" :key="index" />
         </FancyBox>
       </div>
       <div class="text-[#576b95] cursor-pointer" v-if="hh > maxHeight && !showAll" @click="showMore">全文</div>
@@ -173,11 +172,6 @@ const likeList = useStorage<Array<number>>('likeList', [])
 
 const memoExt = computed(() => JSON.parse(props.memo.ext || '{}') as MemoExt)
 
-const gridCols = computed(() => {
-  const imgLen = (props.memo.imgs || '').split(',').length;
-  return imgLen >= 3 ? 3 : 2
-})
-
 const imgs = computed(() => props.memo.imgs ? props.memo.imgs.split(',') : []);
 const gridStyle = computed(() => {
   let style = 'align-items: start;'; // 确保内容顶部对齐
@@ -286,7 +280,7 @@ watchOnce(height, () => {
 
 </script>
 
-<style>
+<style scoped>
 .full-cover-image-mult {
   object-fit: cover;
   object-position: center;
@@ -301,6 +295,7 @@ watchOnce(height, () => {
   max-height: 200px;
   height: auto;
   width: auto;
+  min-width: 50%;
   border: transparent 1px solid;
 }
 </style>
