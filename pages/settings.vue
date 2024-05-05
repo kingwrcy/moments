@@ -129,6 +129,10 @@
           </thead>
           <tbody>
             <tr class="*:border *:p-2">
+              <td>NUXT_PUBLIC_TIME_FORMAT(时间格式)</td>
+              <td>{{ $config.public.timeFormat }}</td>
+            </tr>
+            <tr class="*:border *:p-2">
               <td>PAGE_SIZE(分页大小)</td>
               <td>{{ $config.public.pageSize }}</td>
             </tr>

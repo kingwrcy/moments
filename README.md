@@ -53,6 +53,7 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 
 | KEY  | 默认值 | 描述 |
 | ------------- | ------------- | ------------- |
+| NUXT_PUBLIC_TIME_FORMAT  | AGO  | 时间显示格式 AGO:几分钟前,几小时前,几天前,几月前,几年前,DATE:yyyy-MM-dd HH:mm:ss |
 | NUXT_PUBLIC_PAGE_SIZE  | 10  | 分页大小 |
 | NUXT_PUBLIC_MOMENTS_COMMENT_ENABLE  | true  | 是否开启评论 |
 | NUXT_PUBLIC_MOMENTS_SHOW_COMMENT  | true  | 是否显示评论 |

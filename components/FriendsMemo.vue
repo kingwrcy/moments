@@ -44,9 +44,11 @@
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none">
         {{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
       <div class="toolbar relative flex flex-row justify-between select-none my-1">
-        <div class="flex-1 text-gray text-xs text-[#9DA4B0] ">{{
+        <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-if="$config.public.timeFormat === 'AGO'">{{
       dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
         '') }}</div>
+        <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-else>{{
+      dayjs(props.memo.createdAt).format('YYYY-MM-DD hh:mm:ss')}}</div>
         <div @click="showToolbar = !showToolbar"
           class="toolbar-icon mb-2 px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
           <img src="~/assets/img/dian.svg" class="w-3 h-3" />

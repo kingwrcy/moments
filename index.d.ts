@@ -25,6 +25,7 @@ declare module "nuxt/schema" {
     momentsMaxLine: number;
     siteUrl:string;
     pageSize:number;
+    timeFormat:'AGO'&'DATE'
   }
 }
 // It is always important to ensure you import/export something when augmenting a type

@@ -27,6 +27,7 @@ export default defineNuxtConfig({
       googleRecaptchaSiteKey: "",
       siteUrl:"",
       pageSize:10,
+      timeFormat:'AGO',
     },
   },
   modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/color-mode"],
