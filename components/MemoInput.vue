@@ -69,7 +69,8 @@
                   如何获取?</NuxtLink>
               </div>
               <Input class="my-2" placeholder="请输入网易云音乐代码" v-model="music163Url" />
-              <Button size="sm" @click="importMusic">提交</Button>
+              <Button size="sm" class="mr-2" @click="importMusic">提交</Button>
+              <Button size="sm" variant="ghost" @click="music163IfrUrl='';music163Url='';music163Open=false;">清空</Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -250,7 +251,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
 import type { DoubanBook, DoubanMovie, Memo, MemoExt } from '~/lib/types';
-import { useAnimate } from '@vueuse/core';
+import { useAnimate ,useWindowScroll} from '@vueuse/core';
 import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check, Loader2 } from 'lucide-vue-next'
 
 const config = useRuntimeConfig()
@@ -302,7 +303,6 @@ const externalFavicon = ref('')
 const externalPending = ref(false)
 const externalFetchError = ref(false)
 const externalTitleEditing = ref(false)
-
 
 onMounted(() => {
   textareaRef.value?.getRef().focus()
@@ -534,13 +534,19 @@ const emojiSelected = (emoji: string) => {
   content.value = target.value!
   // showEmoji.value = false
 }
-memoUpdateEvent.on((event: Memo & { index: number }) => {
-  memoUpdateIndex.value = event.index
+memoUpdateEvent.on((event: Memo & { index?: number }) => {
+  if (event.index) {
+    memoUpdateIndex.value = event.index!
+  }
   content.value = event.content
   id.value = event.id
   if (event.imgs) {
     imgs.value = event.imgs?.split(',')
+  }else{
+    imgs.value = []
   }
+
+  console.log(event.music163Url)
   location.value = event.location || ''
   externalFavicon.value = event.externalFavicon || ''
   externalTitle.value = event.externalTitle || ''
@@ -550,6 +556,9 @@ memoUpdateEvent.on((event: Memo & { index: number }) => {
   doubanMovie.value = memoExt.doubanMovie
   youtubeIfrUrl.value = memoExt.youtubeUrl
   videoIfrUrl.value = memoExt.videoUrl
+  music163IfrUrl.value = event.music163Url || ''
+  music163Url.value= `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
+  textareaRef.value?.getRef().focus()
 })
 </script>
 

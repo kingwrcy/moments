@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper w-full h-full bg-[#f1f5f9] dark:bg-slate-800 rounded-md dark:text-[#C0BEBF]">
-    <ScrollArea class="h-full" type="hover">
+    <ScrollArea class="h-full" type="hover" >
       <div class="main lg:w-[567px] mx-auto shadow-2xl bg-white dark:bg-[#181818]">
         <HeaderImg />
         <slot />
@@ -16,8 +16,9 @@
 
 <script setup lang="ts">
 import { Toaster } from '@/components/ui/sonner';
-import type { User } from '~/lib/types';
+import type { Memo, User } from '~/lib/types';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { memoUpdateEvent } from '~/lib/event';
 
 const userinfo = useState<User>('userinfo')
 await callOnce(async () => {
@@ -26,6 +27,13 @@ await callOnce(async () => {
 })
 
 const config = useRuntimeConfig()
+
+memoUpdateEvent.on((event: Memo & { index?: number }) => {
+  const target = document.querySelector('div[data-radix-scroll-area-viewport]')
+  if(target){
+    target.scrollTop = 0
+  }
+})
 
 
 useHead({
