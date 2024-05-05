@@ -70,7 +70,8 @@
               </div>
               <Input class="my-2" placeholder="请输入网易云音乐代码" v-model="music163Url" />
               <Button size="sm" class="mr-2" @click="importMusic">提交</Button>
-              <Button size="sm" variant="ghost" @click="music163IfrUrl='';music163Url='';music163Open=false;">清空</Button>
+              <Button size="sm" variant="ghost"
+                @click="music163IfrUrl = ''; music163Url = ''; music163Open = false;">清空</Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -251,7 +252,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
 import type { DoubanBook, DoubanMovie, Memo, MemoExt } from '~/lib/types';
-import { useAnimate ,useWindowScroll} from '@vueuse/core';
+import { useAnimate } from '@vueuse/core';
 import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check, Loader2 } from 'lucide-vue-next'
 
 const config = useRuntimeConfig()
@@ -350,6 +351,10 @@ const memoUpdateIndex = useState<number>('memoUpdateIndex', () => -1)
 
 const imgs = ref<string[]>([])
 const submitMemo = async () => {
+  if (content.value === '' && imgs.value.length === 0 && music163IfrUrl.value === '' && bilibiliIfrUrl.value === '' && videoIfrUrl.value === '' && youtubeIfrUrl.value === '' && externalUrl.value === '' && !doubanBook.value && !doubanMovie.value) {
+    toast.warning('请输入内容')
+    return
+  }
   const res = await $fetch('/api/memo/save', {
     method: 'POST',
     body: JSON.stringify({
@@ -542,7 +547,7 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   id.value = event.id
   if (event.imgs) {
     imgs.value = event.imgs?.split(',')
-  }else{
+  } else {
     imgs.value = []
   }
 
@@ -557,7 +562,7 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   youtubeIfrUrl.value = memoExt.youtubeUrl
   videoIfrUrl.value = memoExt.videoUrl
   music163IfrUrl.value = event.music163Url || ''
-  music163Url.value= `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
+  music163Url.value = `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
   textareaRef.value?.getRef().focus()
 })
 </script>

@@ -295,7 +295,6 @@ watchOnce(height, () => {
   max-height: 200px;
   height: auto;
   width: auto;
-  min-width: 50%;
   border: transparent 1px solid;
 }
 </style>
