@@ -27,6 +27,7 @@
         border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
       <video class="w-full h-[250px] my-2" :src="memoExt.videoUrl" controls v-if="memoExt.videoUrl"></video>
+      <video class="w-full h-[250px] my-2" :src="memoExt.localVideoUrl" controls v-if="memoExt.localVideoUrl"></video>
 
       <DoubanBook :book="memoExt.doubanBook" v-if="memoExt.doubanBook" />
       <DoubanMovie :movie="memoExt.doubanMovie" v-if="memoExt.doubanMovie" />

@@ -79,4 +79,5 @@ export type MemoExt = {
   doubanMovie: DoubanMovie;
   youtubeUrl:string;
   videoUrl:string;
+  localVideoUrl:string;
 };

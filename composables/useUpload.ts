@@ -9,8 +9,8 @@ export type UploadCallBack = (res: {
 
 export const useUpload = async (file: File, cb: UploadCallBack) => {
 
-  if(!file.type.startsWith("image")){
-    toast.error("只支持上传图片文件");
+  if(!file.type.startsWith("image") && !file.type.startsWith("video")){
+    toast.error("只支持上传图片/视频文件");
     return
   }
 

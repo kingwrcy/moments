@@ -93,6 +93,10 @@
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="bilibiliOpen = false">
             <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2 mb-2">
+                <Label for="localVideo" :class="buttonVariants({ variant: 'outline' })">上传本地视频</Label>
+                <Input class="my-2 hidden" type="file" id="localVideo" name="localVideo" @change="uploadLocalVideo" />
+              </div>
               <div class="flex flex-col gap-2">
                 <div class=" text-xs  flex justify-between"><span>嵌入B站视频</span>
                   <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
@@ -202,7 +206,20 @@
     <iframe class="w-full h-[250px] my-2" v-if="youtubeIfrUrl" :src="youtubeIfrUrl" scrolling="no" border="0"
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
-    <video class="w-full h-[250px] my-2" :src="videoIfrUrl" controls v-if="videoIfrUrl"></video>
+    <div class="relative"  v-if="videoIfrUrl">
+      <video class="w-full h-[250px] my-2" :src="videoIfrUrl" controls></video>
+      <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
+        @click="videoIfrUrl = ''; videoUrl = ''" />
+    </div>
+
+    <div class="relative" v-if="localVideoUrl && !localVideoUploading">
+      <video class="w-full h-[250px] my-2" :src="localVideoUrl" controls></video>
+      <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
+        @click="localVideoUploading = false; localVideoUrl = ''" />
+    </div>
+    <div v-if="localVideoUploading" class="text-sm my-2">视频上传中,请耐心等待上传完成!</div>
+
+
 
     <DoubanBook :book="doubanBook" v-if="doubanBook" />
     <DoubanMovie :movie="doubanMovie" v-if="doubanMovie" />
@@ -222,7 +239,7 @@
     <div class="grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
       <div v-for="(img, index) in imgs" :key="index" class="relative">
         <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square" />
-        <Trash2 color="#379d1b" :size="15" class="absolute top-1 right-1 cursor-pointer"
+        <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
           @click="removePreviewImg(index)" />
       </div>
     </div>
@@ -248,7 +265,7 @@
 <script setup lang="ts">
 import { getImgUrl, insertTextAtCursor } from '~/lib/utils';
 import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
 import type { DoubanBook, DoubanMovie, Memo, MemoExt } from '~/lib/types';
@@ -279,6 +296,8 @@ const music163Url = ref('')
 const music163IfrUrl = ref('')
 const music163Open = ref(false)
 
+const localVideoUrl = ref('')
+const localVideoUploading = ref(false)
 const youtubeUrl = ref('')
 const youtubeIfrUrl = ref('')
 const videoUrl = ref('')
@@ -351,7 +370,11 @@ const memoUpdateIndex = useState<number>('memoUpdateIndex', () => -1)
 
 const imgs = ref<string[]>([])
 const submitMemo = async () => {
-  if (content.value === '' && imgs.value.length === 0 && music163IfrUrl.value === '' && bilibiliIfrUrl.value === '' && videoIfrUrl.value === '' && youtubeIfrUrl.value === '' && externalUrl.value === '' && !doubanBook.value && !doubanMovie.value) {
+  if (content.value === '' && imgs.value.length === 0
+    && music163IfrUrl.value === '' && bilibiliIfrUrl.value === ''
+    && videoIfrUrl.value === '' && youtubeIfrUrl.value === ''
+    && externalUrl.value === '' && !doubanBook.value
+    && !doubanMovie.value && localVideoUrl.value === '') {
     toast.warning('请输入内容')
     return
   }
@@ -371,7 +394,8 @@ const submitMemo = async () => {
         doubanBook: doubanBook.value,
         doubanMovie: doubanMovie.value,
         youtubeUrl: youtubeIfrUrl.value,
-        videoUrl: videoIfrUrl.value
+        videoUrl: videoIfrUrl.value,
+        localVideoUrl: localVideoUrl.value
       }
     })
   })
@@ -397,6 +421,7 @@ const submitMemo = async () => {
     doubanMovie.value = undefined
     douban.id = ''
     douban.type = 'book'
+    localVideoUrl.value = ''
     emit(id.value > 0 ? 'memoUpdated' : 'memoAdded')
     id.value = -1
   } else {
@@ -482,7 +507,7 @@ const uploadImgs = async (event: Event) => {
   if (!file) {
     return
   }
-
+  localVideoUploading.value = true
   await useUpload(file, async (res) => {
     if (res.success) {
       (event.target as HTMLInputElement).value = ''
@@ -491,6 +516,7 @@ const uploadImgs = async (event: Event) => {
       toast.warning(res.message || '上传失败')
     }
   })
+  localVideoUploading.value = false
 }
 
 const importMusic = () => {
@@ -531,6 +557,26 @@ const importVideo = () => {
   bilibiliOpen.value = false
 }
 
+const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg']
+const uploadLocalVideo = async (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) {
+    return
+  }
+  if (!validVideoTypes.includes(file.type)) {
+    toast.warning('不支持的视频类型,只支持mp4/webm/ogg格式.')
+    return;
+  }
+  bilibiliOpen.value = false
+  await useUpload(file, async (res) => {
+    if (res.success) {
+      (event.target as HTMLInputElement).value = ''
+      localVideoUrl.value = res.filename
+    } else {
+      toast.warning(res.message || '上传失败')
+    }
+  })
+}
 
 
 const emojiSelected = (emoji: string) => {
@@ -551,7 +597,6 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
     imgs.value = []
   }
 
-  console.log(event.music163Url)
   location.value = event.location || ''
   externalFavicon.value = event.externalFavicon || ''
   externalTitle.value = event.externalTitle || ''
@@ -561,6 +606,7 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   doubanMovie.value = memoExt.doubanMovie
   youtubeIfrUrl.value = memoExt.youtubeUrl
   videoIfrUrl.value = memoExt.videoUrl
+  localVideoUrl.value = memoExt.localVideoUrl
   music163IfrUrl.value = event.music163Url || ''
   music163Url.value = `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
   textareaRef.value?.getRef().focus()

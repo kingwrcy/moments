@@ -12,10 +12,10 @@ export default defineEventHandler(async (event) => {
     };
   }
   const file = formData[0] as FileInfo;
-  if (!file.type.startsWith("image")) {
+  if (!file.type.startsWith("image") && !file.type.startsWith("video")) {
     return {
       success: false,
-      message: "只支持上传图片文件",
+      message: "只支持上传图片/视频文件",
       filename: "",
     };
   }
