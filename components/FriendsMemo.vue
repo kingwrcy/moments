@@ -8,7 +8,7 @@
         <div class="username text-[#576b95] cursor-default mb-1 dark:text-white">{{ props.memo.user.nickname }}</div>
         <Pin :size=14 v-if="props.memo.pinned" />
       </div>
-      <div class="memo-content text-sm friend-md" ref="el" v-html="props.memo.content.replaceAll(/\n/g, '<br/>')">
+      <div class="memo-content text-sm friend-md mome-container" ref="el" v-html="'<span>'+props.memo.content.replaceAll(/\n/g, '<br/>').replace(/#(\S+)/g, '</span><a style=color:#3C4F7E href=/tags/$1>#$1</a><span>')+'</span>'">
       </div>
 
       <div class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
