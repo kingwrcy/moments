@@ -46,13 +46,13 @@ useHead({
   ],
   style: [
     {
-      textContent: userinfo.value?.css || '',
+      innerHTML: userinfo.value?.css || '',
     }
   ],
   script: [
     {
       type: 'text/javascript',
-      textContent: userinfo.value?.js || '',
+      innerHTML: userinfo.value?.js || '',
     }
   ]
 })
