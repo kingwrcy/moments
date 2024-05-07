@@ -5,6 +5,8 @@
 
 [更新记录](https://github.com/kingwrcy/moments/blob/master/release.md)
 
+[常见问题看这里](https://github.com/kingwrcy/moments/blob/master/q&a.md)
+
 [tg交流群](https://t.me/simple_moments)
 
 S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存储到对象存储时才需要配置,默认图片存在本地,可备份):
