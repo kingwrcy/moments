@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import prisma from "~/lib/db";
 import short from "short-uuid";
 import fs from "fs/promises";
-import https from "https";
 type Request = {
   id: number;
 };

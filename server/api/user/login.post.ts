@@ -15,7 +15,7 @@ export type JwtPayload = {
 };
 
 export default defineEventHandler(async (event) => {
-  const {username,password} = (await readBody(event)) as loginReq;
+  const { username, password } = (await readBody(event)) as loginReq;
   let token = "";
   if (!username || !password) {
     return {
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
   const user = await prisma.user.findFirst({
     where: {
-      username
+      username,
     },
   });
 
@@ -54,6 +54,6 @@ export default defineEventHandler(async (event) => {
   return {
     success: true,
     username: user.username,
-    message:""
+    message: "",
   };
 });
