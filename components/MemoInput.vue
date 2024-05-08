@@ -207,14 +207,14 @@
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
     <div class="relative"  v-if="videoIfrUrl">
-      <video class="w-full h-[250px] my-2" :src="videoIfrUrl" controls></video>
-      <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
+      <video class="w-2/3 my-2" :src="videoIfrUrl" controls></video>
+      <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer rounded"
         @click="videoIfrUrl = ''; videoUrl = ''" />
     </div>
 
     <div class="relative" v-if="localVideoUrl && !localVideoUploading">
-      <video class="w-full h-[250px] my-2" :src="localVideoUrl" controls></video>
-      <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
+      <video class="w-2/3 my-2" :src="localVideoUrl" controls></video>
+      <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer rounded"
         @click="localVideoUploading = false; localVideoUrl = ''" />
     </div>
     <div v-if="localVideoUploading" class="text-sm my-2">视频上传中,请耐心等待上传完成!</div>
@@ -557,14 +557,14 @@ const importVideo = () => {
   bilibiliOpen.value = false
 }
 
-const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg']
+const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime']
 const uploadLocalVideo = async (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) {
     return
   }
   if (!validVideoTypes.includes(file.type)) {
-    toast.warning('不支持的视频类型,只支持mp4/webm/ogg格式.')
+    toast.warning('不支持的视频类型,只支持mp4/webm/ogg/mov格式.')
     return;
   }
   bilibiliOpen.value = false
