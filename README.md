@@ -1,21 +1,19 @@
 # 极简朋友圈
 
-[![docker pull](https://img.shields.io/badge/moments-更新记录-blue)](https://github.com/kingwrcy/moments/blob/master/release.md)
-[![docker pull](https://img.shields.io/badge/moments-常见问题-blue)](https://github.com/kingwrcy/moments/blob/master/q&a.md)
 ![moments github action status](https://img.shields.io/github/actions/workflow/status/kingwrcy/moments/deploy.yml)
 [![docker pull](https://img.shields.io/docker/pulls/kingwrcy/moments)](https://hub.docker.com/repository/docker/kingwrcy/moments)
-[![docker pull](https://img.shields.io/badge/Telegram-group-blue)](https://t.me/simple_moments)
-[![docker pull](https://img.shields.io/badge/1panel-本地安装-blue)](https://ono.ee/?p=1713750155422)
 
+[更新记录](https://github.com/kingwrcy/moments/blob/master/release.md)
 
-## S3配置教程
+[常见问题看这里](https://github.com/kingwrcy/moments/blob/master/q&a.md)
 
-[![docker pull](https://img.shields.io/badge/CF-R2配置-blue)](https://jerry.mblog.club/moments-r2-config)
-[![docker pull](https://img.shields.io/badge/阿里云-OSS配置-blue)](https://jerry.mblog.club/moments-config-aliyun)
-
+[tg交流群](https://t.me/simple_moments)
 
 S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存储到对象存储时才需要配置,默认图片存在本地,可备份):
 
+[Cloudflare R2配置](https://jerry.mblog.club/moments-r2-config)  
+
+[阿里云OSS配置](https://jerry.mblog.club/moments-config-aliyun)
 
 又拍云 不支持[使用预签名 URL 上传对象](https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/userguide/PresignedUrlUploadObject.html),所以不支持又拍云.
 
