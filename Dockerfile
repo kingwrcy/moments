@@ -40,7 +40,7 @@ COPY --from=builder /app/.output /app/.output
 COPY --from=builder /app/prisma /app/prisma
 COPY --from=builder /app/start.sh /app/start.sh
 COPY --from=builder /app/version /app/version
-COPY --from=builder /app/config.json /app/data/config.json
+COPY --from=builder /app/config.json .
 
 RUN npm init -y
 RUN npm install -g prisma

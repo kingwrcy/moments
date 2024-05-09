@@ -137,7 +137,6 @@ import { settingsUpdateEvent } from '~/lib/event'
 const token = useCookie('token')
 import { useStorage } from "@vueuse/core";
 import type { User } from '~/lib/types';
-import { buttonVariants } from '@/components/ui/button'
 import { encode } from 'js-base64';
 const { data: versionData } = await useAsyncData('version', async () => $fetch('/api/version'))
 
