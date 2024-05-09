@@ -45,6 +45,7 @@
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none">
         {{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
       <div class="toolbar relative flex flex-row justify-between select-none my-1">
+        <div v-if="memo.showType==0" class="text-xs text-[#fc5185]">私密</div> &nbsp;
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-if="publicConfig.dateTimeFormat === 'AGO'">{{
       dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
         '') }}</div>

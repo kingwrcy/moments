@@ -8,6 +8,9 @@ type ListMemoReq = {
 };
 
 export default defineEventHandler(async (event) => {
+  const cookie = event.headers.get('cookie') || '';
+  let showType = cookie ? [{ showType: 1 },{ showType: 0 }] : [{ showType: 1 }]
+
   const config = ((await fs.readFile(`${process.env.CONFIG_FILE}`)).toString())
   const sysConfig = JSON.parse(config) as SysConfig
 
@@ -39,6 +42,7 @@ export default defineEventHandler(async (event) => {
     },
     where: {
       pinned: false,
+      OR: showType,
     },
     orderBy: {
       createdAt: "desc",
