@@ -58,7 +58,7 @@ const emailReg =
 
 export default defineEventHandler(async (event) => {
   const config = ((await fs.readFile(`${process.env.CONFIG_FILE}`)).toString())
-  const sysConfig = JSON.parse(config).private as SysConfig
+  const sysConfig = JSON.parse(config) as SysConfig
   const request = (await readBody(event)) as SaveCommentReq;
   const { content, email, memoId, replyToId, username, website, token } =
     request;

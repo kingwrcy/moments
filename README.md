@@ -65,6 +65,8 @@ Docker Compose启动看[这里](https://github.com/kingwrcy/moments/blob/master/
 DATABASE_URL="file:/app/data/db.sqlite" 
 -- 本地上传的文件目录
 UPLOAD_DIR="/app/data/upload"
+-- 配置文件目录(可以复制项目根目录的)
+CONFIG_FILE=/app/data/config.json
 ```
 
 执行命令
