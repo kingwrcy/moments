@@ -193,7 +193,7 @@ state.thumbnailSuffix = data?.thumbnailSuffix || ''
 state.css = data?.css || ''
 state.js = data?.js || ''
 state.beianNo = data?.beianNo || ''
-state.config = data?.config || ''
+state.config = data?.config || '{"public":{"siteUrl":"","enableComment":true,"enableShowComment":true,"commentMaxLength":120,"memoMaxLine":4,"googleRecaptchaSiteKey":"","pageSize":10,"dateTimeFormat":"AGO"},"private":{"commentOrderBy":"desc","enableDouban":true,"enableMusic163":true,"enableVideo":true,"googleRecaptchaSecretKey":"","googleRecaptchaEnable":false,"enableNotifyByEmail":false,"adminEmail":"","emailHost":"","emailPort":587,"emailSecure":true,"emailLoginName":"","emailPassword":"","emailFrom":"","emailFromName":"","enableAliyunJudge":false,"aliyunAk":"","aliyunSk":""}}'
 enableS3.value = state.enableS3
 
 
@@ -245,8 +245,8 @@ const saveSettings = async () => {
 }
 
 
-const openConfigUrl = () => {  
-  window.open(`https://moments-config.vercel.app?config=${encode(state.config)}`)
+const openConfigUrl = () => {
+  window.open(`https://mconfig.mblog.club/?config=${encode(state.config)}`)
 }
 
 

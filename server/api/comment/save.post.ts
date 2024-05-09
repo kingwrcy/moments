@@ -86,9 +86,8 @@ export default defineEventHandler(async (event) => {
     sysConfig.private.aliyunSk;
 
   if (sysConfig.private.googleRecaptchaSecretKey) {
-    const response = (await $fetch(
-      `https://recaptcha.net/recaptcha/api/siteverify?secret=${config.googleRecaptchaSecretKey}&response=${token}`
-    )) as any as recaptchaResponse;
+    const url = `https://recaptcha.net/recaptcha/api/siteverify?secret=${sysConfig.private.googleRecaptchaSecretKey}&response=${token}`
+    const response = (await $fetch(url)) as any as recaptchaResponse;
     if (response.score <= 0.5) {
       return {
         success: false,
@@ -118,7 +117,7 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    const aliJudgeResponse2 = (await aliTextJudge(
+    const aliJudgeResponse2 = (await aliTextJudge(sysConfig,
       username,
       "nickname_detection"
     )) as any;
