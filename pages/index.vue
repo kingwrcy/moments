@@ -19,10 +19,10 @@
 </template>
 
 <script setup lang="ts">
-import { type User, type Memo } from '~/lib/types';
+import type { User, Memo, PublicConfig } from '~/lib/types';
 const token = useCookie('token')
 const userinfo = useState<User>('userinfo')
-const config = useRuntimeConfig()
+const publicConfig = useState<PublicConfig>('publicConfig')
 useHead({
   title: userinfo.value.title || '极简朋友圈',
 })
@@ -31,7 +31,7 @@ useHead({
 const state = reactive({
   memoList: Array<Memo>(),
   page: 1,
-  size: config.public.pageSize,
+  size: publicConfig.value.pageSize,
   hasNext: false
 })
 

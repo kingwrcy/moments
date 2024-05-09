@@ -43,7 +43,7 @@ const login = async () => {
 
   if (res.success) {
     toast.success('登录成功',)
-    await navigateTo('/')
+    location.href='/'
   } else {
     toast.warning(res.message || '登录失败')
   }

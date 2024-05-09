@@ -1,0 +1,32 @@
+{
+  "public": {
+    "siteUrl": "",
+    "enableComment": true,
+    "enableShowComment": true,
+    "commentMaxLength": 120,
+    "memoMaxLine": 4,
+    "googleRecaptchaSiteKey": "",
+    "pageSize": 10,
+    "dateTimeFormat": "AGO"
+  },
+  "private": {
+    "commentOrderBy": "desc",
+    "enableDouban": true,
+    "enableMusic163": true,
+    "enableVideo": true,
+    "googleRecaptchaSecretKey": "",
+    "googleRecaptchaEnable": false,
+    "enableNotifyByEmail": false,
+    "adminEmail": "",
+    "emailHost": "",
+    "emailPort": 587,
+    "emailSecure": true,
+    "emailLoginName": "",
+    "emailPassword": "",
+    "emailFrom": "",
+    "emailFromName": "",
+    "enableAliyunJudge": false,
+    "aliyunAk": "",
+    "aliyunSk": ""
+  }
+}

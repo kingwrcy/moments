@@ -1,4 +1,6 @@
 import prisma from "~/lib/db";
+import fs from "fs/promises";
+import type { SysConfig } from "~/lib/types";
 
 type ListMemoReq = {
   page: number;
@@ -6,7 +8,8 @@ type ListMemoReq = {
 };
 
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig()
+  const config = ((await fs.readFile(`${process.env.CONFIG_FILE}`)).toString())
+  const sysConfig = JSON.parse(config) as SysConfig
 
   const { page ,size} = (await readBody(event)) as ListMemoReq;
   let data = await prisma.memo.findMany({
@@ -24,7 +27,7 @@ export default defineEventHandler(async (event) => {
       comments: {
         //@ts-ignore
         orderBy: {
-          createdAt: config.public.momentsCommentOrderBy,
+          createdAt: sysConfig.private.commentOrderBy,
         },
         take: 5,
       },
