@@ -1,5 +1,6 @@
 import prisma from "~/lib/db";
 import bcrypt from "bcrypt";
+import fs from "fs/promises";
 
 type SaveSettingsReq = {
   username?: string;
@@ -18,13 +19,14 @@ type SaveSettingsReq = {
   thumbnailSuffix: string;
   title: string;
   favicon: string;
-  css:string;
-  js:string;
-  beianNo:string;
+  css: string;
+  js: string;
+  beianNo: string;
+  config: string;
 };
 
 export default defineEventHandler(async (event) => {
-  const { username,password, nickname, avatarUrl, slogan, coverUrl, ...rest } =
+  const { username, password, nickname, avatarUrl, slogan, coverUrl,config, ...rest } =
     (await readBody(event)) as SaveSettingsReq;
 
   const updated = {} as SaveSettingsReq;
@@ -45,6 +47,9 @@ export default defineEventHandler(async (event) => {
     },
     data: { ...updated, ...rest },
   });
+
+  await fs.writeFile(`${process.env.CONFIG_FILE}`, config);
+
   return {
     success: true,
   };

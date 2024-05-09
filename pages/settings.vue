@@ -112,84 +112,19 @@
         <Input type="text" id="thumbnailSuffix" placeholder="" autocomplete="off" v-model="state.thumbnailSuffix" />
       </div>
     </template>
-    <Collapsible>
-      <CollapsibleTrigger>
-        <div class="cursor-pointer font-bold text-sm flex justify-between items-center">
-          <div>基础设置</div>
-          <ChevronsUpDown :size=16 />
+
+    <div class="flex flex-col gap-2">
+      <div class="flex justify-between items-center">
+        <Label for="slogan" class="font-bold">个性化配置</Label>
+        <div class="flex items-center ">
+          <Button variant="ghost" size="sm" @click="pasteConfig">从剪切板导入</Button>
+          <NuxtLink target="_blank" to="https://mconfig.mblog.club"
+            :class="buttonVariants({ variant: 'link', size: 'sm' })">
+            去配置</NuxtLink>
         </div>
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <table class="w-full border my-2 text-xs">
-          <thead>
-            <tr class="*:border *:p-2 *:bg-gray-300">
-              <td>配置项(去掉了前缀`NUXT_PUBLIC`)</td>
-              <td>内容</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="*:border *:p-2">
-              <td>NUXT_PUBLIC_TIME_FORMAT(时间格式)</td>
-              <td>{{ $config.public.timeFormat }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>PAGE_SIZE(分页大小)</td>
-              <td>{{ $config.public.pageSize }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>MOMENTS_COMMENT_ENABLE(是否可以评论)</td>
-              <td>{{ $config.public.momentsCommentEnable }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>MOMENTS_SHOW_COMMENT(是否展示评论)</td>
-              <td>{{ $config.public.momentsShowComment }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>MOMENTS_COMMENT_MAX_LENGTH(评论最大字数)</td>
-              <td>{{ $config.public.momentsCommentMaxLength }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>MOMENTS_COMMENT_ORDER_BY(评论排序)</td>
-              <td>{{ $config.public.momentsCommentOrderBy }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>MOMENTS_TOOLBAR_ENABLE_DOUBAN(是否显示豆瓣按钮)</td>
-              <td>{{ $config.public.momentsToolbarEnableDouban }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>MOMENTS_TOOLBAR_ENABLE_MUSIC163(是否显示音乐按钮)</td>
-              <td>{{ $config.public.momentsToolbarEnableMusic163 }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>MOMENTS_TOOLBAR_ENABLE_VIDEO(是否显示视频按钮)</td>
-              <td>{{ $config.public.momentsToolbarEnableVideo }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>MOMENTS_MAX_LINE(发言最大行数,超过折叠)</td>
-              <td>{{ $config.public.momentsMaxLine }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>GOOGLE_RECAPTCHA_SITE_KEY(RECAPTCHA网站key)</td>
-              <td>{{ $config.public.googleRecaptchaSiteKey }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>SITE_URL(本站访问地址站点地址)</td>
-              <td>{{ $config.public.siteUrl }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>NOTIFY_BY_EMAIL_ENABLE(是否开启评论邮件通知)</td>
-              <td>{{ $config.public.notifyByEmailEnable }}</td>
-            </tr>
-            <tr class="*:border *:p-2">
-              <td>ALIYUN_TEXT_JUDGE_ENABLE(是否开启评论内容阿里云鉴权)</td>
-              <td>{{ $config.public.aliyunTextJudgeEnable }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </CollapsibleContent>
-
-    </Collapsible>
-
+      </div>
+      <Textarea autocomplete="off" rows="10" v-model="state.config" />
+    </div>
 
     <div class="flex flex-col gap-2 ">
       <Button @click="saveSettings">保存</Button>
@@ -203,7 +138,7 @@ import { settingsUpdateEvent } from '~/lib/event'
 const token = useCookie('token')
 import { useStorage } from "@vueuse/core";
 import type { User } from '~/lib/types';
-import { ChevronsUpDown } from 'lucide-vue-next'
+import { buttonVariants } from '@/components/ui/button'
 
 const { data: versionData } = await useAsyncData('version', async () => $fetch('/api/version'))
 
@@ -235,7 +170,8 @@ const state = reactive({
   favicon: "",
   css: "",
   js: "",
-  beianNo: ""
+  beianNo: "",
+  config: ""
 })
 
 const { data: res } = await useFetch<{ data: typeof state }>('/api/user/settings/full', { key: 'settings' })
@@ -258,8 +194,14 @@ state.thumbnailSuffix = data?.thumbnailSuffix || ''
 state.css = data?.css || ''
 state.js = data?.js || ''
 state.beianNo = data?.beianNo || ''
+state.config = data?.config || ''
 enableS3.value = state.enableS3
 
+
+const pasteConfig = async () => {
+  state.config = await navigator.clipboard.readText()
+  toast.success('导入配置成功!')
+}
 
 const uploadImgs = async (event: Event, id: string) => {
   const file = (event.target as HTMLInputElement).files?.[0]

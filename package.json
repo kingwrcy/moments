@@ -12,6 +12,7 @@
     "resetPwd": "node ./resetPwd.js"
   },
   "dependencies": {
+    "@alicloud/pop-core": "^1.7.13",
     "@aws-sdk/client-s3": "^3.550.0",
     "@aws-sdk/s3-request-presigner": "^3.550.0",
     "@fancyapps/ui": "^5.0.36",
@@ -25,6 +26,7 @@
     "dayjs": "^1.11.10",
     "jsonwebtoken": "^9.0.2",
     "lucide-vue-next": "^0.372.0",
+    "nodemailer": "^6.9.13",
     "nuxt": "^3.11.1",
     "radix-vue": "^1.7.0",
     "reflect-metadata": "^0.2.2",
@@ -33,9 +35,7 @@
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.23",
     "vue-router": "^4.3.2",
-    "vue-sonner": "^1.1.2",
-    "@alicloud/pop-core": "^1.7.13",
-    "nodemailer": "^6.9.13"
+    "vue-sonner": "^1.1.2"
   },
   "devDependencies": {
     "@nuxtjs/color-mode": "^3.4.0",
@@ -43,6 +43,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/markdown-it": "^14.0.1",
+    "@types/nodemailer": "^6.4.15",
     "prisma": "^5.11.0",
     "sass": "^1.75.0",
     "shadcn-nuxt": "^0.10.2",

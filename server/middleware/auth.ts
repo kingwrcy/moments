@@ -17,6 +17,7 @@ const needLoginUrl = [
   "/api/files/s3Presigned",
   "/api/files/upload",
   "/api/comment/remove",
+  "/api/config/private",
 ];
 
 export default defineEventHandler(async (event) => {

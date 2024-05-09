@@ -39,52 +39,7 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 
 ## 自定义其他配置
 
-鉴于萝卜青菜各有所爱,每个人情况不一致,特此使用配置文件配置各项特性化需求,目前支持以下环境变量配置见.
-
-同时也支持使用配置文件的方式,环境变量的优先级高于配置文件.
-
-配置文件的使用方法:docker启动时把配置文件挂载进去,挂载目录为
-
-```
-/app/data/config.properties
-```
-
-你可以先复制[这个文件](https://github.com/kingwrcy/moments/blob/master/config.properties),修改,然后挂载进docker内就可以了.
-
-<details>
-
-<summary>点我查看支持的个性化配置</summary>
-
-| KEY  | 默认值 | 描述 |
-| ------------- | ------------- | ------------- |
-| NUXT_PUBLIC_TIME_FORMAT  | AGO  | 时间显示格式 AGO:几分钟前,几小时前,几天前,几月前,几年前,DATE:yyyy-MM-dd HH:mm:ss |
-| NUXT_PUBLIC_PAGE_SIZE  | 10  | 分页大小 |
-| NUXT_PUBLIC_MOMENTS_COMMENT_ENABLE  | true  | 是否开启评论 |
-| NUXT_PUBLIC_MOMENTS_SHOW_COMMENT  | true  | 是否显示评论 |
-| NUXT_PUBLIC_MOMENTS_COMMENT_MAX_LENGTH  | 120  | 评论最大字数 |
-| NUXT_PUBLIC_MOMENTS_COMMENT_ORDER_BY  | desc  | 评论的显示顺序,desc:倒序,asc:顺序 |
-| NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_DOUBAN  | true  | 是否显示引入豆瓣读书/视频按钮 |
-| NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_MUSIC163  | true  | 是否显示引入网易云音乐按钮 |
-| NUXT_PUBLIC_MOMENTS_TOOLBAR_ENABLE_VIDEO  | true  | 是否显示引入youtube,b站,在线视频按钮 |
-| NUXT_PUBLIC_MOMENTS_MAX_LINE  | 4  | 单条发言最大行数,最大10行,超过折叠 |
-| NUXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY  | 无  | google recaptchaV3 HTML 代码中使用此网站密钥 |
-| NUXT_GOOGLE_RECAPTCHA_SECRET_KEY  | 无  | google recaptchaV3 网站和 reCAPTCHA 之间的通信密钥 |
-| NUXT_PUBLIC_SITE_URL  | 无  | 实例的访问地址 |
-| NUXT_ENABLE_NOTIFY_BY_EMAIL  | false  | 是否启用评论通知 |
-| NUXT_NOTIFY_MAIL  | 无  | 管理员邮箱 |
-| NUXT_MAIL_HOST  | 无  | 邮件服务器地址 |
-| NUXT_MAIL_PORT  | 587  | 邮件服务器端口 |
-| NUXT_MAIL_SECURE  | false  | 邮件服务器是否是安全连接 |
-| NUXT_MAIL_NAME  | 无  | 发件邮箱用户名 |
-| NUXT_MAIL_PASSWORD  | 无  | 发件邮箱密码 |
-| NUXT_MAIL_FROM  | 无  | 发件人邮箱 |
-| NUXT_MAIL_FROM_NAME  | 无  | 发件人名称 |
-| NUXT_ALIYUN_TEXT_JUDGE_ENABLE  | false  | 是否启用阿里云文本审核(只针对评论) |
-| NUXT_ALIYUN_ACCESS_KEY_ID  | 无  | 阿里云AK |
-| NUXT_ALIYUN_ACCESS_KEY_SECRET  | 无  | 阿里云SK |
-</details>
-
-
+打开[配置管理器](https://mconfig.mblog.club),配置好后点击一键复制配置,然后进入moments后台拉到最底下,导入进去,保存即可生效.
 
 
 ## 使用google recaptchaV3(可选)

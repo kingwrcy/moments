@@ -47,7 +47,7 @@
           <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs">
         </Label>
 
-        <Popover :open="music163Open" v-if="config.public.momentsToolbarEnableMusic163">
+        <Popover :open="music163Open" v-if="privateConfig.enableMusic163">
           <PopoverTrigger as="div">
             <TooltipProvider>
               <Tooltip>
@@ -77,7 +77,7 @@
         </Popover>
 
 
-        <Popover :open="bilibiliOpen" v-if="config.public.momentsToolbarEnableVideo">
+        <Popover :open="bilibiliOpen" v-if="privateConfig.enableVideo">
           <PopoverTrigger as="div">
             <TooltipProvider>
               <Tooltip>
@@ -123,7 +123,7 @@
           </PopoverContent>
         </Popover>
 
-        <Popover :open="doubanOpen" v-if="$config.public.momentsToolbarEnableDouban">
+        <Popover :open="doubanOpen" v-if="privateConfig.enableDouban">
           <PopoverTrigger as="div">
             <TooltipProvider>
               <Tooltip>
@@ -268,11 +268,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
-import type { DoubanBook, DoubanMovie, Memo, MemoExt } from '~/lib/types';
+import type { DoubanBook, DoubanMovie, Memo, MemoExt, PrivateConfig } from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
 import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check, Loader2 } from 'lucide-vue-next'
 
-const config = useRuntimeConfig()
+const privateConfig = useState<PrivateConfig>('privateConfig')
 
 const textareaRef = ref()
 const showEmojiRef = ref<HTMLElement>()
