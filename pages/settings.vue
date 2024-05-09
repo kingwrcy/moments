@@ -118,9 +118,8 @@
         <Label for="slogan" class="font-bold">个性化配置</Label>
         <div class="flex items-center ">
           <Button variant="ghost" size="sm" @click="pasteConfig">从剪切板导入</Button>
-          <NuxtLink target="_blank" to="https://mconfig.mblog.club"
-            :class="buttonVariants({ variant: 'link', size: 'sm' })">
-            去配置</NuxtLink>
+          <Button variant="link" size="sm" @click="openConfigUrl">
+            去配置</Button>
         </div>
       </div>
       <Textarea autocomplete="off" rows="10" v-model="state.config" />
@@ -139,7 +138,7 @@ const token = useCookie('token')
 import { useStorage } from "@vueuse/core";
 import type { User } from '~/lib/types';
 import { buttonVariants } from '@/components/ui/button'
-
+import { encode } from 'js-base64';
 const { data: versionData } = await useAsyncData('version', async () => $fetch('/api/version'))
 
 const userinfo = useState<User>('userinfo')
@@ -244,6 +243,13 @@ const saveSettings = async () => {
     settingsUpdateEvent.emit()
   }
 }
+
+
+const openConfigUrl = () => {  
+  window.open(`https://moments-config.vercel.app?config=${encode(state.config)}`)
+}
+
+
 </script>
 
 <style scoped></style>
