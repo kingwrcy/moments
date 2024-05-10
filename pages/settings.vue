@@ -146,7 +146,6 @@ useHead({
   title: '设置-' + (userinfo.value.title || '极简朋友圈'),
 })
 
-const enableS3 = useStorage("enableS3", false);
 
 
 const state = reactive({
@@ -193,7 +192,7 @@ state.css = data?.css || ''
 state.js = data?.js || ''
 state.beianNo = data?.beianNo || ''
 state.config = data?.config || '{"public":{"siteUrl":"","enableComment":true,"enableShowComment":true,"commentMaxLength":120,"memoMaxLine":4,"googleRecaptchaSiteKey":"","pageSize":10,"dateTimeFormat":"AGO"},"private":{"commentOrderBy":"desc","enableDouban":true,"enableMusic163":true,"enableVideo":true,"googleRecaptchaSecretKey":"","googleRecaptchaEnable":false,"enableNotifyByEmail":false,"adminEmail":"","emailHost":"","emailPort":587,"emailSecure":true,"emailLoginName":"","emailPassword":"","emailFrom":"","emailFromName":"","enableAliyunJudge":false,"aliyunAk":"","aliyunSk":""}}'
-enableS3.value = state.enableS3
+userinfo.value.enableS3 = state.enableS3
 
 
 const pasteConfig = async () => {
@@ -229,7 +228,7 @@ const saveSettings = async () => {
     body: JSON.stringify(state)
   })
   if (success) {
-    enableS3.value = state.enableS3
+    userinfo.value.enableS3 = state.enableS3
     if (state.password) {
       token.value = ''
       toast.success('密码修改成功,请重新登录')

@@ -217,7 +217,7 @@
       <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
         @click="localVideoUploading = false; localVideoUrl = ''" />
     </div>
-    <div v-if="localVideoUploading" class="text-sm my-2">视频上传中,请耐心等待上传完成!</div>
+    <div v-if="localVideoUploading" class="text-sm my-2">上传中,请耐心等待上传完成!</div>
 
 
 

@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { Toaster } from '@/components/ui/sonner';
-import type { Memo, PublicConfig,PrivateConfig, User } from '~/lib/types';
+import type { Memo, PublicConfig, PrivateConfig, User } from '~/lib/types';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { memoUpdateEvent } from '~/lib/event';
 
@@ -27,20 +27,21 @@ const { data } = await useFetch('/api/user/validateToken', {
 if (!data.value?.success) {
   const token = useCookie('token')
   token.value = undefined
-}else{
+} else {
   const privateConfigData = await useFetch('/api/config/private', {
-  method: 'POST'
-})
-useState<PrivateConfig|null>('privateConfig',()=>privateConfigData.data.value!)
+    method: 'POST'
+  })
+  useState<PrivateConfig | null>('privateConfig', () => privateConfigData.data.value!)
 }
 
 const publicConfigData = await useFetch('/api/config/public', {
   method: 'POST'
 })
-const publicConfig = useState<PublicConfig|null>('publicConfig',()=>publicConfigData.data.value!)
+const publicConfig = useState<PublicConfig | null>('publicConfig', () => publicConfigData.data.value!)
 
 
 const userinfo = useState<User>('userinfo')
+
 
 await callOnce(async () => {
   const { data: res } = await useAsyncData('userinfo', async () => await $fetch('/api/user/settings/get'))
