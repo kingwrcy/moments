@@ -1,6 +1,8 @@
 import prisma from "~/lib/db";
 import fs from "fs/promises";
 import type { SysConfig } from "~/lib/types";
+import jwt from "jsonwebtoken";
+import { jwtKey } from "~/lib/constant";
 
 type ListMemoReq = {
   page: number;
@@ -8,8 +10,19 @@ type ListMemoReq = {
 };
 
 export default defineEventHandler(async (event) => {
-  const cookie = event.headers.get('cookie') || '';
-  let showType = cookie ? [{ showType: 1 },{ showType: 0 }] : [{ showType: 1 }]
+  const token = getCookie(event, "token");
+  let userId = 0;
+  try{
+    const user = jwt.verify(token, jwtKey)
+    userId = user.userId
+  }
+  catch{ }
+  const fromUser = ()=>{
+    return userId == 0? {}:{userId}
+  }
+  const fromShowType = ()=>{
+    return userId == 0 ? [{ showType: 1 }]:[{ showType: 1 },{ showType: 0 }]
+  }
 
   const config = ((await fs.readFile(`${process.env.CONFIG_FILE}`)).toString())
   const sysConfig = JSON.parse(config) as SysConfig
@@ -42,7 +55,8 @@ export default defineEventHandler(async (event) => {
     },
     where: {
       pinned: false,
-      OR: showType,
+      OR: [...fromShowType()],
+      ...fromUser()
     },
     orderBy: {
       createdAt: "desc",
@@ -77,6 +91,8 @@ export default defineEventHandler(async (event) => {
       },
       where: {
         pinned: true,
+        OR: [...fromShowType()],
+        ...fromUser()
       },
     });
     if (pinnedMemo) {
