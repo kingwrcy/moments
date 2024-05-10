@@ -26,8 +26,8 @@
       <iframe class="w-full h-[250px] my-2" v-if="memoExt.youtubeUrl" :src="memoExt.youtubeUrl" scrolling="no"
         border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
-      <video class="w-full h-[250px] my-2" :src="memoExt.videoUrl" controls v-if="memoExt.videoUrl"></video>
-      <video class="w-full h-[250px] my-2" :src="memoExt.localVideoUrl" controls v-if="memoExt.localVideoUrl"></video>
+      <video class="w-2/3 my-2 rounded" :src="memoExt.videoUrl" controls v-if="memoExt.videoUrl"></video>
+      <video class="w-2/3 my-2 rounded" :src="memoExt.localVideoUrl" controls v-if="memoExt.localVideoUrl"></video>
 
       <DoubanBook :book="memoExt.doubanBook" v-if="memoExt.doubanBook" />
       <DoubanMovie :movie="memoExt.doubanMovie" v-if="memoExt.doubanMovie" />
@@ -296,7 +296,7 @@ watchOnce(height, () => {
 .full-cover-image-single {
   object-fit: cover;
   object-position: center;
-  max-height: 200px;
+  max-height: 300px;
   height: auto;
   width: auto;
   border: transparent 1px solid;
