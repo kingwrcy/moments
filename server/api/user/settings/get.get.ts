@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
       css:true,
       js:true,
       beianNo:true,
+      enableS3:true
     },
   });
   if (!data) {

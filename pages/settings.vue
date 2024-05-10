@@ -135,7 +135,6 @@
 import { toast } from 'vue-sonner'
 import { settingsUpdateEvent } from '~/lib/event'
 const token = useCookie('token')
-import { useStorage } from "@vueuse/core";
 import type { User } from '~/lib/types';
 import { encode } from 'js-base64';
 const { data: versionData } = await useAsyncData('version', async () => $fetch('/api/version'))
@@ -146,7 +145,6 @@ useHead({
   title: '设置-' + (userinfo.value.title || '极简朋友圈'),
 })
 
-const enableS3 = useStorage("enableS3", false);
 
 
 const state = reactive({
@@ -193,12 +191,25 @@ state.css = data?.css || ''
 state.js = data?.js || ''
 state.beianNo = data?.beianNo || ''
 state.config = data?.config || '{"public":{"siteUrl":"","enableComment":true,"enableShowComment":true,"commentMaxLength":120,"memoMaxLine":4,"googleRecaptchaSiteKey":"","pageSize":10,"dateTimeFormat":"AGO"},"private":{"commentOrderBy":"desc","enableDouban":true,"enableMusic163":true,"enableVideo":true,"googleRecaptchaSecretKey":"","googleRecaptchaEnable":false,"enableNotifyByEmail":false,"adminEmail":"","emailHost":"","emailPort":587,"emailSecure":true,"emailLoginName":"","emailPassword":"","emailFrom":"","emailFromName":"","enableAliyunJudge":false,"aliyunAk":"","aliyunSk":""}}'
-enableS3.value = state.enableS3
+userinfo.value.enableS3 = state.enableS3
 
+function isJSON(str: string) {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
 const pasteConfig = async () => {
-  state.config = await navigator.clipboard.readText()
-  toast.success('导入配置成功!')
+  const config = await navigator.clipboard.readText()
+  if (config && isJSON(config)) {
+    state.config = config
+    toast.success('导入配置成功!')
+  } else {
+    toast.error('配置为空或者不是JSON格式,导入失败!')
+  }
 }
 
 const uploadImgs = async (event: Event, id: string) => {
@@ -224,12 +235,16 @@ const uploadImgs = async (event: Event, id: string) => {
 }
 
 const saveSettings = async () => {
+  if (!state.config || !isJSON(state.config)) {
+    toast.error('个性化配置为空或者不是JSON格式,保存失败!')
+    return
+  }
   const { success } = await $fetch('/api/user/settings/save', {
     method: 'POST',
     body: JSON.stringify(state)
   })
   if (success) {
-    enableS3.value = state.enableS3
+    userinfo.value.enableS3 = state.enableS3
     if (state.password) {
       token.value = ''
       toast.success('密码修改成功,请重新登录')
