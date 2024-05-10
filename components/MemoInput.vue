@@ -44,7 +44,7 @@
             </Tooltip>
           </TooltipProvider>
 
-          <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs">
+          <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs" multiple>
         </Label>
 
         <Popover :open="music163Open" v-if="privateConfig.enableMusic163">
@@ -206,7 +206,7 @@
     <iframe class="w-full h-[250px] my-2" v-if="youtubeIfrUrl" :src="youtubeIfrUrl" scrolling="no" border="0"
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
-    <div class="relative"  v-if="videoIfrUrl">
+    <div class="relative" v-if="videoIfrUrl">
       <video class="w-2/3 my-2" :src="videoIfrUrl" controls></video>
       <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer rounded"
         @click="videoIfrUrl = ''; videoUrl = ''" />
@@ -493,29 +493,34 @@ const pasteImg = async (event: ClipboardEvent) => {
   if (!items || items.length === 0) {
     return;
   }
-  await useUpload(items[0], async (res) => {
-    if (res.success) {
-      imgs.value = [...imgs.value, res.filename]
-    } else {
-      toast.warning(res.message || '上传失败')
-    }
-  })
+  for (var i = 0; i < items.length; i++) {
+    await useUpload(items[i], async (res) => {
+      if (res.success) {
+        imgs.value = [...imgs.value, res.filename]
+      } else {
+        toast.warning(res.message || '上传失败')
+      }
+    })
+  }
 }
 
 const uploadImgs = async (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (!file) {
+  const files = ((event.target as HTMLInputElement).files)
+  if (!files) {
     return
   }
   localVideoUploading.value = true
-  await useUpload(file, async (res) => {
-    if (res.success) {
-      (event.target as HTMLInputElement).value = ''
-      imgs.value = [...imgs.value, res.filename]
-    } else {
-      toast.warning(res.message || '上传失败')
-    }
-  })
+  for (var i = 0; i < files.length; i++) {
+    var file = files[i];
+    useUpload(file, async (res) => {
+      if (res.success) {
+        (event.target as HTMLInputElement).value = ''
+        imgs.value = [...imgs.value, res.filename]
+      } else {
+        toast.warning(res.message || '上传失败')
+      }
+    })
+  }
   localVideoUploading.value = false
 }
 
