@@ -20,7 +20,7 @@ S3兼容的对象存储配置方法(不是必须的,只有你需要把图片存�
 又拍云 不支持[使用预签名 URL 上传对象](https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/userguide/PresignedUrlUploadObject.html),所以不支持又拍云.
 
 
-[在线DEMO](https://m.mblog.club),欢迎体验.
+[在线DEMO](https://m.mblog.club),欢迎体验.目前不支持多用户,多用户版本已由[RandallAnjie](https://github.com/RandallAnjie)自行实现了,有需要的可以去[看看](https://moments.randallanjie.com/)
 
 [1panel本地安装](https://ono.ee/?p=1713750155422),感谢[包子叔](https://ono.ee)提供的教程.
 
