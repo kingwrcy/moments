@@ -33,7 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
 #### 方式一 自定义JS
 
 ```js
-document.querySelector(".footer a[rel='noopener noreferrer']").parentNode.remove()
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    document.querySelector(".footer a[rel='noopener noreferrer']").parentNode.remove()
+  }, 500);
+});
 ```
 
 #### 方式二 自定义CSS
