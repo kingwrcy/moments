@@ -257,7 +257,7 @@
           </PopoverContent>
         </Popover>
       </div>
-      <label class="text-sm text-[#fc5185]">公开权限</label>
+      <label class="text-sm" :class="[showType?'text-lime-600' : 'text-stone-400']">{{ showType ?'公开':'私密' }}</label>
       <Switch id="showType" v-model:checked="showType"></Switch>
       <Button @click="submitMemo">提交</Button>
     </div>

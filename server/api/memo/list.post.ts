@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import type { SysConfig } from "~/lib/types";
 import jwt from "jsonwebtoken";
 import { jwtKey } from "~/lib/constant";
+import { JwtPayload } from "../user/login.post";
 
 type ListMemoReq = {
   page: number;
@@ -12,11 +13,13 @@ type ListMemoReq = {
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, "token");
   let userId = 0;
-  try{
-    const user = jwt.verify(token, jwtKey)
-    userId = user.userId
-  }
-  catch{ }
+  if(token){
+    try{
+      const user = jwt.verify(token, jwtKey) as JwtPayload
+      userId = user.userId
+    }
+    catch{ }
+  }  
   const fromUser = ()=>{
     return userId == 0? {}:{userId}
   }
