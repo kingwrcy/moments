@@ -44,14 +44,15 @@
       <div class="text-[#576b95] cursor-pointer " v-if="showAll" @click="showLess">收起</div>
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none">
         {{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
-      <div class="toolbar relative flex flex-row justify-between select-none my-1">
+      <div class="toolbar relative flex flex-row justify-between select-none my-1 items-center">
+        <div v-if="memo.showType===0" class="text-xs text-stone-400 mr-2">私密</div> 
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-if="publicConfig.dateTimeFormat === 'AGO'">{{
       dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
         '') }}</div>
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-else>{{
       dayjs(props.memo.createdAt).format('YYYY-MM-DD hh:mm:ss')}}</div>
         <div @click="showToolbar = !showToolbar"
-          class="toolbar-icon mb-2 px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
+          class="toolbar-icon px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
           <img src="~/assets/img/dian.svg" class="w-3 h-3" />
         </div>
         <div class="text-xs absolute top-[-8px] right-[30px] bg-[#4c4c4c] rounded text-white p-2" v-if="showToolbar"

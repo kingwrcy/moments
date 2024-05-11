@@ -20,6 +20,7 @@ export type Memo = {
   _count: {
     comments: number;
   };
+  showType: number;
 };
 
 export type Comment = {
