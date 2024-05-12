@@ -16,7 +16,7 @@
             </TooltipProvider>
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="linkOpen = false">
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2" @keyup.enter="addLink()">
               <div class="text-xs my-2 flex justify-between"><span>插入链接</span>
               </div>
               <Input class="my-2" placeholder="请输入链接地址" v-model="externalUrl" />
@@ -62,7 +62,7 @@
 
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="music163Open = false">
-            <div class="">
+            <div class="" @keyup.enter="importMusic()">
               <div class=" text-xs my-2 flex justify-between"><span>嵌入网易云音乐</span>
                 <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
                   class="text-gray-500 underline">
@@ -92,7 +92,7 @@
 
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="bilibiliOpen = false">
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2" @keyup.enter="importVideo()">
               <div class="flex flex-col gap-2 mb-2">
                 <Label for="localVideo" :class="buttonVariants({ variant: 'outline' })">上传本地视频</Label>
                 <Input class="my-2 hidden" type="file" id="localVideo" name="localVideo" @change="uploadLocalVideo" />
@@ -139,7 +139,7 @@
 
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="doubanOpen = false">
-            <div class="">
+            <div class="" @keyup.enter="importDouban()">
               <RadioGroup :default-value="douban.type" class="flex flex-row gap-2 text-sm" v-model="douban.type">
                 <div class="flex items-center space-x-2">
                   <RadioGroupItem id="book" value="book" />
