@@ -3,15 +3,21 @@ import jwt from "jsonwebtoken";
 import { JwtPayload } from "../api/user/login.post";
 
 const needLoginUrl = [
-  "/api/memo/save",
   "/api/files/s3Presigned",
   "/api/files/upload",
-  "/api/memo/remove",
   "/api/user/settings/save",
   "/api/user/settings/full",
   "/api/memo/doubanBook",
   "/api/memo/doubanMovie",
+  "/api/memo/pinned",
+  "/api/memo/save",
+  "/api/memo/remove",
+  "/api/memo/readExternal",
   "/api/files/removePreviewImg",
+  "/api/files/s3Presigned",
+  "/api/files/upload",
+  "/api/comment/remove",
+  "/api/config/private",
 ];
 
 export default defineEventHandler(async (event) => {

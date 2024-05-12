@@ -1,5 +1,5 @@
-import { useStorage } from "@vueuse/core";
 import { toast } from "vue-sonner";
+import type { User } from "~/lib/types";
 
 export type UploadCallBack = (res: {
   success: boolean;
@@ -14,8 +14,8 @@ export const useUpload = async (file: File, cb: UploadCallBack) => {
     return
   }
 
-  const enableS3 = useStorage("enableS3", false);
-  if (enableS3.value) {
+  const userinfo = useState<User>('userinfo')
+  if (userinfo.value.enableS3) {
     const res = await $fetch("/api/files/s3Presigned", {
       method: "POST",
       body: JSON.stringify({

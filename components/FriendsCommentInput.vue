@@ -22,10 +22,10 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { useAnimate, useStorage } from '@vueuse/core'
 import { insertTextAtCursor } from '~/lib/utils';
-import type { User } from '~/lib/types';
+import type { PublicConfig, User } from '~/lib/types';
 
 const userinfo = useState<User>('userinfo')
-const config = useRuntimeConfig()
+const publicConfig = useState<PublicConfig>('publicConfig')
 const textareaRef = ref()
 const token = useCookie('token')
 const content = ref('')
@@ -69,7 +69,7 @@ const saveComment = async () => {
     toast.warning('先填写评论')
     return
   }
-  if (content.value.length > config.public.momentsCommentMaxLength) {
+  if (content.value.length > publicConfig.value.commentMaxLength) {
     toast.warning('评论超长')
     return
   }
@@ -86,11 +86,11 @@ const saveComment = async () => {
     return
   }
 
-  if (config.public.googleRecaptchaSiteKey) {
+  if (publicConfig.value.googleRecaptchaSiteKey) {
     //@ts-ignore
     grecaptcha.ready(function () {
       //@ts-ignore
-      grecaptcha.execute(config.public.googleRecaptchaSiteKey, { action: 'submit' }).then(async function (token) {
+      grecaptcha.execute(publicConfig.value.googleRecaptchaSiteKey, { action: 'submit' }).then(async function (token) {
         submitComment(token)
       });
     });

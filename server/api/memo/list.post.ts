@@ -1,4 +1,9 @@
 import prisma from "~/lib/db";
+import fs from "fs/promises";
+import type { SysConfig } from "~/lib/types";
+import jwt from "jsonwebtoken";
+import { jwtKey } from "~/lib/constant";
+import { JwtPayload } from "../user/login.post";
 
 type ListMemoReq = {
   page: number;
@@ -7,7 +12,25 @@ type ListMemoReq = {
 };
 
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig();
+
+  const token = getCookie(event, "token");
+  let userId = 0;
+  if(token){
+    try{
+      const user = jwt.verify(token, jwtKey) as JwtPayload
+      userId = user.userId
+    }
+    catch{ }
+  }  
+  const fromUser = ()=>{
+    return userId == 0? {}:{userId}
+  }
+  const fromShowType = ()=>{
+    return userId == 0 ? [{ showType: 1 }]:[{ showType: 1 },{ showType: 0 }]
+  }
+
+  const config = ((await fs.readFile(`${process.env.CONFIG_FILE}`)).toString())
+  const sysConfig = JSON.parse(config) as SysConfig
 
 
   const { page, tagname } = (await readBody(event)) as ListMemoReq;
@@ -28,7 +51,7 @@ export default defineEventHandler(async (event) => {
       comments: {
         //@ts-ignore
         orderBy: {
-          createdAt: config.public.momentsCommentOrderBy,
+          createdAt: sysConfig.private.commentOrderBy,
         },
         take: 5,
       },
@@ -43,6 +66,8 @@ export default defineEventHandler(async (event) => {
       content: {
         contains: tagname? '#'+tagname: '',
       },
+      OR: [...fromShowType()],
+      ...fromUser()
     },
     orderBy: {
       createdAt: "desc",
@@ -80,6 +105,8 @@ export default defineEventHandler(async (event) => {
         content: {
           contains: tagname? '#'+tagname: '',
         },
+        OR: [...fromShowType()],
+        ...fromUser()
       },
     });
     if (pinnedMemo) {

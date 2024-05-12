@@ -20,6 +20,7 @@ export type Memo = {
   _count: {
     comments: number;
   };
+  showType: number;
 };
 
 export type Comment = {
@@ -47,6 +48,7 @@ export type User = {
   css: string;
   js: string;
   beianNo: string;
+  enableS3: boolean;
 };
 
 export type DoubanBook = {
@@ -58,7 +60,7 @@ export type DoubanBook = {
   rating: string;
   url: string;
   pubDate: string;
-  id:number;
+  id: number;
 };
 
 export type DoubanMovie = {
@@ -69,15 +71,51 @@ export type DoubanMovie = {
   rating: string;
   url: string;
   releaseDate: string;
-  actors:string;
-  runtime:string;
-  id:number
+  actors: string;
+  runtime: string;
+  id: number;
 };
 
 export type MemoExt = {
   doubanBook: DoubanBook;
   doubanMovie: DoubanMovie;
-  youtubeUrl:string;
-  videoUrl:string;
-  localVideoUrl:string;
+  youtubeUrl: string;
+  videoUrl: string;
+  localVideoUrl: string;
 };
+
+export type SysConfig = {
+  private: {
+    commentOrderBy: "desc";
+    enableDouban: true;
+    enableMusic163: true;
+    enableVideo: true;
+    googleRecaptchaSecretKey: "";
+    googleRecaptchaEnable: false;
+    enableNotifyByEmail: false;
+    adminEmail: "";
+    emailHost: "";
+    emailPort: 587;
+    emailSecure: true;
+    emailLoginName: "";
+    emailPassword: "";
+    emailFrom: "";
+    emailFromName: "";
+    enableAliyunJudge: false;
+    aliyunAk: "";
+    aliyunSk: "";
+  };
+  public: {
+    siteUrl: string;
+    enableComment: boolean;
+    enableShowComment: boolean;
+    commentMaxLength: number;
+    memoMaxLine: number;
+    googleRecaptchaSiteKey: string;
+    pageSize: number;
+    dateTimeFormat: string;
+  };
+};
+
+export type PublicConfig = SysConfig['public'];
+export type PrivateConfig = SysConfig['private'];

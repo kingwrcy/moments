@@ -44,10 +44,10 @@
             </Tooltip>
           </TooltipProvider>
 
-          <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs">
+          <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs" multiple>
         </Label>
 
-        <Popover :open="music163Open" v-if="config.public.momentsToolbarEnableMusic163">
+        <Popover :open="music163Open" v-if="privateConfig.enableMusic163">
           <PopoverTrigger as="div">
             <TooltipProvider>
               <Tooltip>
@@ -77,7 +77,7 @@
         </Popover>
 
 
-        <Popover :open="bilibiliOpen" v-if="config.public.momentsToolbarEnableVideo">
+        <Popover :open="bilibiliOpen" v-if="privateConfig.enableVideo">
           <PopoverTrigger as="div">
             <TooltipProvider>
               <Tooltip>
@@ -123,7 +123,7 @@
           </PopoverContent>
         </Popover>
 
-        <Popover :open="doubanOpen" v-if="$config.public.momentsToolbarEnableDouban">
+        <Popover :open="doubanOpen" v-if="privateConfig.enableDouban">
           <PopoverTrigger as="div">
             <TooltipProvider>
               <Tooltip>
@@ -206,7 +206,7 @@
     <iframe class="w-full h-[250px] my-2" v-if="youtubeIfrUrl" :src="youtubeIfrUrl" scrolling="no" border="0"
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
-    <div class="relative"  v-if="videoIfrUrl">
+    <div class="relative" v-if="videoIfrUrl">
       <video class="w-2/3 my-2" :src="videoIfrUrl" controls></video>
       <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer rounded"
         @click="videoIfrUrl = ''; videoUrl = ''" />
@@ -217,7 +217,7 @@
       <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer rounded"
         @click="localVideoUploading = false; localVideoUrl = ''" />
     </div>
-    <div v-if="localVideoUploading" class="text-sm my-2">视频上传中,请耐心等待上传完成!</div>
+    <div v-if="localVideoUploading" class="text-sm my-2">上传中,请耐心等待上传完成!</div>
 
 
 
@@ -238,7 +238,7 @@
 
     <div class="grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
       <div v-for="(img, index) in imgs" :key="index" class="relative">
-        <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square" />
+        <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square max-h-[200px]" />
         <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
           @click="removePreviewImg(index)" />
       </div>
@@ -257,6 +257,8 @@
           </PopoverContent>
         </Popover>
       </div>
+      <label class="text-sm" :class="[showType?'text-lime-600' : 'text-stone-400']">{{ showType ?'公开':'私密' }}</label>
+      <Switch id="showType" v-model:checked="showType"></Switch>
       <Button @click="submitMemo">提交</Button>
     </div>
   </div>
@@ -268,11 +270,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
-import type { DoubanBook, DoubanMovie, Memo, MemoExt } from '~/lib/types';
+import type { DoubanBook, DoubanMovie, Memo, MemoExt, PrivateConfig } from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
 import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check, Loader2 } from 'lucide-vue-next'
 
-const config = useRuntimeConfig()
+const privateConfig = useState<PrivateConfig>('privateConfig')
 
 const textareaRef = ref()
 const showEmojiRef = ref<HTMLElement>()
@@ -308,6 +310,7 @@ const bilibiliOpen = ref(false)
 const doubanOpen = ref(false)
 
 const doubanSubmitting = ref(false)
+const showType = ref(true)
 
 const douban = reactive({
   id: '',
@@ -396,13 +399,15 @@ const submitMemo = async () => {
         youtubeUrl: youtubeIfrUrl.value,
         videoUrl: videoIfrUrl.value,
         localVideoUrl: localVideoUrl.value
-      }
+      },
+      showType: showType.value
     })
   })
   if (res.success) {
     toast.success('提交成功')
     content.value = ''
 
+    showType.value = true
     imgs.value = []
     music163IfrUrl.value = ''
     music163Url.value = ''
@@ -493,29 +498,34 @@ const pasteImg = async (event: ClipboardEvent) => {
   if (!items || items.length === 0) {
     return;
   }
-  await useUpload(items[0], async (res) => {
-    if (res.success) {
-      imgs.value = [...imgs.value, res.filename]
-    } else {
-      toast.warning(res.message || '上传失败')
-    }
-  })
+  for (var i = 0; i < items.length; i++) {
+    await useUpload(items[i], async (res) => {
+      if (res.success) {
+        imgs.value = [...imgs.value, res.filename]
+      } else {
+        toast.warning(res.message || '上传失败')
+      }
+    })
+  }
 }
 
 const uploadImgs = async (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (!file) {
+  const files = ((event.target as HTMLInputElement).files)
+  if (!files) {
     return
   }
   localVideoUploading.value = true
-  await useUpload(file, async (res) => {
-    if (res.success) {
-      (event.target as HTMLInputElement).value = ''
-      imgs.value = [...imgs.value, res.filename]
-    } else {
-      toast.warning(res.message || '上传失败')
-    }
-  })
+  for (var i = 0; i < files.length; i++) {
+    var file = files[i];
+    useUpload(file, async (res) => {
+      if (res.success) {
+        (event.target as HTMLInputElement).value = ''
+        imgs.value = [...imgs.value, res.filename]
+      } else {
+        toast.warning(res.message || '上传失败')
+      }
+    })
+  }
   localVideoUploading.value = false
 }
 
@@ -610,6 +620,7 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   music163IfrUrl.value = event.music163Url || ''
   music163Url.value = `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
   textareaRef.value?.getRef().focus()
+  showType.value = event.showType==1
 })
 </script>
 

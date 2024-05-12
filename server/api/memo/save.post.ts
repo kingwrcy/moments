@@ -11,7 +11,8 @@ type SaveMemoReq = {
   externalUrl?: string;
   externalTitle?: string;
   externalFavicon?: string;
-  ext:MemoExt
+  ext:MemoExt,
+  showType: number;
 };
 
 export default defineEventHandler(async (event) => {
@@ -26,7 +27,8 @@ export default defineEventHandler(async (event) => {
     externalTitle: body.externalTitle,
     externalFavicon: body.externalFavicon,
     content: body.content,
-    ext:JSON.stringify(body.ext)
+    ext:JSON.stringify(body.ext),
+    showType: body.showType ? 1 : 0
   };
   await prisma.memo.upsert({
     where: {

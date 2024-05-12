@@ -44,14 +44,15 @@
       <div class="text-[#576b95] cursor-pointer " v-if="showAll" @click="showLess">收起</div>
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none">
         {{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
-      <div class="toolbar relative flex flex-row justify-between select-none my-1">
-        <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-if="$config.public.timeFormat === 'AGO'">{{
+      <div class="toolbar relative flex flex-row justify-between select-none my-1 items-center">
+        <div v-if="memo.showType===0" class="text-xs text-stone-400 mr-2">私密</div> 
+        <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-if="publicConfig.dateTimeFormat === 'AGO'">{{
       dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
         '') }}</div>
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-else>{{
       dayjs(props.memo.createdAt).format('YYYY-MM-DD hh:mm:ss')}}</div>
         <div @click="showToolbar = !showToolbar"
-          class="toolbar-icon mb-2 px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
+          class="toolbar-icon px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
           <img src="~/assets/img/dian.svg" class="w-3 h-3" />
         </div>
         <div class="text-xs absolute top-[-8px] right-[30px] bg-[#4c4c4c] rounded text-white p-2" v-if="showToolbar"
@@ -94,7 +95,7 @@
             </div>
 
             <div class="flex flex-row gap-2 cursor-pointer items-center"
-              v-if="config.public.momentsCommentEnable"
+              v-if="publicConfig.enableComment"
               @click="momentsShowCommentInput = !momentsShowCommentInput; showUserCommentArray = []; showToolbar = false">
               <MessageSquareMore :size=14 />
               <div class="hidden md:block">评论</div>
@@ -108,7 +109,7 @@
           <div class="text-[#576b95]"><span class="mx-1">{{ props.memo.favCount }}</span>位访客赞过</div>
         </div>
         <FriendsCommentInput :memoId="props.memo.id" @commentAdded="refreshComment" v-if="momentsShowCommentInput" />
-        <template v-if="props.memo.comments.length > 0 && config.public.momentsShowComment">
+        <template v-if="props.memo.comments.length > 0 && publicConfig.enableShowComment">
           <div class="px-4 py-2 flex flex-col gap-1">
             <div class="relative flex flex-col gap-2 text-sm" v-for="(comment, index) in props.memo.comments"
               :key="index">
@@ -125,7 +126,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Memo, MemoExt } from '@/lib/types';
+import type { Memo, MemoExt ,PublicConfig} from '@/lib/types';
 import { useElementSize, onClickOutside, watchOnce, useStorage } from '@vueuse/core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -155,11 +156,11 @@ const props = withDefaults(
 
   }>(), {}
 )
-const config = useRuntimeConfig()
+const publicConfig = useState<PublicConfig>('publicConfig')
 const route = useRoute()
 
 const emit = defineEmits(['memo-update'])
-const maxLine = config.public.momentsMaxLine
+const maxLine = publicConfig.value.memoMaxLine
 const maxHeight = ref(24 * maxLine)
 
 
