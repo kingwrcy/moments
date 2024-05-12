@@ -15,7 +15,8 @@ export default defineEventHandler(async (event) => {
       css:true,
       js:true,
       beianNo:true,
-      enableS3:true
+      enableS3:true,
+      thumbnailSuffix:true,
     },
   });
   if (!data) {

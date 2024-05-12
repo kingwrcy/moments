@@ -48,6 +48,7 @@ export type User = {
   js: string;
   beianNo: string;
   enableS3: boolean;
+  thumbnailSuffix:string;
 };
 
 export type DoubanBook = {
