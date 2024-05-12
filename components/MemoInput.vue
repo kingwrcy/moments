@@ -257,6 +257,8 @@
           </PopoverContent>
         </Popover>
       </div>
+      <label class="text-sm" :class="[showType?'text-lime-600' : 'text-stone-400']">{{ showType ?'公开':'私密' }}</label>
+      <Switch id="showType" v-model:checked="showType"></Switch>
       <Button @click="submitMemo">提交</Button>
     </div>
   </div>
@@ -308,6 +310,7 @@ const bilibiliOpen = ref(false)
 const doubanOpen = ref(false)
 
 const doubanSubmitting = ref(false)
+const showType = ref(true)
 
 const douban = reactive({
   id: '',
@@ -396,13 +399,15 @@ const submitMemo = async () => {
         youtubeUrl: youtubeIfrUrl.value,
         videoUrl: videoIfrUrl.value,
         localVideoUrl: localVideoUrl.value
-      }
+      },
+      showType: showType.value
     })
   })
   if (res.success) {
     toast.success('提交成功')
     content.value = ''
 
+    showType.value = true
     imgs.value = []
     music163IfrUrl.value = ''
     music163Url.value = ''
@@ -615,6 +620,7 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   music163IfrUrl.value = event.music163Url || ''
   music163Url.value = `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
   textareaRef.value?.getRef().focus()
+  showType.value = event.showType==1
 })
 </script>
 
