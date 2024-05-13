@@ -1,18 +1,24 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { User } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export const getImgUrl = (url: string) => {
+  const userinfo = useState<User>("userinfo");
+  const suffix = userinfo.value.thumbnailSuffix || "";
   if (url.startsWith("http")) {
-    return url + "?fmt=avif";
+    return url + (suffix.startsWith("?") ? suffix.substring(1) : suffix);
   }
   return url;
 };
 
-export const insertTextAtCursor = (text: string, textarea: HTMLTextAreaElement | undefined) => {
+export const insertTextAtCursor = (
+  text: string,
+  textarea: HTMLTextAreaElement | undefined
+) => {
   if (!textarea) return; // 检查textarea是否存在
 
   var cursor = textarea.selectionStart;
@@ -37,5 +43,4 @@ export const insertTextAtCursor = (text: string, textarea: HTMLTextAreaElement |
 
   // 确保新插入的文本可见
   textarea.scrollTop = textarea.scrollHeight;
-}
-
+};

@@ -18,7 +18,7 @@
           comment.content }}</span>
       <AlertDialog v-if="token">
         <AlertDialogTrigger asChild>
-          <Trash2 :size=14 class="align-text-top	ml-2 cursor-pointer inline-block text-gray-300" />
+          <Trash2 :size=14 class="ml-2 cursor-pointer inline-block text-gray-300" />
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
