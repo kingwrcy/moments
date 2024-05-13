@@ -8,6 +8,14 @@
 [![docker pull](https://img.shields.io/badge/1panel-本地安装-blue)](https://ono.ee/?p=1713750155422)
 
 
+
+## 贡献者
+
+<a href="https://github.com/kingwrcy/moments/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=kingwrcy/moments" />
+</a>
+
+
 ## S3配置教程
 
 [![docker pull](https://img.shields.io/badge/CF-R2配置-blue)](https://jerry.mblog.club/moments-r2-config)

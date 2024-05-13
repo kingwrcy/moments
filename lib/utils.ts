@@ -9,8 +9,8 @@ export function cn(...inputs: ClassValue[]) {
 export const getImgUrl = (url: string) => {
   const userinfo = useState<User>("userinfo");
   const suffix = userinfo.value.thumbnailSuffix || "";
-  if (url.startsWith("http")) {
-    return url + (suffix.startsWith("?") ? suffix.substring(1) : suffix);
+  if (url.startsWith("http") && suffix) {
+    return url + (suffix.startsWith("?") ? suffix : "?" + suffix);
   }
   return url;
 };
