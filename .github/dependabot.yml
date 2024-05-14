@@ -15,3 +15,7 @@ updates:
     # Check for updates once a week
     schedule:
       interval: "weekly"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
