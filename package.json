@@ -48,7 +48,7 @@
     "prisma": "^5.11.0",
     "sass": "^1.75.0",
     "shadcn-nuxt": "^0.10.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.5"
   },
   "pnpm": {
     "supportedArchitectures": {
