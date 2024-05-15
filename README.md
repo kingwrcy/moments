@@ -27,6 +27,7 @@
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Jonnyan404"><img src="https://avatars.githubusercontent.com/u/20352705?v=4?s=80" width="80px;" alt="jonny"/><br /><sub><b>jonny</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=Jonnyan404" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/akarikun"><img src="https://avatars.githubusercontent.com/u/11921182?v=4?s=80" width="80px;" alt="明"/><br /><sub><b>明</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=akarikun" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/douseful"><img src="https://avatars.githubusercontent.com/u/52767905?v=4?s=80" width="80px;" alt="yee"/><br /><sub><b>yee</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=douseful" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.jschef.com/"><img src="https://avatars.githubusercontent.com/u/38160059?v=4?s=80" width="80px;" alt="Chef"/><br /><sub><b>Chef</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=Chef5" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
