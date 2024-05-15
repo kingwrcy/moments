@@ -8,6 +8,10 @@
 [![docker pull](https://img.shields.io/badge/1panel-本地安装-blue)](https://ono.ee/?p=1713750155422)
 
 
+[多用户版本](https://moments.randallanjie.com/),由[网友](https://github.com/RandallAnjie)自行fork修改而成.本体目前不支持多用户.
+
+有需要的可以看看,目前已经开放注册.
+
 
 ## 贡献者 ✨
 
