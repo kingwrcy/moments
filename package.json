@@ -46,7 +46,7 @@
     "@types/nodemailer": "^6.4.15",
     "prisma": "^5.13.0",
     "sass": "^1.75.0",
-    "shadcn-nuxt": "^0.10.2",
+    "shadcn-nuxt": "^0.10.4",
     "typescript": "^5.4.5"
   },
   "pnpm": {
