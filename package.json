@@ -23,7 +23,7 @@
     "cheerio": "^1.0.0-rc.12",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.11",
     "js-base64": "^3.7.7",
     "jsonwebtoken": "^9.0.2",
     "lucide-vue-next": "^0.378.0",
