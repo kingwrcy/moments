@@ -9,7 +9,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "resetPwd": "node ./resetPwd.js"
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
   },
   "dependencies": {
     "@alicloud/pop-core": "^1.7.13",
@@ -44,6 +45,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/nodemailer": "^6.4.15",
+    "all-contributors-cli": "^6.26.1",
     "prisma": "^5.13.0",
     "sass": "^1.77.1",
     "shadcn-nuxt": "^0.10.4",

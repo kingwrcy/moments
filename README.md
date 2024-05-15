@@ -1,7 +1,4 @@
 # 极简朋友圈
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![docker pull](https://img.shields.io/badge/moments-更新记录-blue)](https://github.com/kingwrcy/moments/blob/master/release.md)
 [![docker pull](https://img.shields.io/badge/moments-常见问题-blue)](https://github.com/kingwrcy/moments/blob/master/q&a.md)
@@ -12,11 +9,30 @@
 
 
 
-## 贡献者
+## 贡献者 ✨
 
-<a href="https://github.com/kingwrcy/moments/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=kingwrcy/moments" />
-</a>
+感谢这些贡献代码的朋友
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/RandallAnjie"><img src="https://avatars.githubusercontent.com/u/84122428?v=4?s=80" width="80px;" alt="Randall"/><br /><sub><b>Randall</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=RandallAnjie" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Jonnyan404"><img src="https://avatars.githubusercontent.com/u/20352705?v=4?s=80" width="80px;" alt="jonny"/><br /><sub><b>jonny</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=Jonnyan404" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/akarikun"><img src="https://avatars.githubusercontent.com/u/11921182?v=4?s=80" width="80px;" alt="明"/><br /><sub><b>明</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=akarikun" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/douseful"><img src="https://avatars.githubusercontent.com/u/52767905?v=4?s=80" width="80px;" alt="yee"/><br /><sub><b>yee</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=douseful" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 
 ## S3配置教程
@@ -130,27 +146,3 @@ npx prisma studio
 如果你觉得这个项目对你有帮助,可以对我打赏,感谢!
 
 ![1713695645770.png](https://yoyo.s3.bitiful.net/2024/04/21/6624eb9a4fd18.png)
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/RandallAnjie"><img src="https://avatars.githubusercontent.com/u/84122428?v=4?s=80" width="80px;" alt="Randall"/><br /><sub><b>Randall</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=RandallAnjie" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Jonnyan404"><img src="https://avatars.githubusercontent.com/u/20352705?v=4?s=80" width="80px;" alt="jonny"/><br /><sub><b>jonny</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=Jonnyan404" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/akarikun"><img src="https://avatars.githubusercontent.com/u/11921182?v=4?s=80" width="80px;" alt="明"/><br /><sub><b>明</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=akarikun" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/douseful"><img src="https://avatars.githubusercontent.com/u/52767905?v=4?s=80" width="80px;" alt="yee"/><br /><sub><b>yee</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=douseful" title="Code">💻</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
