@@ -1,0 +1,25 @@
+{
+  "projectName": "moments",
+  "projectOwner": "kingwrcy",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 80,
+  "commit": true,
+  "commitConvention": "eslint",
+  "contributors": [
+    {
+      "login": "RandallAnjie",
+      "name": "Randall",
+      "avatar_url": "https://avatars.githubusercontent.com/u/84122428?v=4",
+      "profile": "https://github.com/RandallAnjie",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false
+}
