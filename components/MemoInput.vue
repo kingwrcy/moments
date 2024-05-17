@@ -237,7 +237,10 @@
     </div>
 
     <div class="grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
-      <div v-for="(img, index) in imgs" :key="index" class="relative">
+      <div v-for="(img, index) in imgs" :key="index" class="relative" draggable="true"
+           @dragstart="event => dragStart(event, index)"
+           @dragover="dragOver"
+           @drop="event => drop(event, index)">
         <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square max-h-[200px]" />
         <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
           @click="removePreviewImg(index)" />
@@ -372,6 +375,23 @@ const addLink = async () => {
 const memoUpdateIndex = useState<number>('memoUpdateIndex', () => -1)
 
 const imgs = ref<string[]>([])
+
+const dragStart = (event: any, index: any) => {
+  event.dataTransfer.setData('text/plain', index);
+}
+
+const dragOver = (event: any) => {
+  event.preventDefault();
+}
+
+const drop = (event: any, dropIndex: any) => {
+  event.preventDefault();
+  const dragIndex = event.dataTransfer.getData('text/plain');
+  const dragImg = imgs.value[dragIndex];
+  imgs.value.splice(dragIndex, 1);  // 删除被拖拽的图片
+  imgs.value.splice(dropIndex, 0, dragImg);  // 在放置位置插入被拖拽的图片
+}
+
 const submitMemo = async () => {
   if (content.value === '' && imgs.value.length === 0
     && music163IfrUrl.value === '' && bilibiliIfrUrl.value === ''
