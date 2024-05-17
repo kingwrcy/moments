@@ -6,7 +6,7 @@
         <slot />
         <Footer />
       </div>
-      <ScrollBar orientation="vertical" />
+      <ScrollBar orientation="vertical" class="md:hidden"/>
     </ScrollArea>
   </div>
 

@@ -2,10 +2,10 @@
 
   <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 p-2 sm:p-4"
     :class="{ 'bg-slate-100 dark:bg-neutral-800': props.memo.pinned }">
-    <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" />
+    <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" @click="toDetail" />
     <div class="flex flex-col gap-.5 flex-1">
       <div class="flex flex-row justify-between items-center">
-        <div class="username text-[#576b95] cursor-default mb-1 dark:text-white">{{ props.memo.user.nickname }}</div>
+        <div class="username text-[#576b95] cursor-default mb-1 dark:text-white" @click="toDetail">{{ props.memo.user.nickname }}</div>
         <Pin :size=14 v-if="props.memo.pinned" />
       </div>
       <div class="memo-content text-sm friend-md mome-container" ref="el" v-html="'<span>'+props.memo.content.replaceAll(/\n/g, '<br/>').replace(/#(\S+)/g, '</span><a style=color:#3C4F7E href=/tags/$1>#$1</a><span>')+'</span>'">
@@ -116,8 +116,7 @@
               <Comment :comment="comment" @memo-update="refreshComment" :index="index"
                 @comment-started="momentsShowCommentInput = false" />
             </div>
-            <div v-if="props.memo._count.comments > 5 && props.showMore" class="text-[#576b95] cursor-pointer"
-              @click="navigateTo(`/detail/${props.memo.id}`)">查看更多...</div>
+            <div v-if="props.memo._count.comments > 5 && props.showMore" class="text-[#576b95] cursor-pointer" @click="toDetail">查看更多...</div>
           </div>
         </template>
       </div>
@@ -216,6 +215,10 @@ const like = async () => {
     }
     emit('memo-update')
   }
+}
+
+const toDetail = () => {
+  if (props.showMore) navigateTo(`/detail/${props.memo.id}`);
 }
 
 const pinned = async () => {

@@ -1,0 +1,61 @@
+{
+  "projectName": "moments",
+  "projectOwner": "kingwrcy",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 80,
+  "commit": true,
+  "commitConvention": "eslint",
+  "contributors": [
+    {
+      "login": "RandallAnjie",
+      "name": "Randall",
+      "avatar_url": "https://avatars.githubusercontent.com/u/84122428?v=4",
+      "profile": "https://github.com/RandallAnjie",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Jonnyan404",
+      "name": "jonny",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20352705?v=4",
+      "profile": "https://github.com/Jonnyan404",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "akarikun",
+      "name": "明",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11921182?v=4",
+      "profile": "https://github.com/akarikun",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "douseful",
+      "name": "yee",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52767905?v=4",
+      "profile": "https://github.com/douseful",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Chef5",
+      "name": "Chef",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38160059?v=4",
+      "profile": "https://www.jschef.com/",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false
+}

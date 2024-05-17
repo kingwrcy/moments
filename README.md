@@ -8,6 +8,38 @@
 [![docker pull](https://img.shields.io/badge/1panel-本地安装-blue)](https://ono.ee/?p=1713750155422)
 
 
+[多用户版本](https://moments.randallanjie.com/),由[网友](https://github.com/RandallAnjie)自行fork修改而成.本体目前不支持多用户.
+
+有需要的可以看看,目前已经开放注册.
+
+
+## 贡献者 ✨
+
+感谢这些贡献代码的朋友
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/RandallAnjie"><img src="https://avatars.githubusercontent.com/u/84122428?v=4?s=80" width="80px;" alt="Randall"/><br /><sub><b>Randall</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=RandallAnjie" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Jonnyan404"><img src="https://avatars.githubusercontent.com/u/20352705?v=4?s=80" width="80px;" alt="jonny"/><br /><sub><b>jonny</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=Jonnyan404" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/akarikun"><img src="https://avatars.githubusercontent.com/u/11921182?v=4?s=80" width="80px;" alt="明"/><br /><sub><b>明</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=akarikun" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/douseful"><img src="https://avatars.githubusercontent.com/u/52767905?v=4?s=80" width="80px;" alt="yee"/><br /><sub><b>yee</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=douseful" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.jschef.com/"><img src="https://avatars.githubusercontent.com/u/38160059?v=4?s=80" width="80px;" alt="Chef"/><br /><sub><b>Chef</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=Chef5" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+
 ## S3配置教程
 
 [![docker pull](https://img.shields.io/badge/CF-R2配置-blue)](https://jerry.mblog.club/moments-r2-config)

@@ -9,7 +9,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "resetPwd": "node ./resetPwd.js"
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
   },
   "dependencies": {
     "@alicloud/pop-core": "^1.7.13",
@@ -22,16 +23,16 @@
     "bcrypt": "^5.1.1",
     "cheerio": "^1.0.0-rc.12",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.0",
-    "dayjs": "^1.11.10",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.11",
     "js-base64": "^3.7.7",
     "jsonwebtoken": "^9.0.2",
-    "lucide-vue-next": "^0.372.0",
+    "lucide-vue-next": "^0.378.0",
     "nodemailer": "^6.9.13",
     "nuxt": "^3.11.1",
     "radix-vue": "^1.7.0",
     "reflect-metadata": "^0.2.2",
-    "short-uuid": "^4.2.2",
+    "short-uuid": "^5.2.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.23",
@@ -39,16 +40,16 @@
     "vue-sonner": "^1.1.2"
   },
   "devDependencies": {
-    "@nuxtjs/color-mode": "^3.4.0",
+    "@nuxtjs/color-mode": "^3.4.1",
     "@nuxtjs/tailwindcss": "^6.12.0",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
-    "@types/markdown-it": "^14.0.1",
     "@types/nodemailer": "^6.4.15",
-    "prisma": "^5.11.0",
-    "sass": "^1.75.0",
-    "shadcn-nuxt": "^0.10.2",
-    "typescript": "^5.4.3"
+    "all-contributors-cli": "^6.26.1",
+    "prisma": "^5.13.0",
+    "sass": "^1.77.1",
+    "shadcn-nuxt": "^0.10.4",
+    "typescript": "^5.4.5"
   },
   "pnpm": {
     "supportedArchitectures": {
