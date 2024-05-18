@@ -19,14 +19,14 @@
             <div class="flex flex-col gap-2" @keyup.enter="addLink()">
               <div class="text-xs my-2 flex justify-between"><span>插入链接</span>
               </div>
-              <Input class="my-2" placeholder="请输入链接地址" v-model="externalUrl" />
+              <Input class="my-2" placeholder="请输入地址" v-model="externalUrl" />
               <template v-if="externalFetchError">
-                <Input class="my-2" placeholder="请输入链接标题" v-model="externalTitle" />
-                <Input class="my-2" placeholder="请输入链接图标,选填" v-model="externalFavicon" />
+                <Input class="my-2" placeholder="请输入标题" v-model="externalTitle" />
+                <Input class="my-2" placeholder="请输入图标(选填)" v-model="externalFavicon" />
               </template>
               <div class="text-sm my-1" v-if="externalPending">获取信息中...</div>
-              <Button size="sm" @click="addLink">提交</Button>
-              <Button size="sm" class="ml-2" variant="secondary" @click="clearExternalUrl()">清空并关闭</Button>
+              <Button size="sm" @click="addLink">确定</Button>
+              <Button size="sm" variant="secondary" @click="clearExternalUrl()">清空</Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -69,7 +69,7 @@
                   如何获取?</NuxtLink>
               </div>
               <Input class="my-2" placeholder="请输入网易云音乐代码" v-model="music163Url" />
-              <Button size="sm" class="mr-2" @click="importMusic">提交</Button>
+              <Button size="sm" class="mr-2" @click="importMusic">确定</Button>
               <Button size="sm" variant="ghost"
                 @click="music163IfrUrl = ''; music163Url = ''; music163Open = false;">清空</Button>
             </div>
@@ -118,7 +118,7 @@
                 </div>
                 <Input class="my-2" placeholder="请输入在线视频地址" v-model="videoUrl" />
               </div>
-              <Button size="sm" @click="importVideo">提交</Button>
+              <Button size="sm" @click="importVideo">确定</Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -152,7 +152,7 @@
               </RadioGroup>
               <Input class="my-2" placeholder="请输入豆瓣读书/电影的ID" v-model="douban.id" />
               <Button size="sm" @click="importDouban" :disabled="doubanSubmitting">
-                <Loader2 class="w-4 h-4 mr-2 animate-spin" v-if="doubanSubmitting" />提交
+                <Loader2 class="w-4 h-4 mr-2 animate-spin" v-if="doubanSubmitting" />确定
               </Button>
               <span class="text-xs ml-2 text-gray-400" v-if="doubanSubmitting">请耐心等待下载豆瓣图片并上传!</span>
             </div>
@@ -171,7 +171,7 @@
               </a>
             </TooltipTrigger>
             <TooltipContent>
-              <p>进入设置</p>
+              <p>设置</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -247,11 +247,11 @@
       <div class="text-sm flex flex-row gap-1 flex-1 items-center">
         <Popover>
           <PopoverTrigger>
-            <div class="text-[#576b95] text-sm cursor-pointer">{{ fmtLocation }}</div>
+            <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer"><MapPin :size=14 />{{ fmtLocation }}</div>
           </PopoverTrigger>
           <PopoverContent class="w-80">
             <div class="flex flex-row gap-2 text-sm">
-              <Input v-model="location" placeholder="空格分隔,火星都行!" />
+              <Input v-model="location" placeholder="空格分隔" />
               <Button variant="outline" @click="location = ''">清空</Button>
             </div>
           </PopoverContent>
@@ -259,7 +259,7 @@
       </div>
       <label class="text-sm" :class="[showType?'text-lime-600' : 'text-stone-400']">{{ showType ?'公开':'私密' }}</label>
       <Switch id="showType" v-model:checked="showType"></Switch>
-      <Button @click="submitMemo">提交</Button>
+      <Button size="sm" @click="submitMemo">发布</Button>
     </div>
   </div>
 </template>
@@ -272,7 +272,7 @@ import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
 import type { DoubanBook, DoubanMovie, Memo, MemoExt, PrivateConfig } from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
-import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check, Loader2 } from 'lucide-vue-next'
+import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check, Loader2, MapPin } from 'lucide-vue-next'
 
 const privateConfig = useState<PrivateConfig>('privateConfig')
 
@@ -290,7 +290,7 @@ const fmtLocation = computed(() => {
   if (location.value) {
     return location.value.split(' ').join(' · ')
   }
-  return '自定义位置?'
+  return '自定义位置'
 })
 const content = ref('')
 const id = ref(-1)
@@ -404,7 +404,7 @@ const submitMemo = async () => {
     })
   })
   if (res.success) {
-    toast.success('提交成功')
+    toast.success('发布成功')
     content.value = ''
 
     showType.value = true
@@ -430,7 +430,7 @@ const submitMemo = async () => {
     emit(id.value > 0 ? 'memoUpdated' : 'memoAdded')
     id.value = -1
   } else {
-    toast.warning('提交失败')
+    toast.warning('发布失败')
   }
 }
 
