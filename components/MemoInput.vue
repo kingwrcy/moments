@@ -241,7 +241,7 @@
            @dragstart="event => dragStart(event, index)"
            @dragover="dragOver"
            @drop="event => drop(event, index)">
-        <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square max-h-[200px]" />
+        <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square max-h-[200px] cursor-grab" />
         <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
           @click="removePreviewImg(index)" />
       </div>
