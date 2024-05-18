@@ -40,8 +40,8 @@
                v-for="(img, index) in imgs" :key="index" />
         </FancyBox>
       </div>
-      <div class="text-[#576b95] cursor-pointer" v-if="hh > maxHeight && !showAll" @click="showMore">全文</div>
-      <div class="text-[#576b95] cursor-pointer " v-if="showAll" @click="showLess">收起</div>
+      <div class="text-[#576b95] cursor-pointer" v-if="!isDetailPage && hh > maxHeight && !showAll" @click="showMore">全文</div>
+      <div class="text-[#576b95] cursor-pointer " v-if="!isDetailPage && showAll" @click="showLess">收起</div>
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none" v-if="props.memo.location">
         {{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
       <div class="toolbar relative flex flex-row justify-between select-none my-1 items-center">
@@ -157,7 +157,7 @@ const props = withDefaults(
 )
 const publicConfig = useState<PublicConfig>('publicConfig')
 const route = useRoute()
-
+const isDetailPage = route.fullPath.startsWith('/detail')
 const emit = defineEmits(['memo-update'])
 const maxLine = publicConfig.value.memoMaxLine
 const maxHeight = ref(24 * maxLine)
@@ -280,7 +280,7 @@ const showLess = () => {
 
 watchOnce(height, () => {
   hh.value = height.value
-  if (height.value > maxHeight.value) {
+  if (!isDetailPage && height.value > maxHeight.value) {
     el.value.classList.add(`line-clamp-${maxLine}`)
   }
 })

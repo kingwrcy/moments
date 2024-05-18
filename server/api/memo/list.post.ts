@@ -12,30 +12,26 @@ type ListMemoReq = {
 };
 
 export default defineEventHandler(async (event) => {
-
   const token = getCookie(event, "token");
   let userId = 0;
-  if(token){
-    try{
-      const user = jwt.verify(token, jwtKey) as JwtPayload
-      userId = user.userId
-    }
-    catch{ }
-  }  
-  const fromUser = ()=>{
-    return userId == 0? {}:{userId}
+  if (token) {
+    try {
+      const user = jwt.verify(token, jwtKey) as JwtPayload;
+      userId = user.userId;
+    } catch {}
   }
-  const fromShowType = ()=>{
-    return userId == 0 ? [{ showType: 1 }]:[{ showType: 1 },{ showType: 0 }]
-  }
+  const fromUser = () => {
+    return userId == 0 ? {} : { userId };
+  };
+  const fromShowType = () => {
+    return userId == 0 ? [{ showType: 1 }] : [{ showType: 1 }, { showType: 0 }];
+  };
 
-  const config = ((await fs.readFile(`${process.env.CONFIG_FILE}`)).toString())
-  const sysConfig = JSON.parse(config) as SysConfig
-
+  const config = (await fs.readFile(`${process.env.CONFIG_FILE}`)).toString();
+  const sysConfig = JSON.parse(config) as SysConfig;
 
   const { page, tagname } = (await readBody(event)) as ListMemoReq;
-  // const size = config.pageSize;
-    const size = 10;
+  const size = sysConfig.public.pageSize;
   let data = await prisma.memo.findMany({
     include: {
       user: {
@@ -64,10 +60,10 @@ export default defineEventHandler(async (event) => {
     where: {
       pinned: false,
       content: {
-        contains: tagname? '#'+tagname: '',
+        contains: tagname ? "#" + tagname : "",
       },
       OR: [...fromShowType()],
-      ...fromUser()
+      ...fromUser(),
     },
     orderBy: {
       createdAt: "desc",
@@ -103,10 +99,10 @@ export default defineEventHandler(async (event) => {
       where: {
         pinned: true,
         content: {
-          contains: tagname? '#'+tagname: '',
+          contains: tagname ? "#" + tagname : "",
         },
         OR: [...fromShowType()],
-        ...fromUser()
+        ...fromUser(),
       },
     });
     if (pinnedMemo) {
@@ -117,7 +113,7 @@ export default defineEventHandler(async (event) => {
   const total = await prisma.memo.count({
     where: {
       content: {
-        contains: tagname? '#'+tagname: '',
+        contains: tagname ? "#" + tagname : "",
       },
     },
   });
