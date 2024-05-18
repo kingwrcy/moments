@@ -35,7 +35,7 @@
     "short-uuid": "^5.2.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "vue": "^3.4.23",
+    "vue": "^3.4.27",
     "vue-router": "^4.3.2",
     "vue-sonner": "^1.1.2",
     "vuedraggable": "^2.24.3"
@@ -48,7 +48,7 @@
     "@types/nodemailer": "^6.4.15",
     "all-contributors-cli": "^6.26.1",
     "prisma": "^5.14.0",
-    "sass": "^1.77.1",
+    "sass": "^1.77.2",
     "shadcn-nuxt": "^0.10.4",
     "typescript": "^5.4.5"
   },
