@@ -37,7 +37,8 @@
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.23",
     "vue-router": "^4.3.2",
-    "vue-sonner": "^1.1.2"
+    "vue-sonner": "^1.1.2",
+    "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
     "@nuxtjs/color-mode": "^3.4.1",

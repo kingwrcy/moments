@@ -8,9 +8,11 @@ import { JwtPayload } from "../user/login.post";
 type ListMemoReq = {
   page: number;
   size: number;
+  tagname: any;
 };
 
 export default defineEventHandler(async (event) => {
+
   const token = getCookie(event, "token");
   let userId = 0;
   if(token){
@@ -30,7 +32,10 @@ export default defineEventHandler(async (event) => {
   const config = ((await fs.readFile(`${process.env.CONFIG_FILE}`)).toString())
   const sysConfig = JSON.parse(config) as SysConfig
 
-  const { page ,size} = (await readBody(event)) as ListMemoReq;
+
+  const { page, tagname } = (await readBody(event)) as ListMemoReq;
+  // const size = config.pageSize;
+    const size = 10;
   let data = await prisma.memo.findMany({
     include: {
       user: {
@@ -58,6 +63,9 @@ export default defineEventHandler(async (event) => {
     },
     where: {
       pinned: false,
+      content: {
+        contains: tagname? '#'+tagname: '',
+      },
       OR: [...fromShowType()],
       ...fromUser()
     },
@@ -94,6 +102,9 @@ export default defineEventHandler(async (event) => {
       },
       where: {
         pinned: true,
+        content: {
+          contains: tagname? '#'+tagname: '',
+        },
         OR: [...fromShowType()],
         ...fromUser()
       },
@@ -103,7 +114,14 @@ export default defineEventHandler(async (event) => {
       data = [pinnedMemo, ...data];
     }
   }
-  const total = await prisma.memo.count();
+  const total = await prisma.memo.count({
+    where: {
+      content: {
+        contains: tagname? '#'+tagname: '',
+      },
+    },
+  });
+
   const totalPage = Math.ceil(total / size);
   return {
     data,
