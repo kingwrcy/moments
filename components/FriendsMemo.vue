@@ -106,7 +106,7 @@
       <div class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-[#202020] flex flex-col gap-1  ">
         <div class="flex flex-row py-2 px-4 gap-2 items-center text-sm" v-if="props.memo.favCount > 0">
           <Heart :size=14 color="#C64A4A" />
-          <div class="text-[#576b95]"><span class="mx-1">{{ props.memo.favCount }}</span>位访客赞过</div>
+          <div class="text-[#576b95]"><span class="mx-1">{{ props.memo.favCount }}</span>位访客</div>
         </div>
         <FriendsCommentInput :memoId="props.memo.id" @commentAdded="refreshComment" v-if="momentsShowCommentInput" />
         <template v-if="props.memo.comments.length > 0 && publicConfig.enableShowComment">

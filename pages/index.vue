@@ -6,14 +6,14 @@
 
     <div class="content flex flex-col divide-y divide-[#C0BEBF]/10">
       <div v-if="(data?.data as any as Memo[]).length === 0 && !token" class="text-center">
-        <div class="my-2 text-sm">什么也没有,赶紧去登录发表Moments吧!</div>
-        <Button @click="navigateTo('/login')">去登录</Button>
+        <div class="my-2 text-sm">空空如也，赶紧去发表Moments吧!</div>
+        <Button @click="navigateTo('/login')">登录</Button>
       </div>
       <FriendsMemo :memo="memo" v-for="(memo, index) in data?.data as any as Memo[]" :index="index" :key="index"
         :show-more="true" @memo-update="loadData(Math.ceil((index + 1) / state.size), 'edit')" />
     </div>
     <div class="cursor-pointer text-center text-sm opacity-70  my-4" @click="loadData(state.page + 1, 'more')"
-      v-if="state.hasNext">点击加载更多...
+      v-if="state.hasNext">- 加载更多 -
     </div>
   </div>
 </template>

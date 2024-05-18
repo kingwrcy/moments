@@ -7,10 +7,10 @@
     </div>
     <Emoji v-if="showEmoji" class="mt-2" @emoji-selected="emojiSelected"/>
     <div class="flex flex-row items-center justify-end mt-2 gap-2">
-      <Input placeholder="昵称,必填" type="text"  v-model="info.username" class=" dark:bg-slate-500 text-xs sm:text-sm  py-0.5"></Input>
-      <Input placeholder="主页,可空" type="text" v-model="info.website" class="dark:bg-slate-500 text-xs sm:text-sm  py-0.5"> </Input>
-      <Input placeholder="邮箱,可空" type="text" v-model="info.email" class="hidden sm:block dark:bg-slate-500 text-xs sm:text-sm py-0.5"></Input>
-      <Button size="sm" @click="saveComment" :disabled="pending">发表评论</Button>
+      <Input placeholder="昵称(必填)" type="text"  v-model="info.username" class=" dark:bg-slate-500 text-xs sm:text-sm  py-0.5"></Input>
+      <Input placeholder="主页(选填)" type="text" v-model="info.website" class="dark:bg-slate-500 text-xs sm:text-sm  py-0.5"> </Input>
+      <Input placeholder="邮箱(选填)" type="text" v-model="info.email" class="hidden sm:block dark:bg-slate-500 text-xs sm:text-sm py-0.5"></Input>
+      <Button size="sm" @click="saveComment" :disabled="pending">发送</Button>
     </div>
   </div>
 </template>
@@ -29,7 +29,7 @@ const publicConfig = useState<PublicConfig>('publicConfig')
 const textareaRef = ref()
 const token = useCookie('token')
 const content = ref('')
-const placeholder = ref('发表评论')
+const placeholder = ref('评论')
 const emit = defineEmits(['commentAdded'])
 const showEmoji = ref(false)
 const keyframes = { transform: 'rotate(360deg)' }
@@ -66,11 +66,11 @@ const pending = ref(false)
 const saveComment = async () => {
 
   if (!content.value) {
-    toast.warning('先填写评论')
+    toast.warning('先填写内容')
     return
   }
   if (content.value.length > publicConfig.value.commentMaxLength) {
-    toast.warning('评论超长')
+    toast.warning('内容超长')
     return
   }
   if (!info.value.username) {
@@ -118,11 +118,11 @@ const submitComment = async (token?: string) => {
   })
 
   if (res.success) {
-    toast.success('评论成功')
+    toast.success('发送成功')
     content.value = ''
     emit('commentAdded')
   } else {
-    toast.warning(res.message || '评论失败')
+    toast.warning(res.message || '发送失败')
   }
   pending.value = false
 }
@@ -130,7 +130,7 @@ const submitComment = async (token?: string) => {
 onMounted(async () => {
 
   if (props.reply) {
-    placeholder.value = "回复给@" + props.reply
+    placeholder.value = "回复@" + props.reply
   }
 })
 </script>
