@@ -35,7 +35,7 @@
     "short-uuid": "^5.2.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "vue": "^3.4.23",
+    "vue": "^3.4.27",
     "vue-router": "^4.3.2",
     "vue-sonner": "^1.1.2",
     "vuedraggable": "^2.24.3"
