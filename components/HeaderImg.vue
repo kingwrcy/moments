@@ -39,7 +39,7 @@ const colorMode = useColorMode()
 const token = useCookie('token')
 const route = useRoute()
 const showBack = () => {
-  return route.path.startsWith('/detail') || route.path.startsWith('/settings') || route.path.startsWith('/tags')
+  return route.path.startsWith('/detail') || route.path.startsWith('/settings') || route.path.startsWith('/tags') || route.query.tag
 }
 const { data: res, refresh } = await useAsyncData('userinfo', async () => await $fetch('/api/user/settings/get'))
 

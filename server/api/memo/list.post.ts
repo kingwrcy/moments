@@ -8,7 +8,7 @@ import { JwtPayload } from "../user/login.post";
 type ListMemoReq = {
   page: number;
   size: number;
-  tagname: any;
+  tag: any;
 };
 
 export default defineEventHandler(async (event) => {
@@ -30,8 +30,9 @@ export default defineEventHandler(async (event) => {
   const config = (await fs.readFile(`${process.env.CONFIG_FILE}`)).toString();
   const sysConfig = JSON.parse(config) as SysConfig;
 
-  const { page, tagname } = (await readBody(event)) as ListMemoReq;
+  let { page, tag } = (await readBody(event)) as ListMemoReq;
   const size = sysConfig.public.pageSize;
+
   let data = await prisma.memo.findMany({
     include: {
       user: {
@@ -60,7 +61,7 @@ export default defineEventHandler(async (event) => {
     where: {
       pinned: false,
       content: {
-        contains: tagname ? "#" + tagname : "",
+        contains: tag ? "#" + tag : undefined,
       },
       OR: [...fromShowType()],
       ...fromUser(),
@@ -99,7 +100,7 @@ export default defineEventHandler(async (event) => {
       where: {
         pinned: true,
         content: {
-          contains: tagname ? "#" + tagname : "",
+          contains: tag ? "#" + tag : undefined,
         },
         OR: [...fromShowType()],
         ...fromUser(),
@@ -113,7 +114,7 @@ export default defineEventHandler(async (event) => {
   const total = await prisma.memo.count({
     where: {
       content: {
-        contains: tagname ? "#" + tagname : "",
+        contains: tag ? "#" + tag : undefined,
       },
     },
   });

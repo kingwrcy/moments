@@ -5,10 +5,16 @@
     <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" @click="toDetail" />
     <div class="flex flex-col gap-.5 flex-1">
       <div class="flex flex-row justify-between items-center">
-        <div class="username text-[#576b95] cursor-default mb-1 dark:text-white" @click="toDetail">{{ props.memo.user.nickname }}</div>
+        <div class="username text-[#576b95] cursor-default mb-1 dark:text-white" @click="toDetail">{{
+          props.memo.user.nickname }}</div>
         <Pin :size=14 v-if="props.memo.pinned" />
       </div>
-      <div class="memo-content text-sm friend-md mome-container" ref="el" v-html="'<span>'+props.memo.content.replaceAll(/\n/g, '<br/>').replace(/#(\S+)/g, '</span><a style=color:#3C4F7E href=/tags/$1>#$1</a><span>')+'</span>'">
+
+      <div class="memo-content text-sm friend-md mome-container" ref="el" v-html="memoContent">
+      </div>
+      <div class="flex gap-1">
+        <div @click="navigateTo({ query: { tag: tag.substring(1) } })" v-for="tag in tags"
+          class="text-[#3C4F7E] cursor-pointer hover:text-[#3C4F7E]/80">{{ tag }}</div>
       </div>
 
       <div class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
@@ -33,24 +39,26 @@
       <DoubanMovie :movie="memoExt.doubanMovie" v-if="memoExt.doubanMovie" />
 
       <div v-if="imgs.length">
-        <FancyBox class="grid my-1 gap-0.5" :style="gridStyle"
-                  :options="{ Carousel: { infinite: false } }">
+        <FancyBox class="grid my-1 gap-0.5" :style="gridStyle" :options="{ Carousel: { infinite: false } }">
           <img loading="lazy" :src="getImgUrl(img)" class="cursor-zoom-in rounded"
-               :class="imgs.length === 1 ? 'full-cover-image-single' : 'full-cover-image-mult'"
-               v-for="(img, index) in imgs" :key="index" />
+            :class="imgs.length === 1 ? 'full-cover-image-single' : 'full-cover-image-mult'"
+            v-for="(img, index) in imgs" :key="index" />
         </FancyBox>
       </div>
-      <div class="text-[#576b95] cursor-pointer" v-if="!isDetailPage && hh > maxHeight && !showAll" @click="showMore">全文</div>
+
+      <div class="text-[#576b95] cursor-pointer" v-if="!isDetailPage && hh > maxHeight && !showAll" @click="showMore">全文
+      </div>
+      
       <div class="text-[#576b95] cursor-pointer " v-if="!isDetailPage && showAll" @click="showLess">收起</div>
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none" v-if="props.memo.location">
         {{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
       <div class="toolbar relative flex flex-row justify-between select-none my-1 items-center">
-        <div v-if="memo.showType===0" class="text-xs text-stone-400 mr-2">私密</div>
+        <div v-if="memo.showType === 0" class="text-xs text-stone-400 mr-2">私密</div>
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-if="publicConfig.dateTimeFormat === 'AGO'">{{
-      dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
-        '') }}</div>
+          dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
+            '') }}</div>
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-else>{{
-      dayjs(props.memo.createdAt).format('YYYY-MM-DD hh:mm:ss')}}</div>
+          dayjs(props.memo.createdAt).format('YYYY-MM-DD hh:mm:ss') }}</div>
         <div @click="showToolbar = !showToolbar"
           class="toolbar-icon px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
           <img src="~/assets/img/dian.svg" class="w-3 h-3" />
@@ -63,7 +71,8 @@
               <Pin :size=14 />
               <div class="hidden md:block">{{ (props.memo.pinned ? '取消' : '') + '置顶' }}</div>
             </div>
-            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="token && !route.path.startsWith('/detail')" @click="editMemo">
+            <div class="flex flex-row gap-2 cursor-pointer items-center"
+              v-if="token && !route.path.startsWith('/detail')" @click="editMemo">
               <FilePenLine :size=14 />
               <div class="hidden md:block">编辑</div>
             </div>
@@ -91,11 +100,11 @@
             <div class="flex flex-row gap-2 cursor-pointer items-center" @click="like">
               <Heart :size=14 v-if="likeList.findIndex((id) => id === props.memo.id) < 0" />
               <HeartCrack :size=14 v-else />
-              <div class="hidden md:block">{{ likeList.findIndex((id) => id === props.memo.id) >= 0 ? '取消' : '赞' }}</div>
+              <div class="hidden md:block">{{ likeList.findIndex((id) => id === props.memo.id) >= 0 ? '取消' : '赞' }}
+              </div>
             </div>
 
-            <div class="flex flex-row gap-2 cursor-pointer items-center"
-              v-if="publicConfig.enableComment"
+            <div class="flex flex-row gap-2 cursor-pointer items-center" v-if="publicConfig.enableComment"
               @click="momentsShowCommentInput = !momentsShowCommentInput; showUserCommentArray = []; showToolbar = false">
               <MessageSquareMore :size=14 />
               <div class="hidden md:block">评论</div>
@@ -116,7 +125,8 @@
               <Comment :comment="comment" @memo-update="refreshComment" :index="index"
                 @comment-started="momentsShowCommentInput = false" />
             </div>
-            <div v-if="props.memo._count.comments > 5 && props.showMore" class="text-[#576b95] cursor-pointer" @click="toDetail">查看更多...</div>
+            <div v-if="props.memo._count.comments > 5 && props.showMore" class="text-[#576b95] cursor-pointer"
+              @click="toDetail">查看更多...</div>
           </div>
         </template>
       </div>
@@ -125,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Memo, MemoExt ,PublicConfig} from '@/lib/types';
+import type { Memo, MemoExt, PublicConfig } from '@/lib/types';
 import { useElementSize, onClickOutside, watchOnce, useStorage } from '@vueuse/core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -174,6 +184,8 @@ const { height } = useElementSize(el)
 const likeList = useStorage<Array<number>>('likeList', [])
 
 const memoExt = computed(() => JSON.parse(props.memo.ext || '{}') as MemoExt)
+const tags = computed(() => props.memo.content.match(/#(\S+)/g) || [])
+const memoContent = computed(() => props.memo.content.replaceAll(/\n/g, '<br/>').replace(/#(\S+)/g, ''))
 
 const imgs = computed(() => props.memo.imgs ? props.memo.imgs.split(',') : []);
 const gridStyle = computed(() => {
