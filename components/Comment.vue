@@ -3,15 +3,15 @@
 
     <div class="dark:text-[#9F9F9F] ">
       <span class="text-[#576b95] text-nowrap"><a class="cursor-pointer" v-if="comment.website" target="_blank"
-          :href="comment.website">{{
+          :href="website">{{
             comment.username ?? '匿名' }}</a>
         <span v-else>{{ comment.username ?? '匿名' }}</span>
         <b v-if="comment.author"
           class="border text-xs border-[#C64A4A] rounded mx-0.5 px-0.5 text-[#C64A4A]">作者</b></span>
       <span v-if="comment.replyTo" class="text-nowrap mx-1">回复<span class="text-[#576b95] ml-1"><a
-            class="cursor-pointer" v-if="comment.replyTo" target="_blank" :href="comment.website">{{
-              comment.replyTo ?? '匿名' }}</a></span> 
-              </span>
+            class="cursor-pointer" v-if="comment.replyTo" target="_blank" :href="website">{{
+              comment.replyTo ?? '匿名' }}</a></span>
+      </span>
       <span class="mr-0.5">:</span>
       <span :title="`点击回复${comment.username}`" class="inline w-full break-all cursor-pointer"
         @click="toggleUserComment">{{
@@ -46,7 +46,7 @@ import type { Comment } from '@/lib/types';
 import { Trash2 } from 'lucide-vue-next'
 import { toast } from 'vue-sonner';
 
-const emit = defineEmits(['memo-update','comment-started'])
+const emit = defineEmits(['memo-update', 'comment-started'])
 
 const token = useCookie('token')
 const props = withDefaults(
@@ -55,8 +55,11 @@ const props = withDefaults(
     index: number
   }>(), {}
 )
-const showUserCommentArray = useState<Array<boolean>>('showUserCommentArray_'+props.comment.memoId)
+const showUserCommentArray = useState<Array<boolean>>('showUserCommentArray_' + props.comment.memoId)
 
+const website = computed(() => {
+  return props.comment.website?.startsWith('http') ? props.comment.website : `http://${props.comment.website}`
+})
 
 const refreshComment = async () => {
   emit('memo-update')

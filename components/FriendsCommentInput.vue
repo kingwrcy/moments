@@ -65,23 +65,23 @@ const pending = ref(false)
 
 const saveComment = async () => {
 
-  if (!content.value) {
+  if (!content.value.trim()) {
     toast.warning('先填写内容')
     return
   }
-  if (content.value.length > publicConfig.value.commentMaxLength) {
+  if (content.value.trim().length > publicConfig.value.commentMaxLength) {
     toast.warning('内容超长')
     return
   }
-  if (!info.value.username) {
+  if (!info.value.username.trim()) {
     toast.warning('用户名必填')
     return
   }
-  if (info.value.username.length > 10) {
+  if (info.value.username.trim().length > 10) {
     toast.warning('用户名')
     return
   }
-  if (info.value.website.length > 100) {
+  if (info.value.website.trim().length > 100) {
     toast.warning('网站地址超长')
     return
   }
