@@ -2,10 +2,10 @@
 
   <div class="memo flex flex-row gap-2 sm:gap-4 text-sm border-x-0 pt-2 p-2 sm:p-4"
     :class="{ 'bg-slate-100 dark:bg-neutral-800': props.memo.pinned }">
-    <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded" @click="toDetail" />
+    <img :src="props.memo.user.avatarUrl" class="avatar w-9 h-9 rounded cursor-pointer" @click="toDetail" />
     <div class="flex flex-col gap-.5 flex-1">
       <div class="flex flex-row justify-between items-center">
-        <div class="username text-[#576b95] cursor-default mb-1 dark:text-white" @click="toDetail">{{
+        <div class="username text-[#576b95] cursor-default mb-1 dark:text-white cursor-pointer" @click="toDetail">{{
           props.memo.user.nickname }}</div>
         <Pin :size=14 v-if="props.memo.pinned" />
       </div>
