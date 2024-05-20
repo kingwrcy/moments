@@ -6,7 +6,6 @@
         <slot />
         <Footer />
       </div>
-      <ScrollBar orientation="vertical" class="md:hidden"/>
     </ScrollArea>
   </div>
 
@@ -15,10 +14,10 @@
 </template>
 
 <script setup lang="ts">
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Toaster } from '@/components/ui/sonner';
-import type { Memo, PublicConfig, PrivateConfig, User } from '~/lib/types';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { memoUpdateEvent } from '~/lib/event';
+import type { Memo, PrivateConfig, PublicConfig, User } from '~/lib/types';
 
 
 const { data } = await useFetch('/api/user/validateToken', {

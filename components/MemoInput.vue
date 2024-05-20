@@ -236,12 +236,12 @@
       <CircleX class="w-5 h-5 cursor-pointer" color="red" @click="clearExternalUrl" />
     </div>
 
-    <div class="grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
+    <div class="editImgGrid grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
       <div v-for="(img, index) in imgs" :key="index" class="relative" draggable="true"
            @dragstart="event => dragStart(event, index)"
            @dragover="dragOver"
            @drop="event => drop(event, index)">
-        <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square max-h-[200px] cursor-grab" />
+        <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square max-h-[200px] cursor-move" />
         <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
           @click="removePreviewImg(index)" />
       </div>
@@ -644,4 +644,13 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.editImgGrid img{
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select:none;
+  -o-user-select:none;
+  user-select:none;
+}
+</style>
