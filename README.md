@@ -1,5 +1,8 @@
 # 极简朋友圈
 
+
+又开了个新坑,[极简论坛](https://discussion.mblog.club/),可以过来用于讨论[极简朋友圈](https://github.com/kingwrcy/moments),[极简博客](https://dev.mblog.club)的社区,当然代码也[开源](https://github.com/kingwrcy/discussion)了,可以自由部署使用,有问题可以上论坛反馈.
+
 [![docker pull](https://img.shields.io/badge/moments-更新记录-blue)](https://github.com/kingwrcy/moments/blob/master/release.md)
 [![docker pull](https://img.shields.io/badge/moments-常见问题-blue)](https://github.com/kingwrcy/moments/blob/master/q&a.md)
 ![moments github action status](https://img.shields.io/github/actions/workflow/status/kingwrcy/moments/deploy.yml)
