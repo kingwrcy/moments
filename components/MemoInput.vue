@@ -128,8 +128,7 @@
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger as-child>
-                  <img src="https://www.douban.com/favicon.ico" @click="doubanOpen = true" t="1713855207689"
-                    class="focus:outline-0 cursor-pointer w-[18px] h-[18px] " />
+                  <svg @click="doubanOpen = true" class="focus:outline-0 cursor-pointer w-[18px] h-[18px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.2735 15H5V7H19V15H17.3764L16.0767 19H21V21H3V19H7.6123L6.8 16.5L8.70211 15.882L9.71522 19H13.9738L15.2735 15ZM3.5 3H20.5V5H3.5V3ZM7 9V13H17V9H7Z"></path></svg>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>引入豆瓣读书和豆瓣电影</p>
