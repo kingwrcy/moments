@@ -1,6 +1,16 @@
 <template>
   <div class="header relative mb-8 ">
     <img class="header-img w-full  " :src="getImgUrl(res?.data?.coverUrl!)" alt="" />
+	  
+    <div class="absolute left-2 top-2 rounded p-1 flex flex-row gap-2">
+      <div title="返回" v-if="showBack()" @click="navigateTo('/')">
+        <ArrowLeft color="#9FC84A" :size="20" class="cursor-pointer" />
+      </div>
+      <div title="登录" v-if="!token">
+        <User :size="20" class="cursor-pointer" color="#9FC84A" @click="navigateTo('/login')" />
+      </div>
+    </div>
+
     <div class="absolute right-2 bottom-[-40px]">
       <div class="userinfo flex flex-col">
         <div class="flex flex-row items-center gap-4 justify-end">
@@ -11,14 +21,7 @@
       </div>
     </div>
 
-    <div class="absolute right-2 top-2 bg-slate-100 rounded p-1 flex flex-row gap-2">
-      <div title="返回" v-if="showBack()" @click="navigateTo('/')">
-        <ArrowLeft color="#9FC84A" :size="20" class="cursor-pointer" />
-      </div>
-      <div title="登录" v-if="!token">
-        <LogIn :size="20" class="cursor-pointer" color="#9FC84A" @click="navigateTo('/login')" />
-      </div>
-
+    <div class="absolute right-2 top-2 rounded p-1 flex flex-row gap-2">
       <div title="亮色" v-if="colorMode.value === 'dark'" @click="colorMode.value = 'light'">
         <Sun color="#FDE047" :size="20" class="cursor-pointer" />
       </div>
@@ -34,7 +37,7 @@
 <script setup lang="ts">
 import { settingsUpdateEvent } from '~/lib/event'
 import { getImgUrl } from '~/lib/utils';
-import { Sun, MoonStar, LogIn, ArrowLeft } from 'lucide-vue-next'
+import { Sun, MoonStar, User, ArrowLeft } from 'lucide-vue-next'
 const colorMode = useColorMode()
 const token = useCookie('token')
 const route = useRoute()
