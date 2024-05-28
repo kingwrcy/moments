@@ -58,7 +58,7 @@
           dayjs(props.memo.createdAt).locale('zh-cn').fromNow().replaceAll(/\s+/g,
             '') }}</div>
         <div class="flex-1 text-gray text-xs text-[#9DA4B0] " v-else>{{
-          dayjs(props.memo.createdAt).format('YYYY-MM-DD hh:mm:ss') }}</div>
+          dayjs(props.memo.createdAt).format('YYYY-MM-DD HH:mm:ss') }}</div>
         <div @click="showToolbar = !showToolbar"
           class="toolbar-icon px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
           <img src="~/assets/img/dian.svg" class="w-3 h-3" />
