@@ -166,8 +166,18 @@ export default defineEventHandler(async (event) => {
       sendEmail({
         email: comment.email,
         subject: "新回复",
-        message: `您在moments中的评论有新回复！
-                用户名为:  ${username} 回复了您的评论(${comment.content})，他回复道: ${content}，点击查看: ${sysConfig.public.siteUrl}/detail/${memoId}`,
+        message: `<div style="max-width: 500px;margin: 0 auto;padding: 20px;background: #f9f9f9;">
+                    <div style="color: #666;line-height: 1.5;">
+                      <p>您在 Moments 中的评论有回复啦！</p>
+                      <p><b>${username}</b> 回复了您的评论（${comment.content}）说：</p>
+                      <p style="text-indent: 30px;">${content}</p>
+                      <p>请及时查阅哦~</p>
+                    </div>
+                    <div style="margin-top: 30px;text-align: center;font-size: 14px;color: #999;">
+                      <a href="${sysConfig.public.siteUrl}/detail/${memoId}" style="margin-top: 20px;background: #007BFF;color: white;padding: 10px 20px;text-decoration: none;border-radius: 5px;">点击查看</a>
+                      <p>此邮件由系统自动发送，请勿直接回复。</p>
+                    </div>
+                  </div>`,
       }).catch((err) => {
         console.log(`发送邮件给: ${comment.email} 失败了,原因:{$err.message}`);
       });
@@ -194,8 +204,18 @@ export default defineEventHandler(async (event) => {
     sendEmail({
       email: sysConfig.private.adminEmail || "",
       subject: "新评论",
-      message: `您的moments有新评论！
-            用户名为:  ${username} 在您的moment中发表了评论: ${content}，点击查看: ${siteUrl}/detail/${memoId}`,
+      message: `<div style="max-width: 500px;margin: 0 auto;padding: 20px;background: #f9f9f9;">
+                  <div style="color: #666;line-height: 1.5;">
+                    <p>这是一条来自 Moments 的新评论！</p>
+                    <p><b>${username}</b> 说：</p>
+                    <p style="text-indent: 30px;">${content}</p>
+                    <p>请及时查阅哦~</p>
+                  </div>
+                  <div style="margin-top: 30px;text-align: center;font-size: 14px;color: #999;">
+                    <a href="${siteUrl}/detail/${memoId}" style="margin-top: 20px;background: #007BFF;color: white;padding: 10px 20px;text-decoration: none;border-radius: 5px;">点击查看</a>
+                    <p>此邮件由系统自动发送，请勿直接回复。</p>
+                  </div>
+                </div>`,
     }).catch((err) => {
       console.log(
         `发送邮箱给管理员: ${sysConfig.private.adminEmail} 失败了,原因:{$err.message}`
