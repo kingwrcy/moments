@@ -254,6 +254,7 @@
           <PopoverContent class="w-80">
             <div class="flex flex-row gap-2 text-sm">
               <Input v-model="location" placeholder="空格分隔" />
+              <Button variant="outline" @click="updateLocation">自动获取</Button>
               <Button variant="outline" @click="location = ''">清空</Button>
             </div>
           </PopoverContent>
@@ -272,10 +273,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
-import type { DoubanBook, DoubanMovie, Memo, MemoExt, PrivateConfig } from '~/lib/types';
+import type {DoubanBook, DoubanMovie, Memo, MemoExt, PrivateConfig, PublicConfig} from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
 import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check, Loader2, MapPin } from 'lucide-vue-next'
+import jsonp from "jsonp";
 
+const publicConfig = useState<PublicConfig>('publicConfig')
 const privateConfig = useState<PrivateConfig>('privateConfig')
 
 const textareaRef = ref()
@@ -646,6 +649,90 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   textareaRef.value?.getRef().focus()
   showType.value = event.showType==1
 })
+
+const getTmpLocation = async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let tencentMapKey: string = '';
+      if (publicConfig.value?.tencentMapKey !== undefined && publicConfig.value?.tencentMapKey !== '') {
+        tencentMapKey = publicConfig.value?.tencentMapKey;
+      } else {
+        reject('当前站点未开启地图服务，请手动输入位置或者联系管理员开启地图服务');
+      }
+      const url = 'https://apis.map.qq.com/ws/location/v1/ip';
+      const params = {
+        key: tencentMapKey,
+        output: 'jsonp'
+      };
+      const queryString = new URLSearchParams(params).toString();
+      const jsonpUrl = `${url}?${queryString}`;
+      jsonp(jsonpUrl, null, (err: any, data: any) => {
+        if (err) {
+          return '获取位置失败';
+        } else {
+          const ipLocation = data;
+          if (ipLocation.status === 0) {
+            let pos = ipLocation.result.ad_info.nation;
+            if (ipLocation.result.ad_info.province !== undefined && ipLocation.result.ad_info.province !== '') {
+              pos += '-' + ipLocation.result.ad_info.province;
+            }
+            if (ipLocation.result.ad_info.city !== undefined && ipLocation.result.ad_info.city !== '' && ipLocation.result.ad_info.city !== ipLocation.result.ad_info.province) {
+              pos += '-' + ipLocation.result.ad_info.city;
+            }
+            if (ipLocation.result.ad_info.district !== undefined && ipLocation.result.ad_info.district !== '') {
+              pos += '-' + ipLocation.result.ad_info.district;
+            }
+            if (ipLocation.result.address_reference !== undefined && ipLocation.result.address_reference !== '') {
+              if (ipLocation.result.address_reference.famous_area !== undefined && ipLocation.result.address_reference.famous_area !== '') {
+                pos += ' ' + ipLocation.result.address_reference.famous_area.title;
+              } else if (ipLocation.result.address_reference.business_area !== undefined && ipLocation.result.address_reference.business_area !== '') {
+                pos += ' ' + ipLocation.result.address_reference.town.title;
+              } else if (ipLocation.result.address_reference.town !== undefined && ipLocation.result.address_reference.town !== '') {
+                pos += ' ' + ipLocation.result.address_reference.town.title;
+              } else if (ipLocation.result.address_reference.landmark_l1 !== undefined && ipLocation.result.address_reference.landmark_l1 !== '') {
+                pos += ' ' + ipLocation.result.address_reference.town.title;
+              } else if (ipLocation.result.address_reference.landmark_l2 !== undefined && ipLocation.result.address_reference.landmark_l2 !== '') {
+                pos += ' ' + ipLocation.result.address_reference.town.title;
+              } else if (ipLocation.result.address_reference.street !== undefined && ipLocation.result.address_reference.street !== '') {
+                pos += ' ' + ipLocation.result.address_reference.town.title;
+              } else if (ipLocation.result.address_reference.street_number !== undefined && ipLocation.result.address_reference.street_number !== '') {
+                pos += ' ' + ipLocation.result.address_reference.town.title;
+              } else if (ipLocation.result.address_reference.crossroad !== undefined && ipLocation.result.address_reference.crossroad !== '') {
+                pos += ' ' + ipLocation.result.address_reference.town.title;
+              } else if (ipLocation.result.address_reference.water !== undefined && ipLocation.result.address_reference.water !== '') {
+                pos += ' ' + ipLocation.result.address_reference.town.title;
+              } else if (ipLocation.result.address_reference.ocean !== undefined && ipLocation.result.address_reference.ocean !== '') {
+                pos += ' ' + ipLocation.result.address_reference.town.title;
+              }
+            }
+            resolve(pos);
+          }
+        }
+        reject('获取位置失败');
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+}
+
+async function updateLocation() {
+  try {
+    toast.promise(getTmpLocation(), {
+      loading: '获取位置中...',
+      success: (data: any) => {
+        typeof data === "string" ? location.value = data : location.value = ''
+        return '获取位置成功';
+      },
+      error: (error: any) => {
+        location.value = '';
+        return error;
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
 </script>
 
 <style scoped>
