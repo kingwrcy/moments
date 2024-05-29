@@ -25,7 +25,7 @@
             <AlertDialogTitle>确定删除评论吗?</AlertDialogTitle>
             <AlertDialogDescription>
               <div><span class="font-bold">评论内容</span>:</div>
-              <div>{{ comment.content }}</div>
+              <div class="text-wrap break-all">{{ comment.content }}</div>
               <div class="my-2 text-red-400">无法恢复,你确定删除吗?</div>
             </AlertDialogDescription>
           </AlertDialogHeader>
