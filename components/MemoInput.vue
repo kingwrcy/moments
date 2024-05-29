@@ -562,6 +562,7 @@ const importMusic = () => {
 }
 
 
+const youtubeUrlRegs = [/v=([^&#]+)/, /youtu\.be\/(.*)\?/]
 const importVideo = () => {
   if (bilibiliUrl.value === '' && videoUrl.value === '' && youtubeUrl.value === '') {
     toast.warning('请输入视频地址/代码')
@@ -574,11 +575,15 @@ const importVideo = () => {
       bilibiliIfrUrl.value = url + '&autoplay=0&high_quality=1&as_wide=1'
     }
   } else if (youtubeUrl.value) {
-    const match = youtubeUrl.value.match(/v=([^&#]+)/)
-    if (match && match.length > 1) {
-      const id = match[1]
-      youtubeIfrUrl.value = `https://www.youtube.com/embed/${id}?autoplay=0&frameborder="0"`
+    for (let i = 0; i < youtubeUrlRegs.length; i++) {
+      const match = youtubeUrl.value.match(youtubeUrlRegs[i])
+      if (match && match.length > 1) {
+        const id = match[1]
+        youtubeIfrUrl.value = `https://www.youtube.com/embed/${id}?autoplay=0&frameborder="0"`
+        break
+      }
     }
+
   } else if (videoUrl.value) {
     // https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4
     videoIfrUrl.value = videoUrl.value
