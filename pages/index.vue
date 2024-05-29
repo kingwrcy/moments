@@ -9,8 +9,8 @@
         <div class="my-2 text-sm">空空如也，赶紧去发表Moments吧!</div>
         <Button @click="navigateTo('/login')">登录</Button>
       </div>
-      <FriendsMemo :memo="memo" v-for="(memo, index) in state.memoList" :index="index" :key="index"
-        :show-more="true" @memo-update="loadData(Math.ceil((index + 1) / state.size), 'edit')" />
+      <FriendsMemo :memo="memo" v-for="(memo, index) in state.memoList" :index="index" :key="index" :show-more="true"
+        @memo-update="loadData(Math.ceil((index + 1) / state.size), 'edit')" />
     </div>
     <div class="cursor-pointer text-center text-sm opacity-70  my-4" @click="loadData(state.page + 1, 'more')"
       v-if="state.hasNext">- 加载更多 -
@@ -50,8 +50,10 @@ const { data } = await useFetch('/api/memo/list', {
 state.memoList = data.value?.data as any as Memo[]
 state.hasNext = data.value?.hasNext || false
 
-watch(() => route.query, async () => {
-  await loadData(1, 'refresh')
+watch(() => route.query, async (n,o) => {
+  if (n.tag || !(Object.keys(n).length === Object.keys(o).length && (Object.keys(n).length === 0) )) {
+    await loadData(1, 'refresh')
+  }
 })
 
 const loadData = async (page: number, type: 'add' | 'edit' | 'more' | 'refresh') => {
