@@ -7,7 +7,8 @@
     "memoMaxLine": 4,
     "googleRecaptchaSiteKey": "",
     "pageSize": 10,
-    "dateTimeFormat": "AGO"
+    "dateTimeFormat": "AGO",
+    "tencentMapKey": "abc"
   },
   "private": {
     "commentOrderBy": "desc",

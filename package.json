@@ -38,7 +38,8 @@
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
     "vue-sonner": "^1.1.2",
-    "vuedraggable": "^2.24.3"
+    "vuedraggable": "^2.24.3",
+    "jsonp": "^0.2.1"
   },
   "devDependencies": {
     "@nuxtjs/color-mode": "^3.4.1",

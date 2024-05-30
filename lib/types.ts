@@ -115,6 +115,7 @@ export type SysConfig = {
     googleRecaptchaSiteKey: string;
     pageSize: number;
     dateTimeFormat: string;
+    tencentMapKey: string;
   };
 };
 
