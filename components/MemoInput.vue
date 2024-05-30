@@ -254,7 +254,7 @@
           <PopoverContent class="w-80">
             <div class="flex flex-row gap-2 text-sm">
               <Input v-model="location" placeholder="空格分隔" />
-              <Button variant="outline" @click="updateLocation">自动获取</Button>
+              <Button variant="outline" @click="updateLocation" v-if="publicConfig.tencentMapKey">自动获取</Button>
               <Button variant="outline" @click="location = ''">清空</Button>
             </div>
           </PopoverContent>
@@ -666,6 +666,7 @@ const getTmpLocation = async () => {
       };
       const queryString = new URLSearchParams(params).toString();
       const jsonpUrl = `${url}?${queryString}`;
+      
       jsonp(jsonpUrl, null, (err: any, data: any) => {
         if (err) {
           return '获取位置失败';
@@ -674,13 +675,13 @@ const getTmpLocation = async () => {
           if (ipLocation.status === 0) {
             let pos = ipLocation.result.ad_info.nation;
             if (ipLocation.result.ad_info.province !== undefined && ipLocation.result.ad_info.province !== '') {
-              pos += '-' + ipLocation.result.ad_info.province;
+              pos += ' ' + ipLocation.result.ad_info.province;
             }
             if (ipLocation.result.ad_info.city !== undefined && ipLocation.result.ad_info.city !== '' && ipLocation.result.ad_info.city !== ipLocation.result.ad_info.province) {
-              pos += '-' + ipLocation.result.ad_info.city;
+              pos += ' ' + ipLocation.result.ad_info.city;
             }
             if (ipLocation.result.ad_info.district !== undefined && ipLocation.result.ad_info.district !== '') {
-              pos += '-' + ipLocation.result.ad_info.district;
+              pos += ' ' + ipLocation.result.ad_info.district;
             }
             if (ipLocation.result.address_reference !== undefined && ipLocation.result.address_reference !== '') {
               if (ipLocation.result.address_reference.famous_area !== undefined && ipLocation.result.address_reference.famous_area !== '') {
@@ -711,6 +712,7 @@ const getTmpLocation = async () => {
         reject('获取位置失败');
       });
     } catch (error) {
+      reject('获取位置异常');
       console.error(error);
     }
   });

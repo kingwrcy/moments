@@ -26,6 +26,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.11",
     "js-base64": "^3.7.7",
+    "jsonp": "^0.2.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-vue-next": "^0.378.0",
     "nodemailer": "^6.9.13",
@@ -38,13 +39,13 @@
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
     "vue-sonner": "^1.1.2",
-    "vuedraggable": "^2.24.3",
-    "jsonp": "^0.2.1"
+    "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
     "@nuxtjs/color-mode": "^3.4.1",
     "@nuxtjs/tailwindcss": "^6.12.0",
     "@types/bcrypt": "^5.0.2",
+    "@types/jsonp": "^0.2.3",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/nodemailer": "^6.4.15",
     "all-contributors-cli": "^6.26.1",
