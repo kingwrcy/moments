@@ -62,7 +62,7 @@
 
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="music163Open = false">
-            <div class="" @keyup.enter="importMusic()">
+            <div @keyup.enter="importMusic()">
               <div class=" text-xs my-2 flex justify-between"><span>嵌入网易云音乐</span>
                 <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
                   class="text-gray-500 underline">
@@ -138,7 +138,7 @@
 
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="doubanOpen = false">
-            <div class="" @keyup.enter="importDouban()">
+            <div @keyup.enter="importDouban()">
               <RadioGroup :default-value="douban.type" class="flex flex-row gap-2 text-sm" v-model="douban.type">
                 <div class="flex items-center space-x-2">
                   <RadioGroupItem id="book" value="book" />
@@ -165,9 +165,9 @@
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger as-child>
-              <a href="/settings">
+              <NuxtLink to="/settings">
                 <Settings :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" />
-              </a>
+              </NuxtLink>
             </TooltipTrigger>
             <TooltipContent>
               <p>设置</p>

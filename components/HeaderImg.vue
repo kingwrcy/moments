@@ -22,11 +22,11 @@
     </div>
 
     <div class="absolute right-2 top-2 rounded p-1 flex flex-row gap-2">
-      <div title="亮色" v-if="colorMode.value === 'dark'" @click="colorMode.value = 'light'">
+      <div title="亮色" v-if="colorMode === 'dark'" @click="colorMode = 'light'">
         <Sun color="#FDE047" :size="20" class="cursor-pointer" />
       </div>
       <div title="暗色" v-else>
-        <MoonStar color="#FDE047" :size="20" class="cursor-pointer" @click="colorMode.value = 'dark'" />
+        <MoonStar color="#FDE047" :size="20" class="cursor-pointer" @click="colorMode = 'dark'" />
       </div>
     </div>
 
@@ -38,6 +38,8 @@
 import { settingsUpdateEvent } from '~/lib/event'
 import { getImgUrl } from '~/lib/utils';
 import { Sun, MoonStar, User, ArrowLeft } from 'lucide-vue-next'
+import { useColorMode } from '@vueuse/core';
+
 const colorMode = useColorMode()
 const token = useCookie('token')
 const route = useRoute()

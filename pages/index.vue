@@ -51,7 +51,7 @@ state.memoList = data.value?.data as any as Memo[]
 state.hasNext = data.value?.hasNext || false
 
 watch(() => route.query, async (n,o) => {
-  if (n.tag || !(Object.keys(n).length === Object.keys(o).length && (Object.keys(n).length === 0) )) {
+  if((n.tag && !o.tag) || (!n.tag && o.tag)){
     await loadData(1, 'refresh')
   }
 })
