@@ -1,14 +1,19 @@
 # Nuxt 3 builder
 FROM node:22.2.0-alpine as builder
 
+RUN corepack enable && corepack prepare pnpm@latest --activate
+ENV PNPM_HOME=/usr/local/bin
+RUN pnpm add --global prisma
+
 ARG VERSION
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # 安装生产依赖
-RUN npm ci 
+RUN pnpm install
+ENV NODE_ENV=production
 
 # 复制整个项目
 COPY . .
@@ -18,13 +23,14 @@ RUN npx prisma generate
 
 RUN echo $VERSION > /app/version
 
-ENV NODE_ENV=production
-
 # 构建Nuxt应用
-RUN npm run build
+RUN pnpm run build
 
 # Nuxt 3 production
-FROM node:22.2.0-alpine
+FROM node:22-alpine
+RUN corepack enable && corepack prepare pnpm@latest --activate
+ENV PNPM_HOME=/usr/local/bin
+RUN pnpm add --global prisma
 
 WORKDIR /app
 
@@ -42,8 +48,6 @@ COPY --from=builder /app/start.sh /app/start.sh
 COPY --from=builder /app/version /app/version
 COPY --from=builder /app/config.json .
 
-RUN npm init -y
-RUN npm install -g prisma
 RUN chmod +x /app/start.sh
 
 EXPOSE 3000
