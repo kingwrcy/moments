@@ -83,6 +83,7 @@ export type MemoExt = {
   youtubeUrl: string;
   videoUrl: string;
   localVideoUrl: string;
+  audioUrl: string;
 };
 
 export type SysConfig = {

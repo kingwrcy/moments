@@ -32,6 +32,8 @@
       <iframe class="w-full h-[250px] my-2" v-if="memoExt.youtubeUrl" :src="memoExt.youtubeUrl" scrolling="no"
         border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
+      <audio class="w-full my-2" :src="memoExt.audioUrl" controls v-if="memoExt.audioUrl"></audio>
+
       <video class="w-2/3 my-2 rounded" :src="memoExt.videoUrl" controls v-if="memoExt.videoUrl"></video>
       <video class="w-2/3 my-2 rounded" :src="memoExt.localVideoUrl" controls v-if="memoExt.localVideoUrl"></video>
 

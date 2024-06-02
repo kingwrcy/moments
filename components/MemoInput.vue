@@ -63,15 +63,20 @@
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="music163Open = false">
             <div @keyup.enter="importMusic()">
-              <div class=" text-xs my-2 flex justify-between"><span>嵌入网易云音乐</span>
-                <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
-                  class="text-gray-500 underline">
-                  如何获取?</NuxtLink>
+              <div class="flex flex-col space-y">
+                <div class=" text-xs my-2 flex justify-between"><span>嵌入网易云音乐</span>
+                  <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
+                    class="text-gray-500 underline">
+                    如何获取?</NuxtLink>
+                </div>
+                <Input class="my-2" placeholder="请输入网易云音乐代码" v-model="music163Url" />
+
+                <Input class="my-2" placeholder="请输入在线音频地址" v-model="audioUrl" />
+
               </div>
-              <Input class="my-2" placeholder="请输入网易云音乐代码" v-model="music163Url" />
               <Button size="sm" class="mr-2" @click="importMusic">确定</Button>
               <Button size="sm" variant="ghost"
-                @click="music163IfrUrl = ''; music163Url = ''; music163Open = false;">清空</Button>
+                @click="music163IfrUrl = ''; music163Url = ''; audioUrl = ''; music163Open = false;">清空</Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -128,7 +133,12 @@
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger as-child>
-                  <svg @click="doubanOpen = true" class="focus:outline-0 cursor-pointer w-[18px] h-[18px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.2735 15H5V7H19V15H17.3764L16.0767 19H21V21H3V19H7.6123L6.8 16.5L8.70211 15.882L9.71522 19H13.9738L15.2735 15ZM3.5 3H20.5V5H3.5V3ZM7 9V13H17V9H7Z"></path></svg>
+                  <svg @click="doubanOpen = true" class="focus:outline-0 cursor-pointer w-[18px] h-[18px]"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M15.2735 15H5V7H19V15H17.3764L16.0767 19H21V21H3V19H7.6123L6.8 16.5L8.70211 15.882L9.71522 19H13.9738L15.2735 15ZM3.5 3H20.5V5H3.5V3ZM7 9V13H17V9H7Z">
+                    </path>
+                  </svg>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>引入豆瓣读书和豆瓣电影</p>
@@ -199,6 +209,8 @@
     <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86
       :src="music163IfrUrl" v-if="music163IfrUrl"></iframe>
 
+    <audio class="w-full my-2" :src="audioUrl" controls v-if="audioUrl && !music163Open"></audio>
+
     <iframe class="w-full h-[250px] my-2" v-if="bilibiliIfrUrl" :src="bilibiliIfrUrl" scrolling="no" border="0"
       frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
@@ -237,9 +249,7 @@
 
     <div class="editImgGrid grid grid-cols-3 my-2 gap-2" v-if="imgs && imgs.length > 0">
       <div v-for="(img, index) in imgs" :key="index" class="relative" draggable="true"
-           @dragstart="event => dragStart(event, index)"
-           @dragover="dragOver"
-           @drop="event => drop(event, index)">
+        @dragstart="event => dragStart(event, index)" @dragover="dragOver" @drop="event => drop(event, index)">
         <img :src="getImgUrl(img)" class="rounded object-cover h-full aspect-square max-h-[200px] cursor-move" />
         <Trash2 color="rgb(234 88 12)" :size="15" class="absolute top-1 right-1 cursor-pointer"
           @click="removePreviewImg(index)" />
@@ -249,7 +259,9 @@
       <div class="text-sm flex flex-row gap-1 flex-1 items-center">
         <Popover>
           <PopoverTrigger>
-            <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer"><MapPin :size=14 />{{ fmtLocation }}</div>
+            <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
+              <MapPin :size=14 />{{ fmtLocation }}
+            </div>
           </PopoverTrigger>
           <PopoverContent class="w-80">
             <div class="flex flex-row gap-2 text-sm">
@@ -260,7 +272,7 @@
           </PopoverContent>
         </Popover>
       </div>
-      <label class="text-sm" :class="[showType?'text-lime-600' : 'text-stone-400']">{{ showType ?'公开':'私密' }}</label>
+      <label class="text-sm" :class="[showType ? 'text-lime-600' : 'text-stone-400']">{{ showType ? '公开' : '私密' }}</label>
       <Switch id="showType" v-model:checked="showType"></Switch>
       <Button size="sm" @click="submitMemo">发布</Button>
     </div>
@@ -273,7 +285,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { toast } from 'vue-sonner'
 import { memoUpdateEvent } from '@/lib/event'
-import type {DoubanBook, DoubanMovie, Memo, MemoExt, PrivateConfig, PublicConfig} from '~/lib/types';
+import type { DoubanBook, DoubanMovie, Memo, MemoExt, PrivateConfig, PublicConfig } from '~/lib/types';
 import { useAnimate } from '@vueuse/core';
 import { Image, Music4, Settings, Trash2, LogOut, Link, Youtube, CircleX, Check, Loader2, MapPin } from 'lucide-vue-next'
 import jsonp from "jsonp";
@@ -300,6 +312,7 @@ const fmtLocation = computed(() => {
 const content = ref('')
 const id = ref(-1)
 const music163Url = ref('')
+const audioUrl = ref('')
 const music163IfrUrl = ref('')
 const music163Open = ref(false)
 
@@ -399,7 +412,7 @@ const submitMemo = async () => {
     && music163IfrUrl.value === '' && bilibiliIfrUrl.value === ''
     && videoIfrUrl.value === '' && youtubeIfrUrl.value === ''
     && externalUrl.value === '' && !doubanBook.value
-    && !doubanMovie.value && localVideoUrl.value === '') {
+    && !doubanMovie.value && localVideoUrl.value === ''&& audioUrl.value === '') {
     toast.warning('请输入内容')
     return
   }
@@ -420,7 +433,8 @@ const submitMemo = async () => {
         doubanMovie: doubanMovie.value,
         youtubeUrl: youtubeIfrUrl.value,
         videoUrl: videoIfrUrl.value,
-        localVideoUrl: localVideoUrl.value
+        localVideoUrl: localVideoUrl.value,
+        audioUrl: audioUrl.value
       },
       showType: showType.value
     })
@@ -449,6 +463,7 @@ const submitMemo = async () => {
     douban.id = ''
     douban.type = 'book'
     localVideoUrl.value = ''
+    audioUrl.value = ''
     emit(id.value > 0 ? 'memoUpdated' : 'memoAdded')
     id.value = -1
   } else {
@@ -552,16 +567,19 @@ const uploadImgs = async (event: Event) => {
 }
 
 const importMusic = () => {
-  if (music163Url.value === '') {
-    toast.warning('请输入网易云音乐代码')
+  if (music163Url.value === '' && audioUrl.value === '') {
+    toast.warning('请输入网易云音乐代码或者在线音频的地址')
     return
   }
-  const match = music163Url.value.match(/src="(.*)&auto.*"/)
-  if (match && match.length > 1) {
-    const url = match[1]
-    music163IfrUrl.value = url + '&auto=0&height=66'
-    music163Open.value = false
+  if (music163Url.value) {
+    const match = music163Url.value.match(/src="(.*)&auto.*"/)
+    if (match && match.length > 1) {
+      const url = match[1]
+      music163IfrUrl.value = url + '&auto=0&height=66'     
+    }
   }
+  music163Open.value = false
+
 }
 
 
@@ -647,7 +665,7 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   music163IfrUrl.value = event.music163Url || ''
   music163Url.value = `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
   textareaRef.value?.getRef().focus()
-  showType.value = event.showType==1
+  showType.value = event.showType == 1
 })
 
 const getTmpLocation = async () => {
@@ -666,7 +684,7 @@ const getTmpLocation = async () => {
       };
       const queryString = new URLSearchParams(params).toString();
       const jsonpUrl = `${url}?${queryString}`;
-      
+
       jsonp(jsonpUrl, null, (err: any, data: any) => {
         if (err) {
           return '获取位置失败';
@@ -738,12 +756,12 @@ async function updateLocation() {
 </script>
 
 <style scoped>
-.editImgGrid img{
+.editImgGrid img {
   pointer-events: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -webkit-user-select:none;
-  -o-user-select:none;
-  user-select:none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 </style>
