@@ -27,7 +27,7 @@ RUN echo $VERSION > /app/version
 RUN pnpm run build
 
 # Nuxt 3 production
-FROM node:22-alpine
+FROM node:22.2.0-alpine
 RUN corepack enable && corepack prepare pnpm@latest --activate
 ENV PNPM_HOME=/usr/local/bin
 RUN pnpm add --global prisma
