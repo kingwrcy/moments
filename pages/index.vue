@@ -15,7 +15,7 @@
     <div ref="target" class="cursor-pointer text-center text-sm opacity-70  my-4"
       @click="loadData(state.page + 1, 'more')" v-if="state.hasNext">- 加载更多 -
     </div>
-    <div ref="target" class="cursor-pointer text-center text-sm opacity-70  my-4"
+    <div class="cursor-pointer text-center text-sm opacity-70  my-4"
       v-if="loadingMore">- 加载中 -
     </div>
 
