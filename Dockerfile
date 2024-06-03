@@ -1,5 +1,5 @@
 # Nuxt 3 builder
-FROM node:22.1.0-alpine as builder
+FROM node:22.2.0-alpine as builder
 
 ARG VERSION
 
@@ -24,7 +24,7 @@ ENV NODE_ENV=production
 RUN npm run build
 
 # Nuxt 3 production
-FROM node:22.1.0-alpine
+FROM node:22.2.0-alpine
 
 WORKDIR /app
 
