@@ -60,8 +60,8 @@ dependencies:
     specifier: ^3.11.1
     version: 3.11.2(@opentelemetry/api@1.8.0)(@unocss/reset@0.60.4)(floating-vue@5.2.2)(sass@1.77.4)(typescript@5.4.5)(unocss@0.60.4)(vite@5.2.12)
   radix-vue:
-    specifier: ^1.8.0
-    version: 1.8.2(vue@3.4.27)
+    specifier: ^1.8.3
+    version: 1.8.3(vue@3.4.27)
   reflect-metadata:
     specifier: ^0.2.2
     version: 0.2.2
@@ -86,6 +86,11 @@ dependencies:
   vuedraggable:
     specifier: ^2.24.3
     version: 2.24.3
+
+optionalDependencies:
+  '@rollup/rollup-linux-x64-gnu':
+    specifier: 4.9.5
+    version: 4.9.5
 
 devDependencies:
   '@nuxtjs/color-mode':
@@ -2515,6 +2520,14 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    optional: true
+
+  /@rollup/rollup-linux-x64-gnu@4.9.5:
+    resolution: {integrity: sha512-Dq1bqBdLaZ1Gb/l2e5/+o3B18+8TI9ANlA1SkejZqDgdU/jK/ThYaMPMJpVMMXy2uRHvGKbkz9vheVGdq3cJfA==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: false
     optional: true
 
   /@rollup/rollup-linux-x64-musl@4.18.0:
@@ -7505,8 +7518,8 @@ packages:
     resolution: {integrity: sha512-kJt5qhMxoszgU/62PLP1CJytzd2NKetjSRnyuj31fDd3Rlcz3fzlFdFLD1SItunPwyqEOkca6GbV612BWfaBag==}
     dev: false
 
-  /radix-vue@1.8.2(vue@3.4.27):
-    resolution: {integrity: sha512-ey6jG1rPAD/521PsXGrNkjztvh7PRw6Wwbk7LsHjsKqRoy/S4k58ryzmQ0tmoNOiUALfX92+MOnd5F3ONmuZ/w==}
+  /radix-vue@1.8.3(vue@3.4.27):
+    resolution: {integrity: sha512-WPgvEz0i5XKjwahhffD2QPLiOTthTfecoVjwq4l3i3EWBX2tUp4Vw3n3OLGf3S18FN/WfEgD3GIxYfsrnDutqw==}
     peerDependencies:
       vue: '>= 3.2.0'
     dependencies:
