@@ -12,14 +12,20 @@
       <FriendsMemo :memo="memo" v-for="(memo, index) in state.memoList" :index="index" :key="index" :show-more="true"
         @memo-update="loadData(Math.ceil((index + 1) / state.size), 'edit')" />
     </div>
-    <div class="cursor-pointer text-center text-sm opacity-70  my-4" @click="loadData(state.page + 1, 'more')"
-      v-if="state.hasNext">- 加载更多 -
+    <div ref="target" class="cursor-pointer text-center text-sm opacity-70  my-4"
+      @click="loadData(state.page + 1, 'more')" v-if="state.hasNext">- 加载更多 -
     </div>
+    <div ref="target" class="cursor-pointer text-center text-sm opacity-70  my-4"
+      v-if="loadingMore">- 加载中 -
+    </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
 import type { User, Memo, PublicConfig } from '~/lib/types';
+import { useElementVisibility } from '@vueuse/core'
+
 const token = useCookie('token')
 const userinfo = useState<User>('userinfo')
 const publicConfig = useState<PublicConfig>('publicConfig')
@@ -35,6 +41,10 @@ const state = reactive({
   hasNext: false
 })
 
+const target = ref(null)
+const targetIsVisible = useElementVisibility(target)
+const loadingMore = ref(false)
+
 const memoUpdateIndex = useState<number>('memoUpdateIndex', () => -1)
 
 const { data } = await useFetch('/api/memo/list', {
@@ -46,15 +56,28 @@ const { data } = await useFetch('/api/memo/list', {
     tag: route.query.tag
   })
 })
+if (publicConfig.value.autoLoadMore) {
+  watch(targetIsVisible, async (newVal: boolean) => {
+    if (newVal) {
+      loadingMore.value = true
+      setTimeout(async () => {
+        await loadData(state.page + 1, 'more')
+      }, 500)
+      loadingMore.value = false
+    }
+  })
+}
 
 state.memoList = data.value?.data as any as Memo[]
 state.hasNext = data.value?.hasNext || false
 
-watch(() => route.query, async (n,o) => {
-  if((n.tag && !o.tag) || (!n.tag && o.tag)){
+watch(() => route.query, async (n, o) => {
+  if ((n.tag && !o.tag) || (!n.tag && o.tag)) {
     await loadData(1, 'refresh')
   }
 })
+
+
 
 const loadData = async (page: number, type: 'add' | 'edit' | 'more' | 'refresh') => {
 

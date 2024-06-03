@@ -8,7 +8,8 @@
     "googleRecaptchaSiteKey": "",
     "pageSize": 10,
     "dateTimeFormat": "AGO",
-    "tencentMapKey": "abc"
+    "tencentMapKey": "abc",
+    "autoLoadMore": false
   },
   "private": {
     "commentOrderBy": "desc",

@@ -117,6 +117,7 @@ export type SysConfig = {
     pageSize: number;
     dateTimeFormat: string;
     tencentMapKey: string;
+    autoLoadMore: boolean;
   };
 };
 
