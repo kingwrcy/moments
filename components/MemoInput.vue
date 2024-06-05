@@ -31,8 +31,37 @@
           </PopoverContent>
         </Popover>
 
+        <Popover :open="imageOpen">
+          <PopoverTrigger as="div">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <Image :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="imageOpen = true" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>插入图片</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </PopoverTrigger>
+          <PopoverContent as-child @interact-outside="imageOpen = false">
+            <div class="flex flex-col gap-2">
+              <Label for="imgUpload">
+                <Button class="my-2 w-full">上传本地图片</Button>
+              </Label>
+              <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs" multiple>
+              <Label for="imgUpload">使用在线图片</Label>
+              <Textarea class="my-2" placeholder="请输入图片地址,一行一个,最多9个" v-model="localImgUrl" />
+              <div class="flex flex-row gap-2">
+                <Button size="sm" @click="addLocalImage">确定</Button>
+                <Button size="sm" variant="secondary" @click="localImgUrl = ''">清空</Button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
 
-        <Label for="imgUpload">
+
+        <!-- <Label for="imgUpload">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger as-child>
@@ -45,7 +74,7 @@
           </TooltipProvider>
 
           <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs" multiple>
-        </Label>
+        </Label> -->
 
         <Popover :open="music163Open" v-if="privateConfig.enableMusic163">
           <PopoverTrigger as="div">
@@ -272,7 +301,8 @@
           </PopoverContent>
         </Popover>
       </div>
-      <label class="text-sm" :class="[showType ? 'text-lime-600' : 'text-stone-400']">{{ showType ? '公开' : '私密' }}</label>
+      <label class="text-sm" :class="[showType ? 'text-lime-600' : 'text-stone-400']">{{ showType ? '公开' : '私密'
+        }}</label>
       <Switch id="showType" v-model:checked="showType"></Switch>
       <Button size="sm" @click="submitMemo">发布</Button>
     </div>
@@ -324,6 +354,7 @@ const videoUrl = ref('')
 const videoIfrUrl = ref('')
 const bilibiliUrl = ref('')
 const bilibiliIfrUrl = ref('')
+const localImgUrl = ref('')
 const bilibiliOpen = ref(false)
 const doubanOpen = ref(false)
 
@@ -338,6 +369,7 @@ const doubanBook = ref<DoubanBook>()
 const doubanMovie = ref<DoubanMovie>()
 
 const linkOpen = ref(false)
+const imageOpen = ref(false)
 const externalUrl = ref('')
 const externalTitle = ref('')
 const externalFavicon = ref('')
@@ -412,7 +444,7 @@ const submitMemo = async () => {
     && music163IfrUrl.value === '' && bilibiliIfrUrl.value === ''
     && videoIfrUrl.value === '' && youtubeIfrUrl.value === ''
     && externalUrl.value === '' && !doubanBook.value
-    && !doubanMovie.value && localVideoUrl.value === ''&& audioUrl.value === '') {
+    && !doubanMovie.value && localVideoUrl.value === '' && audioUrl.value === '') {
     toast.warning('请输入内容')
     return
   }
@@ -575,7 +607,7 @@ const importMusic = () => {
     const match = music163Url.value.match(/src="(.*)&auto.*"/)
     if (match && match.length > 1) {
       const url = match[1]
-      music163IfrUrl.value = url + '&auto=0&height=66'     
+      music163IfrUrl.value = url + '&auto=0&height=66'
     }
   }
   music163Open.value = false
@@ -666,7 +698,13 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   music163Url.value = `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
   textareaRef.value?.getRef().focus()
   showType.value = event.showType == 1
+  localImgUrl.value = event.imgs?.replaceAll(',', '\n') || ''
 })
+
+const addLocalImage = ()=>{
+  imgs.value = localImgUrl.value.split('\n')
+  imageOpen.value = false
+}
 
 const getTmpLocation = async () => {
   return new Promise(async (resolve, reject) => {

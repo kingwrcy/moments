@@ -4,5 +4,6 @@
   },
   "editor.quickSuggestions": {
     "strings": "on"
-  }
+  },
+  "editor.fontSize": 12
 }
