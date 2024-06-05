@@ -94,7 +94,7 @@
             <div @keyup.enter="importMusic()">
               <div class="flex flex-col space-y">
                 <div class=" text-xs my-2 flex justify-between"><span>嵌入网易云音乐</span>
-                  <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
+                  <NuxtLink target="_blank" to="https://jerry.mblog.club/simple-moments-import-music-and-video"
                     class="text-gray-500 underline">
                     如何获取?</NuxtLink>
                 </div>
@@ -133,7 +133,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <div class=" text-xs  flex justify-between"><span>嵌入B站视频</span>
-                  <NuxtLink to="https://jerry.mblog.club/simple-moments-import-music-and-video"
+                  <NuxtLink target="_blank" to="https://jerry.mblog.club/simple-moments-import-music-and-video"
                     class="text-gray-500 underline">
                     如何获取?</NuxtLink>
                 </div>
