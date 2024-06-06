@@ -46,11 +46,11 @@
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="imageOpen = false">
             <div class="flex flex-col gap-2">
-              <Label for="imgUpload">
-                <Button class="my-2 w-full">上传本地图片</Button>
+              <Label for="imgUpload" :class="buttonVariants()" class="w-full my-2 cursor-pointer">
+                上传本地图片 
               </Label>
               <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs" multiple>
-              <Label for="imgUpload">使用在线图片</Label>
+              <Label >使用在线图片</Label>
               <Textarea class="my-2" placeholder="请输入图片地址,一行一个,最多9个" v-model="localImgUrl" />
               <div class="flex flex-row gap-2">
                 <Button size="sm" @click="addLocalImage">确定</Button>
@@ -59,23 +59,6 @@
             </div>
           </PopoverContent>
         </Popover>
-
-
-        <!-- <Label for="imgUpload">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger as-child>
-                <Image :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>上传本地图片</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs" multiple>
-        </Label> -->
-
         <Popover :open="music163Open" v-if="privateConfig.enableMusic163">
           <PopoverTrigger as="div">
             <TooltipProvider>
@@ -583,7 +566,6 @@ const uploadImgs = async (event: Event) => {
   if (!files) {
     return
   }
-  localVideoUploading.value = true
   for (var i = 0; i < files.length; i++) {
     var file = files[i];
     useUpload(file, async (res) => {
@@ -595,7 +577,7 @@ const uploadImgs = async (event: Event) => {
       }
     })
   }
-  localVideoUploading.value = false
+  imageOpen.value = false
 }
 
 const importMusic = () => {
