@@ -185,11 +185,11 @@ let hh = ref(0)
 const { height } = useElementSize(el)
 const likeList = useStorage<Array<number>>('likeList', [])
 
-const linkReg = /\[(.*)\]\((.*)\)/g
+const linkReg = /\[(.*?)\]\((.*?)\)/g
 
 const memoExt = computed(() => JSON.parse(props.memo.ext || '{}') as MemoExt)
 const tags = computed(() => props.memo.content.match(/#(\S+)/g) || [])
-const memoContent = computed(() => props.memo.content.replaceAll(/\n/g, '<br/>').replace(/#(\S+)/g, '').replaceAll(linkReg,"<a class='mx-0.5 text-primary/80' href='$2' target='_blank'>$1</a>"))
+const memoContent = computed(() => props.memo.content.replaceAll(/\n/g, '<br/>').replace(/#(\S+)/g, '').replace(linkReg,"<a class='mx-0.5 text-primary/80' href='$2' target='_blank'>$1</a>"))
 
 const imgs = computed(() => props.memo.imgs ? props.memo.imgs.split(',') : []);
 const gridStyle = computed(() => {
