@@ -23,8 +23,23 @@
         <a :href="props.memo.externalUrl" target="_blank" class="text-[#576b95]">{{ props.memo.externalTitle }}</a>
       </div>
 
-      <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86
-        :src="props.memo.music163Url" v-if="props.memo.music163Url"></iframe>
+<!--      <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86-->
+<!--        :src="props.memo.music163Url" v-if="props.memo.music163Url"></iframe>-->
+
+      <div
+          style="max-width: 100%"
+          v-if="props.memo.music163Url && props.memo.music163Url !== '' && musicType && musicId"
+      >
+        <ClientOnly>
+          <meting-js
+              :key="musicBoxKey"
+              :server="musicPlatform"
+              :type="musicType"
+              :id="musicId"
+              :list-folded="true"
+          />
+        </ClientOnly>
+      </div>
 
       <iframe class="w-full h-[250px] my-2" v-if="props.memo.bilibiliUrl" :src="props.memo.bilibiliUrl" scrolling="no"
         border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
@@ -181,6 +196,38 @@ const toolbarRef = ref(null)
 const showUserCommentArray = useState<Array<boolean>>('showUserCommentArray_' + props.memo.id, () => [])
 const el = ref<any>(null)
 let hh = ref(0)
+
+let musicBoxKey = ref(0);
+const musicType = ref('')
+const musicId = ref('')
+const musicPlatform = ref('netease')
+
+if(props.memo.music163Url){
+  if(props.memo.music163Url.includes("music.163.com")){
+    if(props.memo.music163Url.includes("playlist")){
+      musicType.value = 'playlist'
+      musicId.value = props.memo.music163Url.split('playlist?id=')[1].split('&')[0]
+    }else if(props.memo.music163Url.includes("song")){
+      musicType.value = 'song'
+      musicId.value = props.memo.music163Url.split('song?id=')[1].split('&')[0]
+    }else if(props.memo.music163Url.includes("album")) {
+      musicType.value = 'album'
+      musicId.value = props.memo.music163Url.split('album?id=')[1].split('&')[0]
+    }
+  }else if(props.memo.music163Url.includes("y.qq.com")){
+    musicPlatform.value = 'tencent'
+    if(props.memo.music163Url.includes("songDetail")){
+      musicType.value = 'song'
+      musicId.value = props.memo.music163Url.split('songDetail/')[1].split('?')[0]
+    }else if(props.memo.music163Url.includes("playlist")){
+      musicType.value = 'playlist'
+      musicId.value = props.memo.music163Url.split('playlist/')[1].split('?')[0]
+    }
+  }else{
+    props.memo.music163Url = ''
+  }
+}
+
 const { height } = useElementSize(el)
 const likeList = useStorage<Array<number>>('likeList', [])
 
@@ -318,5 +365,36 @@ watchOnce(height, () => {
   height: auto;
   width: auto;
   border: transparent 1px solid;
+}
+
+.aplayer-body {
+  max-width: 100%;
+  width: 100%;
+}
+
+.aplayer-pic{
+  z-index: 1;
+}
+
+.aplayer-music {
+  overflow: hidden;
+  display: inline-block;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  animation: scroll 8s linear infinite;
+}
+
+.aplayer-title, .aplayer-author {
+  padding-right: 10px;
+}
+
+@keyframes scroll {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
+
+.aplayer-lrc {
+  margin-top: 25px !important;
 }
 </style>

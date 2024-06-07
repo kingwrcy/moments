@@ -218,8 +218,20 @@
 
     <Emoji v-if="showEmoji" class="mt-2" @emoji-selected="emojiSelected" />
 
-    <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86
-      :src="music163IfrUrl" v-if="music163IfrUrl"></iframe>
+<!--    <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86-->
+<!--      :src="music163IfrUrl" v-if="music163IfrUrl"></iframe>-->
+    <div style="max-width: 100%">
+      <ClientOnly>
+        <meting-js
+            :key="musicBoxKey"
+            :server="musicPlatform"
+            :type="musicType"
+            :id="musicId"
+            :list-folded="true"
+            v-if="music163Url && musicType && musicId"
+        />
+      </ClientOnly>
+    </div>
 
     <audio class="w-full my-2" :src="audioUrl" controls v-if="audioUrl && !music163Open"></audio>
 
@@ -359,6 +371,12 @@ const externalFavicon = ref('')
 const externalPending = ref(false)
 const externalFetchError = ref(false)
 const externalTitleEditing = ref(false)
+
+let musicBoxKey = ref(0)
+const music163Url = ref('')
+const musicType = ref('')
+const musicId = ref('')
+const musicPlatform = ref('netease')
 
 onMounted(() => {
   textareaRef.value?.getRef().focus()
@@ -586,11 +604,32 @@ const importMusic = () => {
     return
   }
   if (music163Url.value) {
-    const match = music163Url.value.match(/src="(.*)&auto.*"/)
-    if (match && match.length > 1) {
-      const url = match[1]
-      music163IfrUrl.value = url + '&auto=0&height=66'
+    if(music163Url.value.includes("music.163.com")){
+      // 如果里面有playlist
+      if(music163Url.value.includes("playlist")){
+        musicType.value = 'playlist'
+        musicId.value = music163Url.value.split('playlist?id=')[1].split('&')[0]
+      }else if(music163Url.value.includes("song")){
+        musicType.value = 'song'
+        musicId.value = music163Url.value.split('song?id=')[1].split('&')[0]
+      }else if(music163Url.value.includes("album")) {
+        musicType.value = 'album'
+        musicId.value = music163Url.value.split('album?id=')[1].split('&')[0]
+      }
+    }else if(music163Url.value.includes("y.qq.com")){
+      musicPlatform.value = 'tencent'
+      if(music163Url.value.includes("songDetail")){
+        musicType.value = 'song'
+        musicId.value = music163Url.value.split('songDetail/')[1].split('?')[0]
+      }else if(music163Url.value.includes("playlist")){
+        musicType.value = 'playlist'
+        musicId.value = music163Url.value.split('playlist/')[1].split('?')[0]
+      }
+    }else{
+      music163Url.value = ''
     }
+    music163Open.value = false
+    musicBoxKey++
   }
   music163Open.value = false
 
@@ -676,11 +715,38 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   youtubeIfrUrl.value = memoExt.youtubeUrl
   videoIfrUrl.value = memoExt.videoUrl
   localVideoUrl.value = memoExt.localVideoUrl
-  music163IfrUrl.value = event.music163Url || ''
-  music163Url.value = `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
+  // music163IfrUrl.value = event.music163Url || ''
+  // music163Url.value = `<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="${event.music163Url}"></iframe>`
+  music163Url.value = event.music163Url || ''
   textareaRef.value?.getRef().focus()
   showType.value = event.showType == 1
   localImgUrl.value = event.imgs?.replaceAll(',', '\n') || ''
+  if(music163Url.value.includes("music.163.com")){
+    // 如果里面有playlist
+    if(music163Url.value.includes("playlist")){
+      musicType.value = 'playlist'
+      musicId.value = music163Url.value.split('playlist?id=')[1].split('&')[0]
+    }else if(music163Url.value.includes("song")){
+      musicType.value = 'song'
+      musicId.value = music163Url.value.split('song?id=')[1].split('&')[0]
+    }else if(music163Url.value.includes("album")) {
+      musicType.value = 'album'
+      musicId.value = music163Url.value.split('album?id=')[1].split('&')[0]
+    }
+  }else if(music163Url.value.includes("y.qq.com")){
+    musicPlatform.value = 'tencent'
+    if(music163Url.value.includes("songDetail")){
+      musicType.value = 'song'
+      musicId.value = music163Url.value.split('songDetail/')[1].split('?')[0]
+    }else if(music163Url.value.includes("playlist")){
+      musicType.value = 'playlist'
+      musicId.value = music163Url.value.split('playlist/')[1].split('?')[0]
+    }
+  }else{
+    music163Url.value = ''
+  }
+  music163Open.value = false
+  musicBoxKey++
 })
 
 const addLocalImage = ()=>{
@@ -783,5 +849,35 @@ async function updateLocation() {
   -webkit-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+.aplayer-body {
+  max-width: 100%;
+  width: 100%;
+}
+
+.aplayer-pic{
+  z-index: 1;
+}
+
+.aplayer-music {
+  overflow: hidden;
+  display: inline-block;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  animation: scroll 8s linear infinite;
+}
+
+.aplayer-title, .aplayer-author {
+  padding-right: 10px;
+}
+
+@keyframes scroll {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
+
+.aplayer-lrc {
+  margin-top: 25px !important;
 }
 </style>
