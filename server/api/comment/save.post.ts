@@ -146,22 +146,23 @@ export default defineEventHandler(async (event) => {
       message: "",
     };
   }
-  let flag = true;
+  let notificationList: any[] = [];
+  notificationList.push(email || '');
+  let comment = null;
   if (replyToId !== undefined && replyToId !== 0) {
-    const comment = await prisma.comment.findUnique({
+    comment = await prisma.comment.findUnique({
       where: {
         id: replyToId,
-      },
+      }
     });
     if (
-      comment !== null &&
-      comment.email !== null &&
-      comment.email !== "" &&
-      emailReg.test(comment.email)
-    ) {
-      if (comment.email === sysConfig.private.adminEmail) {
-        flag = false;
-      }
+        comment !== null &&
+        comment.email !== null &&
+        comment.email !== '' &&
+        emailReg.test(comment.email) &&
+        notificationList.indexOf(comment.email) === -1
+    ){
+      notificationList.push(comment.email);
       // 邮箱通知被回复者
       sendEmail({
         email: comment.email,
@@ -185,7 +186,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // 非管理员
-  if (event.context.userId == undefined && flag) {
+  if (event.context.userId == undefined && notificationList.indexOf(sysConfig.private.adminEmail) === -1) {
     // 判断process.env.SITE_URL是否以/结尾，如果是则去掉
     let siteUrl = sysConfig.public.siteUrl;
     if (
