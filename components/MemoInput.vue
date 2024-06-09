@@ -479,8 +479,9 @@ const submitMemo = async () => {
     douban.type = 'book'
     localVideoUrl.value = ''
     audioUrl.value = ''
-    emit(id.value > 0 ? 'memoUpdated' : 'memoAdded')
     id.value = -1
+    localImgUrl.value = ''
+    emit(id.value > 0 ? 'memoUpdated' : 'memoAdded')
   } else {
     toast.warning('发布失败')
   }

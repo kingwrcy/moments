@@ -15,7 +15,7 @@
       <div class="userinfo flex flex-col">
         <div class="flex flex-row items-center gap-4 justify-end">
           <div class="username text-lg font-bold text-white">{{ res?.data?.nickname }}</div>
-          <img :src="getImgUrl(res?.data?.avatarUrl!)" class="avatar w-[70px] h-[70px] rounded-xl" />
+          <img :src="getImgUrl(res?.data?.avatarUrl!)" class="avatar w-[70px] h-[70px] rounded-xl" @click="navigateTo('/')" :class="{'cursor-pointer':route.path.startsWith('/detail')}" />
         </div>
         <div class="slogon text-gray truncate w-full text-end text-xs mt-2">{{ res?.data?.slogan }}</div>
       </div>
