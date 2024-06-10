@@ -25,16 +25,21 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      style: [
-        { src: `https://unpkg.com/aplayer/dist/APlayer.min.css`, type: 'text/css' },
+      link: [
+        { href: `/css/APlayer.min.css`, rel: 'stylesheet' },
       ],
       script: [
-        { src: `https://unpkg.com/aplayer/dist/APlayer.min.js`, type: 'text/javascript', async: true, defer: true },
-        { src: `https://unpkg.com/@xizeyoupan/meting@latest/dist/Meting.min.js`, type: 'text/javascript', async: true, defer: true },
+        { src: `/js/APlayer.min.js`, type: 'text/javascript', async: true, defer: true },
+        { src: `/js/Meting.min.js`, type: 'text/javascript', async: true, defer: true },
       ]
     }
   },
   plugins: [
     '~/plugins/meting.ts'
   ],
+  vue: {  
+    compilerOptions: {
+      isCustomElement: (tag:string) => ['meting-js'].includes(tag),
+    },
+  }
 });

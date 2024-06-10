@@ -62,6 +62,10 @@ useHead({
       type: 'image/png',
       href: userinfo.value?.favicon || '/favicon.png',
     },
+    // {
+    //   rel: 'stylesheet',
+    //   href: '/css/APlayer.min.css'
+    // }
   ],
   style: [
     {

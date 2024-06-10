@@ -88,7 +88,7 @@
               </div>
               <Button size="sm" class="mr-2" @click="importMusic">确定</Button>
               <Button size="sm" variant="ghost"
-                @click="music163IfrUrl = ''; music163Url = ''; audioUrl = ''; music163Open = false;">清空</Button>
+                @click="music163Url = ''; audioUrl = ''; music163Open = false;">清空</Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -373,7 +373,6 @@ const externalFetchError = ref(false)
 const externalTitleEditing = ref(false)
 
 let musicBoxKey = ref(0)
-const music163Url = ref('')
 const musicType = ref('')
 const musicId = ref('')
 const musicPlatform = ref('netease')
@@ -442,7 +441,7 @@ const drop = (event: any, dropIndex: any) => {
 
 const submitMemo = async () => {
   if (content.value === '' && imgs.value.length === 0
-    && music163IfrUrl.value === '' && bilibiliIfrUrl.value === ''
+    && music163Url.value === '' && bilibiliIfrUrl.value === ''
     && videoIfrUrl.value === '' && youtubeIfrUrl.value === ''
     && externalUrl.value === '' && !doubanBook.value
     && !doubanMovie.value && localVideoUrl.value === '' && audioUrl.value === '') {
@@ -455,7 +454,7 @@ const submitMemo = async () => {
       id: id.value,
       content: content.value,
       imgUrls: imgs.value,
-      music163Url: music163IfrUrl.value,
+      music163Url: music163Url.value,
       bilibiliUrl: bilibiliIfrUrl.value,
       location: location.value,
       externalFavicon: externalFavicon.value,
@@ -478,7 +477,6 @@ const submitMemo = async () => {
 
     showType.value = true
     imgs.value = []
-    music163IfrUrl.value = ''
     music163Url.value = ''
     bilibiliIfrUrl.value = ''
     bilibiliUrl.value = ''
@@ -630,6 +628,7 @@ const importMusic = () => {
       music163Url.value = ''
     }
     music163Open.value = false
+    //@ts-expect-error
     musicBoxKey++
   }
   music163Open.value = false
@@ -747,6 +746,7 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
     music163Url.value = ''
   }
   music163Open.value = false
+  //@ts-expect-error
   musicBoxKey++
 })
 
