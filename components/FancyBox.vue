@@ -16,7 +16,7 @@ onMounted(() => {
   });
 });
 
-onUpdated(() => {
+nextTick(() => {
   Fancybox.unbind(container.value);
   Fancybox.close();
 
