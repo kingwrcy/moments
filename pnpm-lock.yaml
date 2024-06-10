@@ -51,8 +51,8 @@ dependencies:
     specifier: ^9.0.2
     version: 9.0.2
   lucide-vue-next:
-    specifier: ^0.383.0
-    version: 0.383.0(vue@3.4.27)
+    specifier: ^0.390.0
+    version: 0.390.0(vue@3.4.27)
   nodemailer:
     specifier: ^6.9.13
     version: 6.9.13
@@ -6092,8 +6092,8 @@ packages:
     dependencies:
       yallist: 3.1.1
 
-  /lucide-vue-next@0.383.0(vue@3.4.27):
-    resolution: {integrity: sha512-paQmd2cHAye7Zl/lA0avZN2efZxFkMehfoori1BiHKX//KQG4DVuy00yl4YHVQ6h1B4EsR+QDRCpVUtwvKUBRw==}
+  /lucide-vue-next@0.390.0(vue@3.4.27):
+    resolution: {integrity: sha512-rP02sQ/8EA6DeONL5DinlXddYD+lCggC0m+bqQBkz6rhM7tkhRmnkY3QIfNkgeXpMfNgYpENUrByaVf7kV7sIQ==}
     peerDependencies:
       vue: '>=3.0.1'
     dependencies:
