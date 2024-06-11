@@ -23,21 +23,12 @@
         <a :href="props.memo.externalUrl" target="_blank" class="text-[#576b95]">{{ props.memo.externalTitle }}</a>
       </div>
 
-<!--      <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86-->
-<!--        :src="props.memo.music163Url" v-if="props.memo.music163Url"></iframe>-->
+      <!--      <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86-->
+      <!--        :src="props.memo.music163Url" v-if="props.memo.music163Url"></iframe>-->
 
-      <div
-          style="max-width: 100%"
-          v-if="props.memo.music163Url && props.memo.music163Url !== '' && musicType && musicId"
-      >
-        <ClientOnly>
-          <meting-js
-              :key="musicBoxKey"
-              :server="musicPlatform"
-              :type="musicType"
-              :id="musicId"
-              :list-folded="true"
-          />
+      <div style="max-width: 100%"
+        v-if="props.memo.music163Url && props.memo.music163Url !== '' && musicType && musicId">
+        <ClientOnly><meting-js :server="musicPlatform" :type="musicType" :id="musicId" :list-folded="true" />
         </ClientOnly>
       </div>
 
@@ -65,7 +56,7 @@
 
       <div class="text-[#576b95] cursor-pointer" v-if="!isDetailPage && hh > maxHeight && !showAll" @click="showMore">全文
       </div>
-      
+
       <div class="text-[#576b95] cursor-pointer " v-if="!isDetailPage && showAll" @click="showLess">收起</div>
       <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none" v-if="props.memo.location">
         {{ props.memo.location?.split(/\s+/g).join(' · ') }}</div>
@@ -160,17 +151,7 @@ import { Heart, HeartCrack, MessageSquareMore, Trash2, FilePenLine, Pin } from '
 import { memoUpdateEvent } from '@/lib/event'
 import { toast } from 'vue-sonner';
 import { getImgUrl } from '~/lib/utils';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+
 const token = useCookie('token')
 dayjs.extend(relativeTime)
 const props = withDefaults(
@@ -202,31 +183,33 @@ const musicType = ref('')
 const musicId = ref('')
 const musicPlatform = ref('netease')
 
-if(props.memo.music163Url){
-  if(props.memo.music163Url.includes("music.163.com")){
-    if(props.memo.music163Url.includes("playlist")){
+if (props.memo.music163Url) {
+  if (props.memo.music163Url.includes("music.163.com")) {
+    if (props.memo.music163Url.includes("playlist")) {
       musicType.value = 'playlist'
       musicId.value = props.memo.music163Url.split('playlist?id=')[1].split('&')[0]
-    }else if(props.memo.music163Url.includes("song")){
+    } else if (props.memo.music163Url.includes("song")) {
       musicType.value = 'song'
       musicId.value = props.memo.music163Url.split('song?id=')[1].split('&')[0]
-    }else if(props.memo.music163Url.includes("album")) {
+    } else if (props.memo.music163Url.includes("album")) {
       musicType.value = 'album'
       musicId.value = props.memo.music163Url.split('album?id=')[1].split('&')[0]
     }
-  }else if(props.memo.music163Url.includes("y.qq.com")){
+  } else if (props.memo.music163Url.includes("y.qq.com")) {
     musicPlatform.value = 'tencent'
-    if(props.memo.music163Url.includes("songDetail")){
+    if (props.memo.music163Url.includes("songDetail")) {
       musicType.value = 'song'
       musicId.value = props.memo.music163Url.split('songDetail/')[1].split('?')[0]
-    }else if(props.memo.music163Url.includes("playlist")){
+    } else if (props.memo.music163Url.includes("playlist")) {
       musicType.value = 'playlist'
       musicId.value = props.memo.music163Url.split('playlist/')[1].split('?')[0]
     }
-  }else{
+  } else {
     props.memo.music163Url = ''
   }
 }
+
+console.log(props.memo.music163Url, musicType.value, musicId.value)
 
 const { height } = useElementSize(el)
 const likeList = useStorage<Array<number>>('likeList', [])
@@ -235,7 +218,7 @@ const linkReg = /\[(.*?)\]\((.*?)\)/g
 
 const memoExt = computed(() => JSON.parse(props.memo.ext || '{}') as MemoExt)
 const tags = computed(() => props.memo.content.match(/#(\S+)/g) || [])
-const memoContent = computed(() => props.memo.content.replaceAll(/\n/g, '<br/>').replace(/#(\S+)/g, '').replace(linkReg,"<a class='mx-0.5 text-primary/80' href='$2' target='_blank'>$1</a>"))
+const memoContent = computed(() => props.memo.content.replaceAll(/\n/g, '<br/>').replace(/#(\S+)/g, '').replace(linkReg, "<a class='mx-0.5 text-primary/80' href='$2' target='_blank'>$1</a>"))
 
 const imgs = computed(() => props.memo.imgs ? props.memo.imgs.split(',') : []);
 const gridStyle = computed(() => {
@@ -262,7 +245,7 @@ const gridStyle = computed(() => {
 const like = async () => {
   showToolbar.value = false
   const contain = likeList.value.find((id) => id === props.memo.id)
-  const res = await $fetch('/api/memo/like', {
+  const res = await $fetch<{ success: boolean }>('/api/memo/like', {
     method: 'POST',
     body: JSON.stringify({
       memoId: props.memo.id,
@@ -285,7 +268,7 @@ const toDetail = () => {
 
 const pinned = async () => {
   showToolbar.value = false
-  const res = await $fetch('/api/memo/pinned', {
+  const res = await $fetch<{ success: boolean }>('/api/memo/pinned', {
     method: 'POST',
     body: JSON.stringify({
       memoId: props.memo.id,
@@ -300,7 +283,7 @@ const pinned = async () => {
 
 const removeMemo = async () => {
   showToolbar.value = false
-  const res = await $fetch('/api/memo/remove', {
+  const res = await $fetch<{ success: boolean }>('/api/memo/remove', {
     method: 'POST',
     body: JSON.stringify({
       memoId: props.memo.id
@@ -372,7 +355,7 @@ watchOnce(height, () => {
   width: 100%;
 }
 
-.aplayer-pic{
+.aplayer-pic {
   z-index: 1;
 }
 
@@ -385,13 +368,19 @@ watchOnce(height, () => {
   animation: scroll 8s linear infinite;
 }
 
-.aplayer-title, .aplayer-author {
+.aplayer-title,
+.aplayer-author {
   padding-right: 10px;
 }
 
 @keyframes scroll {
-  from { transform: translateX(100%); }
-  to { transform: translateX(-100%); }
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 .aplayer-lrc {

@@ -47,10 +47,10 @@
           <PopoverContent as-child @interact-outside="imageOpen = false">
             <div class="flex flex-col gap-2">
               <Label for="imgUpload" :class="buttonVariants()" class="w-full my-2 cursor-pointer">
-                上传本地图片 
+                上传本地图片
               </Label>
               <input type="file" id="imgUpload" class="hidden" name="file" @change="uploadImgs" multiple>
-              <Label >使用在线图片</Label>
+              <Label>使用在线图片</Label>
               <Textarea class="my-2" placeholder="请输入图片地址,一行一个,最多9个" v-model="localImgUrl" />
               <div class="flex flex-row gap-2">
                 <Button size="sm" @click="addLocalImage">确定</Button>
@@ -218,18 +218,10 @@
 
     <Emoji v-if="showEmoji" class="mt-2" @emoji-selected="emojiSelected" />
 
-<!--    <iframe class="rounded" frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86-->
-<!--      :src="music163IfrUrl" v-if="music163IfrUrl"></iframe>-->
     <div style="max-width: 100%">
       <ClientOnly>
-        <meting-js
-            :key="musicBoxKey"
-            :server="musicPlatform"
-            :type="musicType"
-            :id="musicId"
-            :list-folded="true"
-            v-if="music163Url && musicType && musicId"
-        />
+        <meting-js :server="musicPlatform" :type="musicType" :id="musicId" :list-folded="true"
+          v-if="music163Url && musicType && musicId" />
       </ClientOnly>
     </div>
 
@@ -372,7 +364,6 @@ const externalPending = ref(false)
 const externalFetchError = ref(false)
 const externalTitleEditing = ref(false)
 
-let musicBoxKey = ref(0)
 const musicType = ref('')
 const musicId = ref('')
 const musicPlatform = ref('netease')
@@ -603,33 +594,31 @@ const importMusic = () => {
     return
   }
   if (music163Url.value) {
-    if(music163Url.value.includes("music.163.com")){
+    if (music163Url.value.includes("music.163.com")) {
       // 如果里面有playlist
-      if(music163Url.value.includes("playlist")){
+      if (music163Url.value.includes("playlist")) {
         musicType.value = 'playlist'
         musicId.value = music163Url.value.split('playlist?id=')[1].split('&')[0]
-      }else if(music163Url.value.includes("song")){
+      } else if (music163Url.value.includes("song")) {
         musicType.value = 'song'
         musicId.value = music163Url.value.split('song?id=')[1].split('&')[0]
-      }else if(music163Url.value.includes("album")) {
+      } else if (music163Url.value.includes("album")) {
         musicType.value = 'album'
         musicId.value = music163Url.value.split('album?id=')[1].split('&')[0]
       }
-    }else if(music163Url.value.includes("y.qq.com")){
+    } else if (music163Url.value.includes("y.qq.com")) {
       musicPlatform.value = 'tencent'
-      if(music163Url.value.includes("songDetail")){
+      if (music163Url.value.includes("songDetail")) {
         musicType.value = 'song'
         musicId.value = music163Url.value.split('songDetail/')[1].split('?')[0]
-      }else if(music163Url.value.includes("playlist")){
+      } else if (music163Url.value.includes("playlist")) {
         musicType.value = 'playlist'
         musicId.value = music163Url.value.split('playlist/')[1].split('?')[0]
       }
-    }else{
+    } else {
       music163Url.value = ''
     }
     music163Open.value = false
-    //@ts-expect-error
-    musicBoxKey++
   }
   music163Open.value = false
 
@@ -721,28 +710,28 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   textareaRef.value?.getRef().focus()
   showType.value = event.showType == 1
   localImgUrl.value = event.imgs?.replaceAll(',', '\n') || ''
-  if(music163Url.value.includes("music.163.com")){
+  if (music163Url.value.includes("music.163.com")) {
     // 如果里面有playlist
-    if(music163Url.value.includes("playlist")){
+    if (music163Url.value.includes("playlist")) {
       musicType.value = 'playlist'
       musicId.value = music163Url.value.split('playlist?id=')[1].split('&')[0]
-    }else if(music163Url.value.includes("song")){
+    } else if (music163Url.value.includes("song")) {
       musicType.value = 'song'
       musicId.value = music163Url.value.split('song?id=')[1].split('&')[0]
-    }else if(music163Url.value.includes("album")) {
+    } else if (music163Url.value.includes("album")) {
       musicType.value = 'album'
       musicId.value = music163Url.value.split('album?id=')[1].split('&')[0]
     }
-  }else if(music163Url.value.includes("y.qq.com")){
+  } else if (music163Url.value.includes("y.qq.com")) {
     musicPlatform.value = 'tencent'
-    if(music163Url.value.includes("songDetail")){
+    if (music163Url.value.includes("songDetail")) {
       musicType.value = 'song'
       musicId.value = music163Url.value.split('songDetail/')[1].split('?')[0]
-    }else if(music163Url.value.includes("playlist")){
+    } else if (music163Url.value.includes("playlist")) {
       musicType.value = 'playlist'
       musicId.value = music163Url.value.split('playlist/')[1].split('?')[0]
     }
-  }else{
+  } else {
     music163Url.value = ''
   }
   music163Open.value = false
@@ -750,7 +739,7 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
   musicBoxKey++
 })
 
-const addLocalImage = ()=>{
+const addLocalImage = () => {
   imgs.value = localImgUrl.value.split('\n')
   imageOpen.value = false
 }
@@ -851,12 +840,13 @@ async function updateLocation() {
   -o-user-select: none;
   user-select: none;
 }
+
 .aplayer-body {
   max-width: 100%;
   width: 100%;
 }
 
-.aplayer-pic{
+.aplayer-pic {
   z-index: 1;
 }
 
@@ -869,13 +859,19 @@ async function updateLocation() {
   animation: scroll 8s linear infinite;
 }
 
-.aplayer-title, .aplayer-author {
+.aplayer-title,
+.aplayer-author {
   padding-right: 10px;
 }
 
 @keyframes scroll {
-  from { transform: translateX(100%); }
-  to { transform: translateX(-100%); }
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 .aplayer-lrc {
