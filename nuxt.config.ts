@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/color-mode"],
   colorMode: {
     classSuffix: "",
+    storageKey:'vueuse-color-scheme'
   },
   shadcn: {
     /**
