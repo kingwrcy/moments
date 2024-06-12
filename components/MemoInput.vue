@@ -735,8 +735,6 @@ memoUpdateEvent.on((event: Memo & { index?: number }) => {
     music163Url.value = ''
   }
   music163Open.value = false
-  //@ts-expect-error
-  musicBoxKey++
 })
 
 const addLocalImage = () => {

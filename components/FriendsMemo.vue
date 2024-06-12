@@ -178,7 +178,6 @@ const showUserCommentArray = useState<Array<boolean>>('showUserCommentArray_' + 
 const el = ref<any>(null)
 let hh = ref(0)
 
-let musicBoxKey = ref(0);
 const musicType = ref('')
 const musicId = ref('')
 const musicPlatform = ref('netease')

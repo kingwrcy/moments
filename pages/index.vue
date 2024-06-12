@@ -9,7 +9,7 @@
         <div class="my-2 text-sm">空空如也，赶紧去发表Moments吧!</div>
         <Button @click="navigateTo('/login')">登录</Button>
       </div>
-      <FriendsMemo :memo="memo" v-for="(memo, index) in state.memoList" :index="index" :key="memo.id" :show-more="true"
+      <FriendsMemo :memo="memo" v-for="(memo, index) in state.memoList" :index="index" :key="`m${memo.id}${index}`" :show-more="true"
         @memo-update="loadData(Math.ceil((index + 1) / state.size), 'edit')" />
     </div>
     <div ref="target" class="cursor-pointer text-center text-sm opacity-70  my-4"
