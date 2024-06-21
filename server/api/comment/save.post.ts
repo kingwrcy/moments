@@ -63,6 +63,10 @@ export default defineEventHandler(async (event) => {
   const { content, email, memoId, replyToId, username, website, token } =
     request;
 
+  if(!sysConfig.public.enableComment){
+    return { success: false, message: "不允许评论" };
+  }
+
   const userId = event.context.userId;
   if (sysConfig.private.googleRecaptchaSecretKey && !token) {
     return { success: false, message: "小样儿,你是不是人机?" };

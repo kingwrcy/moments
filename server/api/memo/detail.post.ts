@@ -1,4 +1,6 @@
 import prisma from "~/lib/db";
+import fs from "fs/promises";
+import { SysConfig } from "~/lib/types";
 
 type DetailMemoReq = {
   id: number;
@@ -6,6 +8,8 @@ type DetailMemoReq = {
 
 export default defineEventHandler(async (event) => {
   const { id } = (await readBody(event)) as DetailMemoReq;
+  const config = ((await fs.readFile(`${process.env.CONFIG_FILE}`)).toString())
+  const sysConfig = JSON.parse(config) as SysConfig
   const data = await prisma.memo.findUnique({
     where:{
       id
@@ -21,11 +25,11 @@ export default defineEventHandler(async (event) => {
           coverUrl: true,
         },
       },
-      comments: {
+      comments: sysConfig.public.enableShowComment ?  {
         orderBy: {
           createdAt: "desc",
         },
-      },
+      } : undefined,
       _count: {
         select:{
           comments:true
