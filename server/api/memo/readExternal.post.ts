@@ -37,7 +37,9 @@ export default defineEventHandler(async (event) => {
   }else{
     href = urlObject.origin+'/favicon.ico';
   }
-  if (!href.startsWith("http")) {
+  if (href.startsWith("//")) {
+    href = urlObject.protocol + href;
+  } else if (!href.startsWith("http")) {
     href = urlObject.origin + (href.startsWith('/') ? href : '/'+href);
   }
 
