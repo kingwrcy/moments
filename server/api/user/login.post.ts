@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { jwtKey } from "~/lib/constant";
 import prisma from "~/lib/db";
 
 type loginReq = {
@@ -15,6 +14,8 @@ export type JwtPayload = {
 };
 
 export default defineEventHandler(async (event) => {
+  const runtimeConfig = useRuntimeConfig()
+
   const { username, password } = (await readBody(event)) as loginReq;
   let token = "";
   if (!username || !password) {
@@ -45,7 +46,7 @@ export default defineEventHandler(async (event) => {
       username: user.username,
       userId: user.id,
     },
-    jwtKey
+    runtimeConfig.jwtKey
   );
   setCookie(event, "token", token, {
     expires: new Date(Date.now() + 60 * 60 * 24 * 1000),

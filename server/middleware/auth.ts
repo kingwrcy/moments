@@ -1,4 +1,3 @@
-import { jwtKey } from "~/lib/constant";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "../api/user/login.post";
 
@@ -23,6 +22,8 @@ const needLoginUrl = [
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, "token");
   const url = getRequestURL(event);
+  const runtimeConfig = useRuntimeConfig()
+
 
   if (token && url.pathname === "/login") {
     await sendRedirect(event, "/", 302);
@@ -31,7 +32,7 @@ export default defineEventHandler(async (event) => {
 
   if (url.pathname === "/api/comment/save" && token) {
     try {
-      const result = jwt.verify(token, jwtKey);
+      const result = jwt.verify(token, runtimeConfig.jwtKey);
       const payload = result as JwtPayload;
       event.context.userId = payload.userId;
     } catch (error) {}

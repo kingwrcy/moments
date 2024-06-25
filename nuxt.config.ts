@@ -6,6 +6,9 @@ export default defineNuxtConfig({
     classSuffix: "",
     storageKey:'vueuse-color-scheme'
   },
+  runtimeConfig:{
+    jwtKey:"",
+  },
   shadcn: {
     /**
      * Prefix for all the imported component

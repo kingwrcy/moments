@@ -2,7 +2,6 @@ import prisma from "~/lib/db";
 import fs from "fs/promises";
 import type { SysConfig } from "~/lib/types";
 import jwt from "jsonwebtoken";
-import { jwtKey } from "~/lib/constant";
 import { JwtPayload } from "../user/login.post";
 
 type ListMemoReq = {
@@ -13,10 +12,12 @@ type ListMemoReq = {
 
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, "token");
+  const runtimeConfig = useRuntimeConfig()
+
   let userId = 0;
   if (token) {
     try {
-      const user = jwt.verify(token, jwtKey) as JwtPayload;
+      const user = jwt.verify(token, runtimeConfig.jwtKey) as JwtPayload;
       userId = user.userId;
     } catch {}
   }

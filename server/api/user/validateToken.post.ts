@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken";
-import { jwtKey } from "~/lib/constant";
 
 export default defineEventHandler(async (event) => {
+  const runtimeConfig = useRuntimeConfig()
+
   const token = getCookie(event, "token");
   if (token) {
     try {
-      jwt.verify(token, jwtKey);
+      jwt.verify(token, runtimeConfig.jwtKey);
     } catch (e) {
       return {
         success: false,
