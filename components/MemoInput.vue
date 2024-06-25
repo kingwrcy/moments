@@ -507,7 +507,7 @@ const removePreviewImg = async (index: number) => {
 const token = useCookie('token')
 const logout = () => {
   token.value = ''
-  navigateTo('/', { replace: true })
+  window.location.reload()
 }
 
 const fetchDoubanBook = async () => {

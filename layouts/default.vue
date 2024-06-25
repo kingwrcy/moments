@@ -27,7 +27,7 @@ if (!data.value?.success) {
   const token = useCookie('token')
   token.value = undefined
 } else {
-  const privateConfigData = await useFetch('/api/config/private', {
+  const privateConfigData = await useFetch('/api/config/pri', {
     method: 'POST'
   })
   useState<PrivateConfig | null>('privateConfig', () => privateConfigData.data.value!)
