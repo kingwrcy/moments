@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
 
   if (needLoginUrl.includes(url.pathname) && token) {
     try {
-      const result = jwt.verify(token, jwtKey);
+      const result = jwt.verify(token, runtimeConfig.jwtKey);
       const payload = result as JwtPayload;
       event.context.userId = payload.userId;
     } catch (error) {

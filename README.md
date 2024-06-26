@@ -43,6 +43,12 @@
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
+***从v0.2版本起,这个环境变量必填,不填无法正常使用.***
+```
+-- 自定义jwt密钥(从0.2版本开始必填,不填无法使用)
+NUXT_JWT_KEY=自定义jwt密钥,可以自己随机生成
+```
+
 
 ## S3配置教程
 
@@ -103,6 +109,8 @@ DATABASE_URL="file:/app/data/db.sqlite"
 UPLOAD_DIR="/app/data/upload"
 -- 配置文件目录(可以复制项目根目录的)
 CONFIG_FILE=/app/data/config.json
+-- 自定义jwt密钥(从0.2版本开始必填,不填无法使用)
+NUXT_JWT_KEY=自定义jwt密钥,可以自己随机生成
 ```
 
 执行命令
