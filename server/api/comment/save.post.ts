@@ -69,7 +69,7 @@ export default defineEventHandler(async (event) => {
 
   const userId = event.context.userId;
   if (sysConfig.private.googleRecaptchaSecretKey && !token) {
-    return { success: false, message: "小样儿,你是不是人机?" };
+    return { success: false, message: "傻逼还来吗?" };
   }
   if (content.length > sysConfig.public.commentMaxLength) {
     return { success: false, message: "评论超长了,老板" };
@@ -92,10 +92,16 @@ export default defineEventHandler(async (event) => {
   if (sysConfig.private.googleRecaptchaSecretKey) {
     const url = `https://recaptcha.net/recaptcha/api/siteverify?secret=${sysConfig.private.googleRecaptchaSecretKey}&response=${token}`
     const response = (await $fetch(url)) as any as recaptchaResponse;
+    if(response.success === false){
+      return {
+        success: false,
+        message: "傻逼,还来??",
+      };
+    }
     if (response.score <= 0.5) {
       return {
         success: false,
-        message: "小样儿,你是不是人机?",
+        message: "二货,你是不是人机?",
       };
     }
   }
