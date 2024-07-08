@@ -34,7 +34,7 @@
     "radix-vue": "^1.8.5",
     "reflect-metadata": "^0.2.2",
     "short-uuid": "^5.2.0",
-    "tailwind-merge": "^2.3.0",
+    "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.31",
     "vue-router": "^4.4.0",
