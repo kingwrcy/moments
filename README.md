@@ -3,6 +3,12 @@
 
 又开了个新坑,[极简论坛](https://discussion.mblog.club/),可以过来用于讨论[极简朋友圈](https://github.com/kingwrcy/moments),[极简博客](https://dev.mblog.club)的社区,当然代码也[开源](https://github.com/kingwrcy/discussion)了,可以自由部署使用,有问题可以上论坛反馈.
 
+[重写了多人版朋友圈](https://m.hotnews.pw) -基于世界上最好的编程语言php编写的demo,目前还不完善,有需要的可以看看.
+
+[极简分享](https://hotnews.pw) - 基于golang的分享社区,镜像包只有6mb.
+
+
+
 [![docker pull](https://img.shields.io/badge/moments-更新记录-blue)](https://github.com/kingwrcy/moments/blob/master/release.md)
 [![docker pull](https://img.shields.io/badge/moments-常见问题-blue)](https://github.com/kingwrcy/moments/blob/master/q&a.md)
 ![moments github action status](https://img.shields.io/github/actions/workflow/status/kingwrcy/moments/deploy.yml)
@@ -11,7 +17,7 @@
 [![docker pull](https://img.shields.io/badge/1panel-本地安装-blue)](https://ono.ee/?p=1713750155422)
 
 
-[多用户版本](https://moments.randallanjie.com/),由[网友](https://github.com/RandallAnjie)自行fork修改而成.本体目前不支持多用户.
+[社区版用户版本](https://moments.randallanjie.com/),由[网友](https://github.com/RandallAnjie)自行fork修改而成.本体目前不支持多用户.
 
 有需要的可以看看,目前已经开放注册.
 
