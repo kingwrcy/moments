@@ -2,13 +2,16 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@nuxtjs/color-mode"],
+
   colorMode: {
     classSuffix: "",
     storageKey:'vueuse-color-scheme'
   },
+
   runtimeConfig:{
     jwtKey:"",
   },
+
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -20,6 +23,7 @@ export default defineNuxtConfig({
      */
     componentDir: "./components/ui",
   },
+
   nitro: {
     esbuild: {
       options: {
@@ -27,6 +31,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   app: {
     head: {
       link: [
@@ -38,12 +43,16 @@ export default defineNuxtConfig({
       ]
     }
   },
+
   plugins: [
     '~/plugins/meting.ts'
   ],
+
   vue: {  
     compilerOptions: {
       isCustomElement: (tag:string) => ['meting-js'].includes(tag),
     },
-  }
+  },
+
+  compatibilityDate: "2024-07-09"
 });

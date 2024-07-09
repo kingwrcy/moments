@@ -212,7 +212,6 @@ if (props.memo.music163Url) {
   }
 }
 
-console.log(props.memo.music163Url, musicType.value, musicId.value)
 
 const { height } = useElementSize(el)
 const likeList = useStorage<Array<number>>('likeList', [])
