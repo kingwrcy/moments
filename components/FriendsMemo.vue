@@ -40,8 +40,12 @@
 
       <audio class="w-full my-2" :src="memoExt.audioUrl" controls v-if="memoExt.audioUrl"></audio>
 
-      <video class="w-2/3 my-2 rounded" :src="memoExt.videoUrl" controls v-if="memoExt.videoUrl"></video>
-      <video class="w-2/3 my-2 rounded" :src="memoExt.localVideoUrl" controls v-if="memoExt.localVideoUrl"></video>
+      <video class="w-2/3 my-2 rounded" controls v-if="memoExt.videoUrl" preload="metadata">
+        <source :src="`${memoExt.videoUrl}#t=1`" type="video/mp4" />
+      </video>
+      <video class="w-2/3 my-2 rounded" controls v-if="memoExt.localVideoUrl" preload="metadata">
+        <source :src="`${memoExt.localVideoUrl}#t=1`" type="video/mp4" />
+      </video>
 
       <DoubanBook :book="memoExt.doubanBook" v-if="memoExt.doubanBook" />
       <DoubanMovie :movie="memoExt.doubanMovie" v-if="memoExt.doubanMovie" />
