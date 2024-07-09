@@ -32,6 +32,7 @@
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/douseful"><img src="https://avatars.githubusercontent.com/u/52767905?v=4?s=80" width="80px;" alt="yee"/><br /><sub><b>yee</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=douseful" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.jschef.com/"><img src="https://avatars.githubusercontent.com/u/38160059?v=4?s=80" width="80px;" alt="Chef"/><br /><sub><b>Chef</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=Chef5" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://xwsir.cn/"><img src="https://avatars.githubusercontent.com/u/17978673?v=4?s=80" width="80px;" alt="小王先森"/><br /><sub><b>小王先森</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=dinphy" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.gooth.org/"><img src="https://avatars.githubusercontent.com/u/126313?v=4?s=80" width="80px;" alt="Athurg Gooth"/><br /><sub><b>Athurg Gooth</b></sub></a><br /><a href="https://github.com/kingwrcy/moments/commits?author=athurg" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>

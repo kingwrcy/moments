@@ -63,6 +63,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "athurg",
+      "name": "Athurg Gooth",
+      "avatar_url": "https://avatars.githubusercontent.com/u/126313?v=4",
+      "profile": "https://www.gooth.org/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
