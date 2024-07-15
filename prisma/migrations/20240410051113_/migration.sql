@@ -1,1 +1,0 @@
-update User set coverUrl = '/cover.webp',avatarUrl = '/avatar.webp' where id = 1;

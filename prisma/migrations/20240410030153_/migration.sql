@@ -1,1 +1,0 @@
-update User set avatarUrl = '/avatar.png',favicon = '/favicon.png',title = '极简朋友圈' where id = 1;
