@@ -3,7 +3,6 @@ import type { FormInst } from 'naive-ui'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const message = useMessage()
 const formRef = ref<FormInst | null>(null)
 const formValue = reactive({
   username: '',
@@ -31,10 +30,8 @@ async function doReg(e: MouseEvent) {
   e.preventDefault()
   formRef.value?.validate((errors) => {
     if (!errors) {
-      message.success('Valid')
     }
     else {
-      message.error('必填信息没有填写')
     }
   })
 }
@@ -52,17 +49,17 @@ async function doReg(e: MouseEvent) {
         label-placement="top"
       >
         <n-form-item label="姓名" path="username">
-          <n-input v-model:value="formValue.username" placeholder="输入姓名" />
+          <n-input v-model:value="formValue.username" placeholder="输入姓名" size="large" />
         </n-form-item>
         <n-form-item label="密码" path="password">
           <n-input
             v-model:value="formValue.password"
-            type="password" show-password-on="mousedown" placeholder="输入密码"
+            type="password" show-password-on="mousedown" placeholder="输入密码" size="large"
           />
         </n-form-item>
         <n-form-item label="重复密码" path="password">
           <n-input
-            v-model:value="formValue.password"
+            v-model:value="formValue.password" size="large"
             type="password" show-password-on="mousedown" placeholder="输入重复密码"
           />
         </n-form-item>

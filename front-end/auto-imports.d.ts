@@ -6,6 +6,7 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
+  const Toaster: typeof import('vue-sonner')['Toaster']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']
   const customRef: typeof import('vue')['customRef']
@@ -47,6 +48,7 @@ declare global {
   const toRef: typeof import('vue')['toRef']
   const toRefs: typeof import('vue')['toRefs']
   const toValue: typeof import('vue')['toValue']
+  const toast: typeof import('vue-sonner')['toast']
   const triggerRef: typeof import('vue')['triggerRef']
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
@@ -57,6 +59,7 @@ declare global {
   const useMessage: typeof import('naive-ui')['useMessage']
   const useNotification: typeof import('naive-ui')['useNotification']
   const useSlots: typeof import('vue')['useSlots']
+  const useStorage: typeof import('@vueuse/core')['useStorage']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
   const watchPostEffect: typeof import('vue')['watchPostEffect']

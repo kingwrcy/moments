@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import {  RouterView } from 'vue-router'
+import {Toaster} from 'vue-sonner'
 </script>
 
 <template>
-  <n-message-provider>
     <div class="w-full h-full bg-[#f1f5f9] dark:bg-slate-800 rounded-md dark:text-[#C0BEBF]">
       <div class="lg:w-[567px] mx-auto shadow-2xl bg-white dark:bg-[#181818] rounded">
         <RouterView />
       </div>
     </div>
-  </n-message-provider>
+    <Toaster position="top-center" rich-colors />
 </template>
 
 <style>

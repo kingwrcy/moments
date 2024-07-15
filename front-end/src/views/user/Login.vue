@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import type { FormInst } from 'naive-ui'
-import { useRouter } from 'vue-router'
-
+import type {FormInst} from 'naive-ui'
+import {useRouter} from 'vue-router'
+import service from "@/api";
+import { type Userinfo} from "@/types/user";
+import { useGlobalState } from '@/store'
+const state = useGlobalState()
 const router = useRouter()
-
-const message = useMessage()
 const formRef = ref<FormInst | null>(null)
 const formValue = reactive({
   username: '',
@@ -25,12 +26,13 @@ const rules = {
 
 async function doLogin(e: MouseEvent) {
   e.preventDefault()
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      message.success('Valid')
-    }
-    else {
-      message.error('必填信息没有填写')
+      const res = await service.post<Userinfo>('/user/login',formValue)
+      state.value = res.data
+      toast.success("登录成功,跳转首页中...")
+    } else {
+      toast.error("必填信息没有填")
     }
   })
 }
@@ -40,20 +42,20 @@ async function doLogin(e: MouseEvent) {
   <n-card title="登录">
     <div class="p-8 rounded shadow max-w-xs mx-auto">
       <n-form
-        ref="formRef"
-        :label-width="80"
-        :model="formValue"
-        :rules="rules"
-        size="small"
-        label-placement="top"
+          ref="formRef"
+          :label-width="80"
+          :model="formValue"
+          :rules="rules"
+          size="small"
+          label-placement="top"
       >
         <n-form-item label="姓名" path="username">
-          <n-input v-model:value="formValue.username" placeholder="输入姓名" />
+          <n-input v-model:value="formValue.username" placeholder="输入姓名" size="large"/>
         </n-form-item>
         <n-form-item label="密码" path="password">
           <n-input
-            v-model:value="formValue.password"
-            type="password" show-password-on="mousedown" placeholder="输入密码"
+              v-model:value="formValue.password"
+              type="password" show-password-on="mousedown" placeholder="输入密码" size="large"
           />
         </n-form-item>
         <n-form-item>

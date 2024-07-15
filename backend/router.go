@@ -10,6 +10,7 @@ func setupRouter(injector do.Injector) {
 	userHandler := handler.NewUserHandler(injector)
 	e := do.MustInvoke[*echo.Echo](injector)
 
-	userGroup := e.Group("/user")
+	api := e.Group("/api")
+	userGroup := api.Group("/user")
 	userGroup.POST("/login", userHandler.Login)
 }

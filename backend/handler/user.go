@@ -48,5 +48,6 @@ func (u UserHandler) Login(c echo.Context) error {
 	return SuccessResp(c, h{
 		"token":    tokenString,
 		"username": user.Username,
+		"id":       user.Id,
 	})
 }
