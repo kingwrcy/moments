@@ -4,16 +4,7 @@
       <div class="flex flex-1 gap-2 items-center">
         <Popover :open="linkOpen">
           <PopoverTrigger as="div">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger as-child>
-                  <Link :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="linkOpen = true" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>插入链接</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Link :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="linkOpen = true" />
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="linkOpen = false">
             <div class="flex flex-col gap-2" @keyup.enter="addLink()">
@@ -33,16 +24,7 @@
 
         <Popover :open="imageOpen">
           <PopoverTrigger as="div">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger as-child>
-                  <Image :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="imageOpen = true" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>插入图片</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Image :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="imageOpen = true" />
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="imageOpen = false">
             <div class="flex flex-col gap-2">
@@ -61,17 +43,7 @@
         </Popover>
         <Popover :open="music163Open" v-if="privateConfig.enableMusic163">
           <PopoverTrigger as="div">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger as-child>
-                  <Music4 :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="music163Open = true" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>嵌入网易云音乐</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
+            <Music4 :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="music163Open = true" />
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="music163Open = false">
             <div @keyup.enter="importMusic()">
@@ -96,17 +68,7 @@
 
         <Popover :open="bilibiliOpen" v-if="privateConfig.enableVideo">
           <PopoverTrigger as="div">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger as-child>
-                  <Youtube :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="bilibiliOpen = true" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>嵌入B站视频</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
+            <Youtube :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="bilibiliOpen = true" />
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="bilibiliOpen = false">
             <div class="flex flex-col gap-2" @keyup.enter="importVideo()">
@@ -142,22 +104,12 @@
 
         <Popover :open="doubanOpen" v-if="privateConfig.enableDouban">
           <PopoverTrigger as="div">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger as-child>
-                  <svg @click="doubanOpen = true" class="focus:outline-0 cursor-pointer w-[18px] h-[18px]"
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M15.2735 15H5V7H19V15H17.3764L16.0767 19H21V21H3V19H7.6123L6.8 16.5L8.70211 15.882L9.71522 19H13.9738L15.2735 15ZM3.5 3H20.5V5H3.5V3ZM7 9V13H17V9H7Z">
-                    </path>
-                  </svg>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>引入豆瓣读书和豆瓣电影</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
+            <svg @click="doubanOpen = true" class="focus:outline-0 cursor-pointer w-[18px] h-[18px]"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M15.2735 15H5V7H19V15H17.3764L16.0767 19H21V21H3V19H7.6123L6.8 16.5L8.70211 15.882L9.71522 19H13.9738L15.2735 15ZM3.5 3H20.5V5H3.5V3ZM7 9V13H17V9H7Z">
+              </path>
+            </svg>
           </PopoverTrigger>
           <PopoverContent as-child @interact-outside="doubanOpen = false">
             <div @keyup.enter="importDouban()">
@@ -184,28 +136,10 @@
 
 
       <div class="flex mx-auto gap-2">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger as-child>
-              <NuxtLink to="/settings">
-                <Settings :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" />
-              </NuxtLink>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>设置</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger as-child>
-              <LogOut :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="logout" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>退出</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <NuxtLink to="/settings">
+          <Settings :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" />
+        </NuxtLink>
+        <LogOut :stroke-width="1.5" class="cursor-pointer w-[20px] h-[20px]" @click="logout" />
       </div>
 
 
