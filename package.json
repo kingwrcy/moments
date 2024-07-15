@@ -55,7 +55,7 @@
     "typescript": "^5.5.3"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.9.5"
+    "@rollup/rollup-linux-x64-gnu": "4.18.1"
   },
   "pnpm": {
     "supportedArchitectures": {
