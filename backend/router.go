@@ -8,9 +8,13 @@ import (
 
 func setupRouter(injector do.Injector) {
 	userHandler := handler.NewUserHandler(injector)
+	memoHandler := handler.NewMemoHandler(injector)
 	e := do.MustInvoke[*echo.Echo](injector)
 
 	api := e.Group("/api")
 	userGroup := api.Group("/user")
 	userGroup.POST("/login", userHandler.Login)
+
+	memoGroup := api.Group("/memo")
+	memoGroup.POST("/list", memoHandler.ListMemos)
 }

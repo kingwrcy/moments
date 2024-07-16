@@ -7,14 +7,30 @@ import (
 	"github.com/kingwrcy/moments/db"
 	"github.com/kingwrcy/moments/handler"
 	"github.com/kingwrcy/moments/log"
+	"github.com/kingwrcy/moments/middleware"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
 	"github.com/samber/do/v2"
 )
 
+type MySerializer struct {
+}
+
+func (m MySerializer) Serialize(c echo.Context, i interface{}, indent string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m MySerializer) Deserialize(c echo.Context, i interface{}) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func newEchoEngine(_ do.Injector) (*echo.Echo, error) {
-	return echo.New(), nil
+	e := echo.New()
+	//e.JSONSerializer =
+	return e, nil
 }
 
 func main() {
@@ -38,7 +54,7 @@ func main() {
 	e := do.MustInvoke[*echo.Echo](injector)
 	myLogger := do.MustInvoke[zerolog.Logger](injector)
 
-	e.Use()
+	e.Use(middleware.Auth(injector))
 
 	setupRouter(injector)
 	myLogger.Info().Msgf("服务端启动成功,监听:%d端口...", cfg.Port)

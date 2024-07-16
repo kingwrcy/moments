@@ -6,24 +6,24 @@ import (
 	"github.com/kingwrcy/moments/handler"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
+	"github.com/rs/zerolog"
 	"github.com/samber/do/v2"
 	"gorm.io/gorm"
 )
 
-func auth(injector do.Injector) echo.MiddlewareFunc {
+func Auth(injector do.Injector) echo.MiddlewareFunc {
 	cfg := do.MustInvoke[vo.SysConfig](injector)
 	db := do.MustInvoke[*gorm.DB](injector)
+	log := do.MustInvoke[zerolog.Logger](injector)
 	ignores := []string{
-		"/user/reg",
-		"/user/login",
+		"/api/user/reg",
+		"/api/user/login",
+		"/api/memo/list",
 	}
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-
 			tokenStr := c.Request().Header.Get("x-api-token")
-			//if tokenStr == "" {
-			//	return handler.FailResp(c, handler.TokenMissing)
-			//}
+			log.Info().Str("token", tokenStr).Msg("receive token")
 			cc := handler.CustomContext{Context: c}
 			if tokenStr != "" {
 				token, _ := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {

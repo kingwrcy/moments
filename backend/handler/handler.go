@@ -5,7 +5,6 @@ import (
 	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"github.com/samber/do/v2"
 	"gorm.io/gorm"
 )
@@ -57,7 +56,6 @@ func SuccessResp[T any](c echo.Context, data T) error {
 		Message: "",
 		Data:    data,
 	}
-	log.Printf("%+v", resp)
 	return c.JSON(200, resp)
 }
 
