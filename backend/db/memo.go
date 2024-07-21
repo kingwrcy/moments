@@ -19,7 +19,7 @@ type Memo struct {
 	ExternalUrl     string     `gorm:"column:externalUrl" json:"externalUrl,omitempty"`
 	ExternalTitle   string     `gorm:"column:externalTitle" json:"externalTitle,omitempty"`
 	ExternalFavicon string     `gorm:"column:externalFavicon;default:/favicon.png;NOT NULL" json:"externalFavicon,omitempty"`
-	Pinned          string     `gorm:"column:pinned;default:false;NOT NULL" json:"pinned,omitempty"`
+	Pinned          *bool      `gorm:"column:pinned;default:false;NOT NULL" json:"pinned,omitempty"`
 	Ext             string     `gorm:"column:ext;default:{};NOT NULL" json:"ext,omitempty"`
 	ShowType        int32      `gorm:"column:showType;default:1;NOT NULL" json:"showType,omitempty"`
 	User            *User      `json:"user,omitempty"`

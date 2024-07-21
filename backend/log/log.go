@@ -8,9 +8,9 @@ import (
 
 func NewLogger(_ do.Injector) (zerolog.Logger, error) {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	zerolog.SetGlobalLevel(zerolog.ErrorLevel)
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
-	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
+	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout}).With().Timestamp().Logger()
 
 	return logger, nil
 }

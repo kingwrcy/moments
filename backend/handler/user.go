@@ -82,3 +82,47 @@ func (u UserHandler) Reg(c echo.Context) error {
 		"id":       user.Id,
 	})
 }
+
+func (u UserHandler) Profile(c echo.Context) error {
+
+	context := c.(CustomContext)
+	currentUser := context.CurrentUser()
+	if currentUser == nil {
+		return SuccessResp(c, h{})
+	}
+
+	return SuccessResp(c, currentUser)
+}
+
+func (u UserHandler) SaveProfile(c echo.Context) error {
+	var (
+		req  vo.ProfileReq
+		user db.User
+	)
+	err := c.Bind(&req)
+	if err != nil {
+		return FailResp(c, ParamError)
+	}
+	context := c.(CustomContext)
+	currentUser := context.CurrentUser()
+	if currentUser == nil {
+		return FailResp(c, TokenMissing)
+	}
+	u.base.db.Find(&user, currentUser.Id)
+	if req.Password != "" {
+		password, err := bcrypt.GenerateFromPassword([]byte(req.Password), 10)
+		if err != nil {
+			return FailResp(c, Fail)
+		}
+		user.Password = string(password)
+	}
+	user.Nickname = req.Nickname
+	user.AvatarUrl = req.AvatarUrl
+	user.Slogan = req.Slogan
+	user.CoverUrl = req.CoverUrl
+
+	if err := u.base.db.Save(&user).Error; err != nil {
+		return FailResp(c, Fail)
+	}
+	return SuccessResp(c, h{})
+}

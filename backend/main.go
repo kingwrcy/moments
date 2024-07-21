@@ -53,7 +53,6 @@ func main() {
 
 	e := do.MustInvoke[*echo.Echo](injector)
 	myLogger := do.MustInvoke[zerolog.Logger](injector)
-
 	e.Use(middleware.Auth(injector))
 
 	setupRouter(injector)

@@ -52,12 +52,13 @@ func NewDB(injector do.Injector) (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open(cfg.DB), &gorm.Config{
 		//Logger: logger.Default.LogMode(logger.Info),
 	})
+	log.Printf("connenct to %s", cfg.DB)
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
 
 	// 迁移 schema
-	err = db.AutoMigrate(&User{}, &Comment{}, &Memo{})
+	err = db.AutoMigrate(&User{}, &Comment{}, &Memo{}, &SysConfig{})
 	if err != nil {
 		return nil, err
 	}

@@ -6,36 +6,36 @@ import (
 	"github.com/kingwrcy/moments/handler"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
-	"github.com/rs/zerolog"
 	"github.com/samber/do/v2"
 	"gorm.io/gorm"
+	"strings"
 )
 
 func Auth(injector do.Injector) echo.MiddlewareFunc {
 	cfg := do.MustInvoke[vo.SysConfig](injector)
 	db := do.MustInvoke[*gorm.DB](injector)
-	log := do.MustInvoke[zerolog.Logger](injector)
 	ignores := []string{
 		"/api/user/reg",
 		"/api/user/login",
 		"/api/memo/list",
+		"/api/user/profile",
 	}
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			tokenStr := c.Request().Header.Get("x-api-token")
-			log.Info().Str("token", tokenStr).Msg("receive token")
 			cc := handler.CustomContext{Context: c}
 			if tokenStr != "" {
 				token, _ := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 					return []byte(cfg.JwtKey), nil
 				})
+
 				if !token.Valid {
 					return handler.FailResp(c, handler.TokenInvalid)
 				}
 
 				claims := token.Claims.(jwt.MapClaims)
 				var user model.User
-				db.Where(&user, claims["id"])
+				db.Select("username", "nickname", "slogan", "id", "avatarUrl", "coverUrl").First(&user, claims["id"])
 				cc.SetUser(&user)
 				return next(cc)
 			} else {
@@ -44,6 +44,9 @@ func Auth(injector do.Injector) echo.MiddlewareFunc {
 					if path == url {
 						return next(cc)
 					}
+				}
+				if strings.HasPrefix(path, "/api/file/get") {
+					return next(cc)
 				}
 				return handler.FailResp(c, handler.TokenMissing)
 			}
