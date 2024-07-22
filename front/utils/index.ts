@@ -6,13 +6,15 @@ const global = useGlobalState()
 
 export async function useMyFetch<T>(url: string, data?: any) {
     const userinfo = global.value.userinfo
+    const headers:Record<string, any> = {}
+    if (userinfo.token){
+        headers["x-api-token"] = userinfo.token
+    }
     try {
         const res = await $fetch<ResultVO<T>>(`/api${url}`, {
             method: "post",
             body: data ? JSON.stringify(data) : null,
-            headers: {
-                "x-api-token": userinfo.token
-            }
+            headers:headers
         })
         if (res.code !== 0) {
             toast.error(res.message || "请求失败")
@@ -62,7 +64,10 @@ export async function useUpload(files: FileList | null) {
     }
 
     const userinfo = global.value.userinfo
-
+    const headers:Record<string, any> = {}
+    if (userinfo.token){
+        headers["x-api-token"] = userinfo.token
+    }
 
     if (sysConfig.value.enableS3) {
         return await upload2S3(files)
@@ -75,9 +80,7 @@ export async function useUpload(files: FileList | null) {
         const res = await $fetch<ResultVO<string[]>>(`/api/file/upload`, {
             method: "post",
             body: form,
-            headers: {
-                "x-api-token": userinfo.token,
-            }
+            headers
         })
         if (res.code !== 0) {
             toast.error(res.message || "请求失败")

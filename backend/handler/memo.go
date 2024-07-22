@@ -40,20 +40,30 @@ func (m MemoHandler) ListMemos(c echo.Context) error {
 	}
 
 	offset := (req.Page - 1) * req.Size
+	totalCondition := m.base.db.Table("Memo").Where("pinned = 0")
 
 	tx := m.base.db.Preload("User", func(x *gorm.DB) *gorm.DB {
 		return x.Select("username", "nickname", "slogan", "id", "avatarUrl", "coverUrl")
 	}).Where("pinned = 0")
 
-	context := c.(CustomContext)
-	currentUser := context.CurrentUser()
-	if currentUser != nil {
-		if req.Source == "" || req.Source == "square" {
-			//tx = tx.Where("userId = ?", currentUser.Id)
+	//context := c.(CustomContext)
+	//currentUser := context.CurrentUser()
+	//if currentUser != nil {
+	//	if req.Source == "" || req.Source == "square" {
+	//		//tx = tx.Where("userId = ?", currentUser.Id)
+	//	}
+	//}
+
+	if req.Username != "" {
+		var target db.User
+		if err := m.base.db.Where("username = ?", req.Username).First(&target).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+			return FailRespWithMsg(c, Fail, "不存在的用户")
 		}
+		tx = tx.Where("userId = ?", target.Id)
+		totalCondition = totalCondition.Where("userId = ?", target.Id)
 	}
 	tx.Order("createdAt desc").Limit(req.Size).Offset(offset).Find(&list)
-	tx.Count(&total)
+	totalCondition.Count(&total)
 
 	m.base.db.Preload("User", func(x *gorm.DB) *gorm.DB {
 		return x.Select("username", "nickname", "slogan", "id", "avatarUrl", "coverUrl")
@@ -68,8 +78,9 @@ func (m MemoHandler) ListMemos(c echo.Context) error {
 	}
 
 	return SuccessResp(c, h{
-		"list":  list,
-		"total": total,
+		"list":    list,
+		"total":   total,
+		"hasNext": int64(req.Page*req.Size) < total,
 	})
 }
 

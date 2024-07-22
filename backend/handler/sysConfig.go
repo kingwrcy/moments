@@ -24,6 +24,28 @@ func (s SysConfigHandler) GetConfig(c echo.Context) error {
 		result vo.SysConfigVO
 	)
 
+	if err := s.base.db.First(&config).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+		return SuccessResp(c, h{})
+	}
+	err := json.Unmarshal([]byte(config.Content), &result)
+	if err != nil {
+		return FailRespWithMsg(c, Fail, "读取系统配置异常")
+	}
+	return SuccessResp(c, h{
+		"favicon": result.Favicon,
+		"title":   result.Title,
+		"js":      result.Js,
+		"css":     result.Css,
+		"beiAnNo": result.BeiAnNo,
+	})
+}
+
+func (s SysConfigHandler) GetFullConfig(c echo.Context) error {
+	var (
+		config db.SysConfig
+		result vo.SysConfigVO
+	)
+
 	context := c.(CustomContext)
 	currentUser := context.CurrentUser()
 	if currentUser == nil || currentUser.Id != 1 {

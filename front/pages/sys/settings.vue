@@ -85,7 +85,7 @@ const state = reactive({
 })
 
 const reload = async () => {
-  const res = await useMyFetch('/sysConfig/get')
+  const res = await useMyFetch('/sysConfig/getFull')
   if (res) {
     Object.assign(state, res)
   }
@@ -94,7 +94,7 @@ const reload = async () => {
 const save = async () => {
   await useMyFetch('/sysConfig/save', state)
   toast.success("保存成功")
-  await reload()
+  location.reload()
 }
 
 const uploadFavicon = async (files: FileList) => {

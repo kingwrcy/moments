@@ -18,6 +18,7 @@ func setupRouter(injector do.Injector) {
 
 	userGroup := api.Group("/user")
 	userGroup.POST("/login", userHandler.Login)
+	userGroup.POST("/reg", userHandler.Reg)
 	userGroup.POST("/profile", userHandler.Profile)
 	userGroup.POST("/saveProfile", userHandler.SaveProfile)
 
@@ -36,6 +37,7 @@ func setupRouter(injector do.Injector) {
 	sycConfigGroup := api.Group("/sysConfig")
 	sycConfigGroup.POST("/save", sycConfigHandler.SaveConfig)
 	sycConfigGroup.POST("/get", sycConfigHandler.GetConfig)
+	sycConfigGroup.POST("/getFull", sycConfigHandler.GetFullConfig)
 
 	e.GET("/api/file/get/:filename", fileHandler.Get)
 	e.POST("/api/file/upload", fileHandler.Upload)

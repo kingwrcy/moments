@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span v-if="currentUser && props.comment.author == currentUser.id" class="text-[#576b95] text-nowrap">{{ props.comment.username }}
+    <span v-if="props.comment.author == props.memoUserId" class="text-[#576b95] text-nowrap">{{ props.comment.username }}
       <UBadge color="gray" variant="solid" size="xs">作者</UBadge>
     </span>
     <span v-else class="text-[#576b95] text-nowrap">{{ props.comment.username }}</span>
@@ -11,7 +11,7 @@
     <span class="mx-0.5">:</span>
     <span class="inline break-all cursor-pointer" @click="toggle">
     <span>{{ props.comment.content }}</span>
-    <UIcon v-if="currentUser && (currentUser.id === props.memoUserId || currentUser.id === 1)" name="i-carbon-trash-can"
+    <UIcon v-if="(global.userinfo.id === props.memoUserId || global.userinfo.id === 1)" name="i-carbon-trash-can"
            @click="removeComment" class="ml-4 text-red-400"/>
     </span>
   </div>
@@ -23,9 +23,9 @@ import type {CommentVO, UserVO} from "~/types";
 import CommentBox from "~/components/CommentBox.vue";
 import {toast} from "vue-sonner";
 import {memoChangedEvent} from "~/event";
+import {useGlobalState} from "~/store";
 
-const currentUser = useState<UserVO>('userinfo')
-
+const global = useGlobalState()
 const currentCommentBox = useState('currentCommentBox')
 const toggle = () => {
   const value = props.memoId + '#' + props.comment.id

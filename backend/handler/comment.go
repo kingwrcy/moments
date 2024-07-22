@@ -60,10 +60,12 @@ func (c CommentHandler) AddComment(ctx echo.Context) error {
 	}
 	if context, ok := ctx.(CustomContext); ok {
 		currentUser := context.CurrentUser()
-		comment.Username = currentUser.Username
-		comment.Author = fmt.Sprintf("%d", currentUser.Id)
-	} else {
-		comment.Username = req.Username
+		if currentUser == nil {
+			comment.Username = req.Username
+		} else {
+			comment.Username = currentUser.Username
+			comment.Author = fmt.Sprintf("%d", currentUser.Id)
+		}
 	}
 
 	comment.Content = req.Content

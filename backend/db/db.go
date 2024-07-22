@@ -48,11 +48,10 @@ func (m myLog) Trace(ctx context.Context, begin time.Time, fc func() (sql string
 }
 
 func NewDB(injector do.Injector) (*gorm.DB, error) {
-	cfg := do.MustInvoke[vo.SysConfig](injector)
+	cfg := do.MustInvoke[vo.AppConfig](injector)
 	db, err := gorm.Open(sqlite.Open(cfg.DB), &gorm.Config{
 		//Logger: logger.Default.LogMode(logger.Info),
 	})
-	log.Printf("connenct to %s", cfg.DB)
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}

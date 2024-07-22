@@ -6,5 +6,5 @@ type SysConfig struct {
 }
 
 func (s *SysConfig) TableName() string {
-	return "SycConfig"
+	return "SysConfig"
 }

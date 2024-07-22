@@ -12,7 +12,7 @@
         ></path>
       </svg>
     </div>
-    <UTextarea v-model="state.content" :rows="8" autoresize padded/>
+    <UTextarea v-model="state.content" :rows="8" autoresize padded autofocus/>
     <div class="flex justify-between items-center">
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
         <UIcon name="i-carbon-location"/>
@@ -37,7 +37,7 @@ const state = reactive({
   id:props.id || 0,
   content:"",
   ext:"",
-  pinned:0,
+  pinned:false,
   showType:1,
   externalFavicon:"",
   externalTitle:"",
@@ -51,7 +51,6 @@ onMounted(async () => {
   if(state.id >0){
     const res = await useMyFetch<MemoVO>('/memo/get?id='+state.id)
     Object.assign(state,res)
-
   }
 })
 
