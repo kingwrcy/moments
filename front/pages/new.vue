@@ -9,7 +9,9 @@
 <script setup lang="ts">
 import type {UserVO} from "~/types";
 import MemoEdit from "~/components/MemoEdit.vue";
+
 const currentUser = useState<UserVO>('userinfo')
+
 </script>
 
 <style scoped>

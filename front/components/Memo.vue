@@ -2,15 +2,18 @@
   <div :class="[item.pinned ? 'bg-slate-100' : '']">
     <div class="flex gap-2 text-sm dark:bg-neutral-800 px-4">
       <div class="avatar p-2">
-        <NuxtLink :to="`/memo/${item.id}`"><UAvatar
-            :src="item.user.avatarUrl"
-            alt="Avatar"
-        /></NuxtLink>
+        <NuxtLink :to="`/memo/${item.id}`">
+          <UAvatar
+              :src="item.user.avatarUrl"
+              alt="Avatar"
+          />
+        </NuxtLink>
       </div>
       <div class="flex flex-col gap-1 p-2 w-full">
         <div class="username text-[#576b95] mb-1 dark:text-white cursor-pointer">
-          <NuxtLink :to="`/user/${item.user.username}`">{{ item.user.username }}</NuxtLink></div>
-        <div class="content mb-2" v-html="content">
+          <NuxtLink :to="`/user/${item.user.username}`">{{ item.user.nickname }}</NuxtLink>
+        </div>
+        <div class="content mb-2" v-html="md.render(item.content)">
         </div>
 
         <div v-if="item.externalTitle"
@@ -22,7 +25,9 @@
 
 
         <div class="grid " :class="`grid-cols-${gridCols}`" v-if="images.length>0">
-          <img class="cursor-zoom-in rounded object-cover" :src="img" v-for="(img,index) in images" :key="index"></img>
+          <MyFancyBox v-for="(img,index) in images" :key="index">
+            <img class="cursor-zoom-in rounded object-cover" :src="img" ></img>
+          </MyFancyBox>
         </div>
 
 
@@ -40,12 +45,14 @@
 
           <div ref="toolbarRef" v-if="showToolbar"
                class="absolute top-[-8px] right-[32px] bg-[#4c4c4c] rounded text-white p-2 px-4">
-            <div class="flex flex-row gap-4">
-              <div class="flex flex-row gap-1 cursor-pointer items-center" @click="setPinned(item.id)"
-                   v-if="global&&global.userinfo.id === 1">
-                <UIcon name="i-carbon-pin"/>
-                <div>{{ item.pinned ? '取消' : '' }}置顶</div>
-              </div>
+            <div class="flex flex-row gap-2">
+              <template v-if="global.userinfo.id === 1">
+                <div class="flex flex-row gap-1 cursor-pointer items-center" @click="setPinned(item.id)">
+                  <UIcon name="i-carbon-pin"/>
+                  <div>{{ item.pinned ? '取消' : '' }}置顶</div>
+                </div>
+                <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
+              </template>
               <div class="flex flex-row gap-1 cursor-pointer items-center" @click="likeMemo(item.id)">
                 <UIcon name="i-carbon-favorite" :class="[liked ? 'text-red-400' : '']"/>
                 <div>赞</div>
@@ -77,15 +84,16 @@
 
 
         <div class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-[#202020] flex flex-col gap-1"
-            >
+        >
           <div class="flex flex-row py-2 px-4 gap-2 items-center text-sm" v-if="item.favCount>0">
             <UIcon name="i-carbon-favorite" class="text-red-500"/>
             <div class="text-[#576b95]"><span class="mx-1">{{ item.favCount }}</span>位访客</div>
           </div>
-          <div class="flex flex-col gap-1" >
-            <CommentBox :comment-id="0" :memo-id="item.id" />
+          <div class="flex flex-col gap-1">
+            <CommentBox :comment-id="0" :memo-id="item.id"/>
             <div :class="[item.comments && item.comments.length>0 ? 'py-2' : '']">
-              <div class="px-4 relative flex-col text-sm" v-for="c in item.comments" :key="c.id" v-if="item.comments && item.comments.length>0">
+              <div class="px-4 relative flex-col text-sm" v-for="c in item.comments" :key="c.id"
+                   v-if="item.comments && item.comments.length>0">
                 <Comment :comment="c" :memo-id="item.id" :memo-user-id="item.user.id"/>
               </div>
             </div>
@@ -103,12 +111,19 @@ import {toast} from "vue-sonner";
 import {memoChangedEvent, memoReloadEvent} from "~/event";
 import Comment from "~/components/Comment.vue";
 import {useGlobalState} from "~/store";
+import markdownit from 'markdown-it'
 
+const md = markdownit({
+  html: true,
+  linkify: true,
+  typographer: true,
+  breaks: true,
+})
 const currentCommentBox = useState('currentCommentBox')
 const props = defineProps<{
   memo: MemoVO
 }>()
-const item = computed(()=>{
+const item = computed(() => {
   return props.memo
 })
 const global = useGlobalState()
@@ -127,7 +142,7 @@ const location = computed(() => {
 
 const doComment = () => {
   const value = item.value.id + '#0'
-  console.log('value is ',value,'===>',currentCommentBox.value)
+  console.log('value is ', value, '===>', currentCommentBox.value)
   if (currentCommentBox.value === value) {
     currentCommentBox.value = ''
   } else {
@@ -173,6 +188,7 @@ const likeMemo = async (id: number) => {
 onMounted(() => {
   const likes = JSON.parse(localStorage.getItem('likeMemos') || '[]') as Array<number>
   liked.value = likes.findIndex(r => r === item.value.id) >= 0
+
 })
 
 const images = computed(() => {
@@ -190,12 +206,12 @@ const gridCols = computed(() => {
   return 3
 })
 
-const content = computed(() => {
-  if(!item.value.content){
-    return ""
-  }
-  return item.value.content.replaceAll("\n", "<br/>")
-})
+// const content = computed(() => {
+//   if (!item.value.content) {
+//     return ""
+//   }
+//   return item.value.content.replaceAll("\n", "<br/>")
+// })
 </script>
 
 <style lang="scss" scoped>

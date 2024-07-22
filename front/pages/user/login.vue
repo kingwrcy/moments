@@ -40,7 +40,7 @@ const doLogin = async () => {
   global.value.userinfo = await useMyFetch<LoginResp>('/user/login', state)
   toast.success("登录成功,跳转到首页...")
   pending.value = false
-  await navigateTo('/')
+  location.href='/'
 }
 </script>
 
