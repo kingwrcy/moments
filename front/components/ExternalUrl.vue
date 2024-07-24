@@ -40,11 +40,7 @@ const pending = ref(false)
 const url = ref(props.externalUrl)
 const title = ref(props.externalTitle)
 const favicon = ref(props.externalFavicon)
-export type ExternalUrlDTO = {
-  url: string
-  title: string
-  favicon: string
-}
+
 
 const clear = (close: Function) => {
   favicon.value = ''

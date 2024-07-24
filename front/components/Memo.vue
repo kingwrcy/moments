@@ -24,15 +24,8 @@
           </div>
         </div>
 
-
-        <div v-if="item.externalTitle"
-             class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
-        >
-          <img class="w-8 h-8" :src="item.externalFavicon" alt=""><a
-            :href="item.externalUrl" target="_blank" class="text-[#576b95]">{{ item.externalTitle }}</a>
-        </div>
-
-
+        <external-url-preview :favicon="item.externalFavicon" :title="item.externalTitle" :url="item.externalUrl"
+                              v-if="item.externalFavicon&&item.externalTitle&&item.externalUrl"/>
         <div class="grid " :class="`grid-cols-${gridCols}`" v-if="images.length>0">
           <MyFancyBox v-for="(img,index) in images" :key="index">
             <img class="cursor-zoom-in rounded object-cover" :src="img">
@@ -40,7 +33,8 @@
         </div>
 
 
-        <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5">
+        <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5"
+             v-if="location">
           <UIcon name="i-carbon-location"/>
           <span>{{ location }}</span>
         </div>

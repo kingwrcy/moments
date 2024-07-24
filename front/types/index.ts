@@ -67,3 +67,9 @@ export type SysConfigVO = {
     timeFormat: 'timeAgo' | 'time',
 }
 
+export type ExternalUrlDTO = {
+    url: string
+    title: string
+    favicon: string
+}
+

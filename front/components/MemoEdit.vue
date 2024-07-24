@@ -1,17 +1,15 @@
 <template>
-  <div class="p-4 space-y-2">
+  <div class="px-4 space-y-2">
     <div class="flex gap-2 text-lg text-gray-600">
-      <ExternalUrl @confirm="updateExternalUrl" :external-favicon="state.externalFavicon" :external-title="state.externalTitle" :external-url="state.externalUrl"/>
+      <ExternalUrl @confirm="updateExternalUrl" :external-favicon="state.externalFavicon"
+                   v-if="state.externalUrl || $route.path==='/new'"
+                   :external-title="state.externalTitle" :external-url="state.externalUrl"/>
 
-      <UIcon name="i-carbon-image" class="cursor-pointer"/>
-      <UIcon name="i-carbon-music"/>
-      <UIcon name="i-carbon-video-player"/>
-      <svg class="focus:outline-0 cursor-pointer w-[18px] h-[18px]" xmlns="http://www.w3.org/2000/svg"
-           viewBox="0 0 24 24" fill="currentColor" data-state="closed">
-        <path
-            d="M15.2735 15H5V7H19V15H17.3764L16.0767 19H21V21H3V19H7.6123L6.8 16.5L8.70211 15.882L9.71522 19H13.9738L15.2735 15ZM3.5 3H20.5V5H3.5V3ZM7 9V13H17V9H7Z"
-        ></path>
-      </svg>
+      <upload-image/>
+      <music/>
+      <upload-video/>
+      <douban-edit/>
+
     </div>
 
     <div class="w-full" @contextmenu.prevent="onContextMenu" v-if="tags">
@@ -27,13 +25,7 @@
       </UContextMenu>
     </div>
 
-    <div v-if="state.externalTitle"
-         class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
-    >
-      <img class="w-8 h-8" :src="state.externalFavicon" alt=""><a
-        :href="state.externalUrl" target="_blank" class="text-[#576b95]">{{ state.externalTitle }}</a>
-    </div>
-
+    <external-url-preview :favicon="state.externalFavicon" :title="state.externalTitle" :url="state.externalUrl"/>
 
     <div class="flex justify-between items-center">
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
@@ -65,10 +57,9 @@
 
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from '@vueuse/core'
-import type {MemoVO} from "~/types";
+import type {ExternalUrlDTO, MemoVO} from "~/types";
 import {toast} from "vue-sonner";
-import type {ExternalUrlDTO} from "~/components/ExternalUrl.vue";
-import ExternalUrl from "~/components/ExternalUrl.vue";
+import UploadImage from "~/components/UploadImage.vue";
 
 
 const contentRef = ref(null)
@@ -87,6 +78,7 @@ const defaultState = {
   bilibiliUrl: "",
   imgs: ""
 }
+
 const updateExternalUrl = ({title, favicon, url}: ExternalUrlDTO) => {
   state.externalTitle = title
   state.externalFavicon = favicon
@@ -98,6 +90,7 @@ const state = reactive({
 const tags = ref<string[]>([])
 const reset = () => {
   Object.assign(state, defaultState)
+
 }
 
 const locationLabel = computed(() => {
@@ -111,6 +104,9 @@ const isOpen = ref(false)
 const virtualElement = ref({getBoundingClientRect: () => ({})})
 
 function onContextMenu() {
+  if (tags.value.length<=0){
+    return
+  }
   const top = unref(y) - unref(windowY)
   const left = unref(x)
 
