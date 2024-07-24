@@ -17,6 +17,9 @@
       <UInput v-model="state.favicon" class="mb-2"/>
       <UAvatar :src="state.favicon"/>
     </UFormGroup>
+    <UFormGroup label="是否启用评论" name="enableComment" :ui="{label:{base:'font-bold'}}">
+      <UToggle v-model="state.enableComment"/>
+    </UFormGroup>
     <UFormGroup label="备案号" name="beiAnNo" :ui="{label:{base:'font-bold'}}">
       <UInput v-model="state.beiAnNo" placeholder="没有可以不填写"/>
     </UFormGroup>
@@ -26,6 +29,35 @@
     <UFormGroup label="自定义JS" name="js" :ui="{label:{base:'font-bold'}}">
       <UTextarea v-model="state.js" :rows="5"/>
     </UFormGroup>
+    <UFormGroup label="评论最大字数" name="maxCommentLength" :ui="{label:{base:'font-bold'}}">
+      <UInput v-model="state.maxCommentLength"/>
+    </UFormGroup>
+    <UFormGroup label="发言最大高度(单位px)" name="memoMaxHeight" :ui="{label:{base:'font-bold'}}">
+      <UInput v-model="state.memoMaxHeight"/>
+    </UFormGroup>
+    <UFormGroup label="评论排序方式(按日期)" name="commentOrder" :ui="{label:{base:'font-bold'}}">
+      <USelectMenu v-model="state.commentOrder"
+                   :options="[{label:'倒序,越晚发布越靠前',value:'desc'},{label:'正序,越早发布越靠前',value:'asc'}]"
+                   value-attribute="value" option-attribute="label"></USelectMenu>
+    </UFormGroup>
+    <UFormGroup label="日期格式" name="timeFormat" :ui="{label:{base:'font-bold'}}">
+      <USelectMenu v-model="state.timeFormat"
+                   :options="[{label:'几分钟前',value:'timeAgo'},{label:'2024-07-24 09:56:55',value:'time'}]"
+                   value-attribute="value" option-attribute="label"></USelectMenu>
+    </UFormGroup>
+    <div class="border rounded border-gray-300 p-2 space-y-4  flex flex-col">
+      <UFormGroup label="是否启用Google Recaptcha" name="enableGoogleRecaptcha" :ui="{label:{base:'font-bold'}}">
+        <UToggle v-model="state.enableGoogleRecaptcha"/>
+      </UFormGroup>
+      <template v-if="state.enableGoogleRecaptcha">
+        <UFormGroup label="SiteKey" name="googleSiteKey" :ui="{label:{base:'font-bold'}}">
+          <UInput v-model="state.googleSiteKey"/>
+        </UFormGroup>
+        <UFormGroup label="SecretKey" name="googleSecretKey" :ui="{label:{base:'font-bold'}}">
+          <UInput v-model="state.googleSecretKey"/>
+        </UFormGroup>
+      </template>
+    </div>
     <div class="border rounded border-gray-300 p-2 space-y-4  flex flex-col">
       <UFormGroup label="是否启用S3存储" name="s3" :ui="{label:{base:'font-bold'}}">
         <UToggle v-model="state.enableS3"/>
@@ -66,6 +98,14 @@ import {useUpload} from "~/utils";
 
 const currentUser = useState<UserVO>('userinfo')
 const state = reactive({
+  enableGoogleRecaptcha: false,
+  googleSiteKey:"",
+  googleSecretKey:"",
+  enableComment: true,
+  maxCommentLength: 120,
+  memoMaxHeight: 300,
+  commentOrder: 'desc',
+  timeFormat: 'timeAgo',
   adminUserName: "admin",
   title: "极简朋友圈",
   favicon: "/favicon.ico",
@@ -98,7 +138,6 @@ const save = async () => {
 }
 
 const uploadFavicon = async (files: FileList) => {
-  console.log(files)
   const result = await useUpload(files)
   toast.success("上传成功")
   if (result) {

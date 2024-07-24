@@ -12,6 +12,7 @@ func setupRouter(injector do.Injector) {
 	commentHandler := handler.NewCommentHandler(injector)
 	sycConfigHandler := handler.NewSysConfigHandler(injector)
 	fileHandler := handler.NewFileHandler(injector)
+	tagHandler := handler.NewTagHandler(injector)
 	e := do.MustInvoke[*echo.Echo](injector)
 
 	api := e.Group("/api")
@@ -20,6 +21,7 @@ func setupRouter(injector do.Injector) {
 	userGroup.POST("/login", userHandler.Login)
 	userGroup.POST("/reg", userHandler.Reg)
 	userGroup.POST("/profile", userHandler.Profile)
+	userGroup.POST("/profile/:username", userHandler.ProfileForUser)
 	userGroup.POST("/saveProfile", userHandler.SaveProfile)
 
 	memoGroup := api.Group("/memo")
@@ -29,6 +31,7 @@ func setupRouter(injector do.Injector) {
 	memoGroup.POST("/like", memoHandler.LikeMemo)
 	memoGroup.POST("/get", memoHandler.GetMemo)
 	memoGroup.POST("/setPinned", memoHandler.SetPinned)
+	memoGroup.POST("/getFaviconAndTitle", memoHandler.GetFaviconAndTitle)
 
 	commentGroup := api.Group("/comment")
 	commentGroup.POST("/add", commentHandler.AddComment)
@@ -38,6 +41,9 @@ func setupRouter(injector do.Injector) {
 	sycConfigGroup.POST("/save", sycConfigHandler.SaveConfig)
 	sycConfigGroup.POST("/get", sycConfigHandler.GetConfig)
 	sycConfigGroup.POST("/getFull", sycConfigHandler.GetFullConfig)
+
+	tagGroup := api.Group("/tag")
+	tagGroup.POST("/list", tagHandler.List)
 
 	e.GET("/api/file/get/:filename", fileHandler.Get)
 	e.POST("/api/file/upload", fileHandler.Upload)

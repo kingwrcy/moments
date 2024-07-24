@@ -13,7 +13,7 @@ func migrateTo3(tx *gorm.DB, log zerolog.Logger) {
 	var (
 		count int64
 		admin db.User
-		item  vo.SysConfigVO
+		item  vo.FullSysConfigVO
 	)
 	tx.Table("SysConfig").Count(&count)
 	if count == 0 {
@@ -41,7 +41,12 @@ func migrateTo3(tx *gorm.DB, log zerolog.Logger) {
 				ThumbnailSuffix: admin.ThumbnailSuffix,
 			}
 		}
-
+		item.EnableGoogleRecaptcha = false
+		item.EnableComment = true
+		item.MaxCommentLength = 120
+		item.MaxCommentLength = 300
+		item.CommentOrder = "desc"
+		item.TimeFormat = "timeAgo"
 		var sysConfig db.SysConfig
 
 		content, err := json.Marshal(&item)

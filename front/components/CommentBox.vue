@@ -11,7 +11,7 @@
         <UInput placeholder="姓名" v-model="state.username"/>
         <UInput placeholder="网站" v-model="state.website"/>
       </template>
-      <UButton color="white" @click="doComment">发布评论</UButton>
+      <UButton color="white" @click="comment">发布评论</UButton>
     </div>
   </div>
 </template>
@@ -22,12 +22,14 @@ import {memoChangedEvent} from "~/event";
 import Emoji from "~/components/Emoji.vue";
 import {useGlobalState} from "~/store";
 import {useStorage} from '@vueuse/core'
+import type {SysConfigVO} from "~/types";
+
 const props = defineProps<{
   commentId: number
   memoId: number
   replyTo?: string
 }>()
-const pid = computed(()=>{
+const pid = computed(() => {
   return `${props.memoId}#${props.commentId}`
 })
 const global = useGlobalState()
@@ -37,7 +39,7 @@ const localCommentUserinfo = useStorage('localCommentUserinfo', {
 })
 const emojiShow = ref(false)
 const currentCommentBox = useState('currentCommentBox')
-
+const sysConfig = useState<SysConfigVO>('sysConfig')
 const state = reactive({
   content: "",
   memoId: props.memoId,
@@ -45,14 +47,32 @@ const state = reactive({
   username: localCommentUserinfo.value.username,
   website: localCommentUserinfo.value.website,
 })
-const doComment = async () => {
+
+
+const comment = async () => {
+  if (sysConfig.value.enableGoogleRecaptcha) {
+    grecaptcha.ready(() => {
+      grecaptcha.execute(sysConfig.value.googleSiteKey, {action: 'newComment'}).then(async (token) => {
+        await doComment(token)
+      })
+    })
+  } else {
+    await doComment()
+  }
+}
+
+const doComment = async (token?: string) => {
   if (!global.value.userinfo.token) {
     localCommentUserinfo.value = {
       username: state.username,
       website: state.website,
     }
   }
-  await useMyFetch('/comment/add', state)
+  if (state.content.length > sysConfig.value.maxCommentLength) {
+    toast.error("评论字数超过限制长度:" + sysConfig.value.maxCommentLength)
+    return
+  }
+  await useMyFetch('/comment/add', {...state, token:token})
   toast.success("评论成功!")
   currentCommentBox.value = ''
   state.username = ''
@@ -60,6 +80,8 @@ const doComment = async () => {
   state.website = ''
   memoChangedEvent.emit(props.memoId)
 }
+
+
 const toggleEmoji = () => {
   emojiShow.value = !emojiShow.value
 }

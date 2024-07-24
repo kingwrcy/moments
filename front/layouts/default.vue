@@ -7,6 +7,7 @@
 
 <script lang="ts" setup>
 import type {SysConfigVO, UserVO} from "~/types";
+
 const currentUser = useState<UserVO>('userinfo')
 const sysConfig = useState<SysConfigVO>('sysConfig')
 const currentProfile = await useMyFetch<UserVO>("/user/profile")
@@ -37,6 +38,14 @@ useHead({
   ]
 })
 
-
-
+if (sysConfigVO.enableGoogleRecaptcha) {
+  useHead({
+    script: [
+      {
+        type: 'text/javascript',
+        src: `https://recaptcha.net/recaptcha/api.js?render=${sysConfigVO.googleSiteKey}`,
+      },
+    ],
+  })
+}
 </script>

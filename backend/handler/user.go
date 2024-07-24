@@ -62,6 +62,10 @@ func (u UserHandler) Reg(c echo.Context) error {
 	if err != nil {
 		return FailResp(c, ParamError)
 	}
+
+	if len(req.Username) < 3 {
+		return FailRespWithMsg(c, Fail, "用户名最少3个字符")
+	}
 	if req.Password != req.RepeatPassword {
 		return FailRespWithMsg(c, Fail, "两次密码不一致")
 	}
@@ -87,6 +91,13 @@ func (u UserHandler) Reg(c echo.Context) error {
 		return FailRespWithMsg(c, Fail, "注册用户异常")
 	}
 	return SuccessResp(c, h{})
+}
+
+func (u UserHandler) ProfileForUser(c echo.Context) error {
+	username := c.Param("username")
+	var user db.User
+	u.base.db.Select("username", "nickname", "slogan", "id", "avatarUrl", "coverUrl").Find(&user, "username = ?", username)
+	return SuccessResp(c, user)
 }
 
 func (u UserHandler) Profile(c echo.Context) error {

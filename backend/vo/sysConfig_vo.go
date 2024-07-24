@@ -11,12 +11,37 @@ type S3VO struct {
 }
 
 type SysConfigVO struct {
-	AdminUserName string `json:"adminUserName,omitempty"`
-	EnableS3      bool   `json:"enableS3,omitempty"`
-	Favicon       string `json:"favicon,omitempty"`
-	Title         string `json:"title,omitempty"`
-	BeiAnNo       string `json:"beiAnNo,omitempty"`
-	Css           string `json:"css,omitempty"`
-	Js            string `json:"js,omitempty"`
-	S3            S3VO   `json:"s3"`
+	AdminUserName         string `json:"adminUserName,omitempty"`
+	EnableS3              bool   `json:"enableS3"`
+	Favicon               string `json:"favicon,omitempty"`
+	Title                 string `json:"title,omitempty"`
+	BeiAnNo               string `json:"beiAnNo,omitempty"`
+	Css                   string `json:"css,omitempty"`
+	Js                    string `json:"js,omitempty"`
+	EnableGoogleRecaptcha bool   `json:"enableGoogleRecaptcha"`
+	GoogleSiteKey         string `json:"googleSiteKey,omitempty"`
+	EnableComment         bool   `json:"enableComment"`
+	MaxCommentLength      int    `json:"maxCommentLength,omitempty"`
+	MemoMaxHeight         int    `json:"memoMaxHeight,omitempty"`
+	CommentOrder          string `json:"commentOrder,omitempty"`
+	TimeFormat            string `json:"timeFormat,omitempty"`
+}
+
+type FullSysConfigVO struct {
+	AdminUserName         string `json:"adminUserName,omitempty"`
+	EnableS3              bool   `json:"enableS3"`
+	Favicon               string `json:"favicon,omitempty"`
+	Title                 string `json:"title,omitempty"`
+	BeiAnNo               string `json:"beiAnNo,omitempty"`
+	Css                   string `json:"css,omitempty"`
+	Js                    string `json:"js,omitempty"`
+	S3                    S3VO   `json:"s3"`
+	EnableGoogleRecaptcha bool   `json:"enableGoogleRecaptcha"`
+	GoogleSiteKey         string `json:"googleSiteKey,omitempty"`
+	GoogleSecretKey       string `json:"googleSecretKey,omitempty"`
+	EnableComment         bool   `json:"enableComment"`
+	MaxCommentLength      int    `json:"maxCommentLength,omitempty"`
+	MemoMaxHeight         int    `json:"memoMaxHeight,omitempty"`
+	CommentOrder          string `json:"commentOrder,omitempty"`
+	TimeFormat            string `json:"timeFormat,omitempty"`
 }

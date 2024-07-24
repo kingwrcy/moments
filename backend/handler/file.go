@@ -91,7 +91,7 @@ func (f FileHandler) S3PreSigned(c echo.Context) error {
 	var (
 		req         PreSignedReq
 		sysConfig   db.SysConfig
-		sysConfigVo vo.SysConfigVO
+		sysConfigVo vo.FullSysConfigVO
 	)
 	if err := c.Bind(&req); err != nil {
 		return FailResp(c, ParamError)

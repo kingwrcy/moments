@@ -37,10 +37,18 @@ const state = reactive({
 const pending = ref(false)
 const doLogin = async () => {
   pending.value = true
-  global.value.userinfo = await useMyFetch<LoginResp>('/user/login', state)
-  toast.success("登录成功,跳转到首页...")
-  pending.value = false
-  location.href='/'
+  let success =false
+  try{
+    global.value.userinfo = await useMyFetch<LoginResp>('/user/login', state)
+    toast.success("登录成功,跳转到首页...")
+    success = true
+  }finally {
+    pending.value = false
+  }
+  if (success){
+    location.href='/'
+  }
+
 }
 </script>
 

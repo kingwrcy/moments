@@ -10,11 +10,11 @@
      <span>{{props.comment.replyTo}}</span>
    </template>
     <span class="mx-0.5">:</span>
-    <span class="inline break-all cursor-pointer" @click="toggle">
-    <span>{{ props.comment.content }}</span>
+    <span class="inline break-all cursor-pointer" @click="toggle">{{ props.comment.content }}</span>
+    <span >{{ $dayjs(props.comment.createdAt).fromNow()  }}</span>
     <UIcon v-if="(global.userinfo.id === props.memoUserId || global.userinfo.id === 1)" name="i-carbon-trash-can"
-           @click="removeComment" class="ml-4 text-red-400"/>
-    </span>
+           @click="removeComment" class="cursor-pointer ml-4 text-red-400"/>
+
   </div>
   <CommentBox :memo-id="props.memoId" :reply-to="props.comment.username" :comment-id="props.comment.id"/>
 </template>

@@ -39,6 +39,7 @@ export type  MemoVO = {
     showType: number
     user: UserVO,
     comments: Array<CommentVO>
+    tags:string
 }
 
 export type UserVO = {
@@ -57,5 +58,12 @@ export type SysConfigVO = {
     css: string,
     js: string,
     enableS3: boolean
+    enableGoogleRecaptcha: boolean,
+    googleSiteKey: string,
+    enableComment: boolean,
+    maxCommentLength: number,
+    memoMaxHeight: number,
+    commentOrder: 'desc' | 'asc',
+    timeFormat: 'timeAgo' | 'time',
 }
 

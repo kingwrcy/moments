@@ -1,11 +1,17 @@
 package vo
 
+import "time"
+
 type ListMemoReq struct {
-	Page     int    `json:"page,omitempty"`
-	Size     int    `json:"size,omitempty"`
-	Tag      string `json:"tag,omitempty"`
-	Source   string `json:"source,omitempty"`
-	Username string `json:"username,omitempty"`
+	Page            int        `json:"page,omitempty"`
+	Size            int        `json:"size,omitempty"`
+	Tag             string     `json:"tag,omitempty"`
+	Source          string     `json:"source,omitempty"`
+	Username        string     `json:"username,omitempty"`
+	Start           *time.Time `json:"start,omitempty"`
+	End             *time.Time `json:"end,omitempty"`
+	ContentContains string     `json:"contentContains,omitempty"`
+	ShowType        *int       `json:"showType,omitempty"`
 }
 
 type MemoExt struct {
@@ -20,11 +26,11 @@ type SaveMemoReq struct {
 	Ext             MemoExt  `json:"ext"`
 	Pinned          *bool    `json:"pinned,omitempty"`
 	ShowType        int      `json:"show_type,omitempty"`
-	ExternalFavicon string   `json:"external_favicon,omitempty"`
-	ExternalTitle   string   `json:"external_title,omitempty"`
-	ExternalUrl     string   `json:"external_url,omitempty"`
+	ExternalFavicon string   `json:"externalFavicon,omitempty"`
+	ExternalTitle   string   `json:"externalTitle,omitempty"`
+	ExternalUrl     string   `json:"externalUrl,omitempty"`
 	Imgs            []string `json:"imgs,omitempty"`
-	Music163Url     string   `json:"music163_url,omitempty"`
-	BilibiliUrl     string   `json:"bilibili_url,omitempty"`
+	Music163Url     string   `json:"music163Url,omitempty"`
+	BilibiliUrl     string   `json:"bilibiliUrl,omitempty"`
 	Location        string   `json:"location,omitempty"`
 }

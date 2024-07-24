@@ -24,6 +24,7 @@ type Memo struct {
 	ShowType        int32      `gorm:"column:showType;default:1;NOT NULL" json:"showType,omitempty"`
 	User            *User      `json:"user,omitempty"`
 	Comments        []Comment  `json:"comments,omitempty"`
+	Tags            string     `json:"tags,omitempty"`
 }
 
 func (m *Memo) TableName() string {

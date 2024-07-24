@@ -13,13 +13,16 @@
     "@fancyapps/ui": "^5.0.36",
     "@iconify-json/carbon": "^1.1.36",
     "@nuxt/ui": "^2.17.0",
+    "date-fns": "^3.6.0",
     "markdown-it": "^14.1.0",
     "nuxt": "^3.12.3",
+    "v-calendar": "^3.1.2",
     "vue": "latest",
     "vue-sonner": "^1.1.3"
   },
   "packageManager": "pnpm@8.15.6+sha1.8105075ad0aa306138be128c017e9c41e28ecffa",
   "devDependencies": {
+    "@types/grecaptcha": "^3.0.9",
     "@types/markdown-it": "^14.1.1",
     "@vueuse/core": "^10.11.0",
     "@vueuse/nuxt": "^10.11.0",

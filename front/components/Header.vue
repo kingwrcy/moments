@@ -23,8 +23,11 @@
         <UIcon name="i-carbon-login" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
       </NuxtLink>
       <UIcon @click="logout" name="i-carbon-logout" v-else class="text-[#9fc84a] w-5 h-5 cursor-pointer" title="登出"/>
-      <NuxtLink to="/new" v-if="global.userinfo.token && $route.path === '/'" title="发言">
+      <NuxtLink to="/new" v-if="global.userinfo.token " title="发言">
         <UIcon name="i-carbon-edit" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
+      </NuxtLink>
+      <NuxtLink to="/user/calendar" v-if="global.userinfo.token" title="日历">
+        <UIcon name="i-carbon-calendar" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
       </NuxtLink>
       <NuxtLink to="/" v-if="$route.path !== '/'" title="去首页">
         <UIcon name="i-carbon-arrow-left" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>

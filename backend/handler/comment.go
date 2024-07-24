@@ -1,13 +1,18 @@
 package handler
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/kingwrcy/moments/db"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
+	"github.com/rs/zerolog"
 	"github.com/samber/do/v2"
 	"gorm.io/gorm"
+	"io"
+	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -47,16 +52,66 @@ func (c CommentHandler) RemoveComment(ctx echo.Context) error {
 	return SuccessResp(ctx, h{})
 }
 
+func checkGoogleRecaptcha(logger zerolog.Logger, sysConfigVO vo.FullSysConfigVO, token string) error {
+	if sysConfigVO.EnableGoogleRecaptcha {
+		if token == "" {
+			return errors.New("token必填")
+		}
+		params := url.Values{}
+		params.Set("secret", sysConfigVO.GoogleSecretKey)
+		params.Set("response", token)
+
+		response, err := http.Post("https://recaptcha.net/recaptcha/api/siteverify?"+params.Encode(), "", nil)
+		if err != nil {
+			return err
+		}
+		defer response.Body.Close()
+
+		if response.StatusCode != http.StatusOK {
+			return errors.New("google验证服务无法正常返回")
+		}
+		resp, err := io.ReadAll(response.Body)
+		if err != nil {
+			return err
+		}
+		logger.Info().Str("Action", "评论").Msgf("google resp: %s", resp)
+
+		var result map[string]interface{}
+		err = json.Unmarshal(resp, &result)
+		if err != nil {
+			return err
+		}
+		if success, ok := result["success"].(bool); ok {
+			if success {
+				if score, ok := result["score"].(float64); ok {
+					if score > 0.5 {
+						return nil
+					}
+				}
+			}
+		}
+		return errors.New("人机校验不通过")
+	}
+	return nil
+}
+
 func (c CommentHandler) AddComment(ctx echo.Context) error {
 	var (
-		req     vo.AddCommentReq
-		comment db.Comment
-		now     = time.Now()
+		req         vo.AddCommentReq
+		comment     db.Comment
+		now         = time.Now()
+		sysConfig   db.SysConfig
+		sysConfigVO vo.FullSysConfigVO
 	)
 	err := ctx.Bind(&req)
 	if err != nil {
 		c.base.log.Error().Msgf("发表评论时参数校验失败,原因:%s", err)
 		return FailResp(ctx, ParamError)
+	}
+	c.base.db.First(&sysConfig)
+	_ = json.Unmarshal([]byte(sysConfig.Content), &sysConfigVO)
+	if err := checkGoogleRecaptcha(c.base.log, sysConfigVO, req.Token); err != nil {
+		return FailRespWithMsg(ctx, Fail, err.Error())
 	}
 	if context, ok := ctx.(CustomContext); ok {
 		currentUser := context.CurrentUser()

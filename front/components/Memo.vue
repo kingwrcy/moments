@@ -1,7 +1,7 @@
 <template>
   <div :class="[item.pinned ? 'bg-slate-100' : '']">
-    <div class="flex gap-2 text-sm dark:bg-neutral-800 px-4">
-      <div class="avatar p-2">
+    <div class="flex gap-4 text-sm dark:bg-neutral-800 p-4">
+      <div class="avatar ">
         <NuxtLink :to="`/memo/${item.id}`">
           <UAvatar
               :src="item.user.avatarUrl"
@@ -9,12 +9,21 @@
           />
         </NuxtLink>
       </div>
-      <div class="flex flex-col gap-1 p-2 w-full">
+      <div class="flex flex-col gap-1  w-full">
         <div class="username text-[#576b95] mb-1 dark:text-white cursor-pointer">
           <NuxtLink :to="`/user/${item.user.username}`">{{ item.user.nickname }}</NuxtLink>
         </div>
-        <div class="content mb-2" v-html="md.render(item.content)">
+        <div class="mb-2">
+          <div class="content overflow-hidden" :style="`max-height:${sysConfig.memoMaxHeight}px;`"
+               v-html="content"></div>
+          <div class="flex gap-2 mt-2" v-if="tags.length > 0">
+            <span v-for="(tag,index) in tags" :key="`tag-${index}`">
+              <NuxtLink :to="`/tags/${item.user.username}/${tag}`"><UBadge size="xs" color="gray"
+                                                                           variant="solid">{{ tag }}</UBadge></NuxtLink>
+            </span>
+          </div>
         </div>
+
 
         <div v-if="item.externalTitle"
              class="flex flex-row gap-2 my-2 bg-[#f7f7f7] dark:bg-[#212121] items-center p-2 border rounded"
@@ -26,15 +35,21 @@
 
         <div class="grid " :class="`grid-cols-${gridCols}`" v-if="images.length>0">
           <MyFancyBox v-for="(img,index) in images" :key="index">
-            <img class="cursor-zoom-in rounded object-cover" :src="img" ></img>
+            <img class="cursor-zoom-in rounded object-cover" :src="img">
           </MyFancyBox>
         </div>
 
 
-        <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none">{{ location }}</div>
+        <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5">
+          <UIcon name="i-carbon-location"/>
+          <span>{{ location }}</span>
+        </div>
 
         <div class="flex justify-between items-center relative">
-          <div class="text-xs text-[#9DA4B0]">{{ $dayjs(item.createdAt).fromNow() }}</div>
+          <div class="text-xs text-[#9DA4B0]">{{
+              sysConfig.timeFormat === 'timeAgo' ? $dayjs(item.createdAt).fromNow() : $dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss")
+            }}
+          </div>
           <div @click="showToolbar=true"
                class="toolbar-icon px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center"
           >
@@ -57,11 +72,13 @@
                 <UIcon name="i-carbon-favorite" :class="[liked ? 'text-red-400' : '']"/>
                 <div>赞</div>
               </div>
-              <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
-              <div class="flex flex-row gap-1 cursor-pointer items-center" @click="doComment">
-                <UIcon name="i-carbon-chat"/>
-                <div>评论</div>
-              </div>
+              <template v-if="sysConfig.enableComment">
+                <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
+                <div class="flex flex-row gap-1 cursor-pointer items-center" @click="doComment">
+                  <UIcon name="i-carbon-chat"/>
+                  <div>评论</div>
+                </div>
+              </template>
               <template v-if="global&&global.userinfo.id === item.userId">
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
                 <div class="flex flex-row gap-1 cursor-pointer items-center" @click="go2Edit(item.id)">
@@ -82,14 +99,13 @@
           </div>
         </div>
 
-
         <div class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-[#202020] flex flex-col gap-1"
         >
           <div class="flex flex-row py-2 px-4 gap-2 items-center text-sm" v-if="item.favCount>0">
             <UIcon name="i-carbon-favorite" class="text-red-500"/>
             <div class="text-[#576b95]"><span class="mx-1">{{ item.favCount }}</span>位访客</div>
           </div>
-          <div class="flex flex-col gap-1">
+          <div class="flex flex-col gap-1" v-if="sysConfig.enableComment">
             <CommentBox :comment-id="0" :memo-id="item.id"/>
             <div :class="[item.comments && item.comments.length>0 ? 'py-2' : '']">
               <div class="px-4 relative flex-col text-sm" v-for="c in item.comments" :key="c.id"
@@ -106,12 +122,14 @@
 </template>
 
 <script setup lang="ts">
-import type {MemoVO} from "~/types";
+import type {MemoVO, SysConfigVO} from "~/types";
 import {toast} from "vue-sonner";
 import {memoChangedEvent, memoReloadEvent} from "~/event";
 import Comment from "~/components/Comment.vue";
 import {useGlobalState} from "~/store";
 import markdownit from 'markdown-it'
+
+const sysConfig = useState<SysConfigVO>('sysConfig')
 
 const md = markdownit({
   html: true,
@@ -140,6 +158,18 @@ const location = computed(() => {
   return (item.value.location || "").replaceAll(" ", " · ")
 })
 
+const tags = computed(() => {
+  const tagsStr = item.value.tags
+  if (!tagsStr) {
+    return []
+  }
+  const len = tagsStr.length
+  if (tagsStr[len - 1] === ',') {
+    return tagsStr.substring(0, len - 1).split(",")
+  }
+  return tagsStr.split(",")
+})
+
 const doComment = () => {
   const value = item.value.id + '#0'
   console.log('value is ', value, '===>', currentCommentBox.value)
@@ -158,11 +188,13 @@ const go2Edit = async (id: number) => {
 const removeMemo = async (id: number) => {
   await useMyFetch('/memo/remove?id=' + id)
   toast.success("删除成功!")
-  if (isDetailPage) {
+  console.log('isDetailPage', isDetailPage.value)
+  if (isDetailPage.value) {
     await navigateTo('/')
   } else {
     memoReloadEvent.emit()
   }
+  showToolbar.value = false
 }
 const setPinned = async (id: number) => {
   await useMyFetch('/memo/setPinned?id=' + id)
@@ -205,13 +237,13 @@ const gridCols = computed(() => {
   }
   return 3
 })
+const content = computed(() => {
+  if (item.value.content && item.value.content.length > 0) {
+    return md.render(item.value.content)
+  }
+  return ""
+})
 
-// const content = computed(() => {
-//   if (!item.value.content) {
-//     return ""
-//   }
-//   return item.value.content.replaceAll("\n", "<br/>")
-// })
 </script>
 
 <style lang="scss" scoped>

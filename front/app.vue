@@ -12,5 +12,7 @@ import "@fancyapps/ui/dist/fancybox/fancybox.css";
 </script>
 
 <style>
-
+div.grecaptcha-badge{
+  display: none !important;
+}
 </style>
