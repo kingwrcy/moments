@@ -86,16 +86,9 @@ export type ExtDTO = {
         type: MetingMusicType,
         api: string
     },
-    douban?: {
-        type: 'book',
-        data: DoubanBook
-    } | {
-        type: 'movie',
-        data: DoubanMovie
-    }
+    doubanBook: DoubanBook,
+    doubanMovie: DoubanMovie,
 }
-
-export type Douban = Exclude<ExtDTO['douban'], undefined>
 
 export type DoubanBook = {
     url?: string

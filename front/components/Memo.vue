@@ -31,7 +31,8 @@
 
         <MusicPreview v-if="extJSON.music" :id="extJSON.music.id" :server="extJSON.music.server"
                       :type="extJSON.music.type" :api="extJSON.music.api"/>
-        <douban-book-preview v-if="extJSON.douban && extJSON.douban.type ==='book'" :book="extJSON.douban.data"/>
+        <douban-book-preview v-if="extJSON.doubanBook && extJSON.doubanBook.title" :book="extJSON.doubanBook"/>
+        <douban-movie-preview v-if="extJSON.doubanMovie && extJSON.doubanMovie.title" :movie="extJSON.doubanMovie"/>
 
         <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5"
              v-if="location">
@@ -137,7 +138,6 @@ const props = defineProps<{
 }>()
 const extJSON = computed(() => {
   return JSON.parse(props.memo.ext || "{}") as ExtDTO
-
 })
 const item = computed(() => {
   return props.memo

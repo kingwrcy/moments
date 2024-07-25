@@ -46,6 +46,7 @@ type SaveMemoReq struct {
 }
 
 type DoubanMovie struct {
+	Id          string `json:"id,omitempty"`
 	Url         string `json:"url,omitempty"`
 	Title       string `json:"title,omitempty"`
 	Desc        string `json:"desc,omitempty"`
@@ -58,6 +59,7 @@ type DoubanMovie struct {
 }
 
 type DoubanBook struct {
+	Id       string `json:"id,omitempty"`
 	Url      string `json:"url,omitempty"`
 	Title    string `json:"title,omitempty"`
 	Desc     string `json:"desc,omitempty"`

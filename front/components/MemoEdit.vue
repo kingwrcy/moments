@@ -7,8 +7,7 @@
       <upload-image v-model:imgs="state.imgs"/>
       <music v-model:id="state.music.id" v-model:type="state.music.type" v-model:server="state.music.server"/>
       <upload-video/>
-      <douban-edit :data="state.douban"/>
-
+      <douban-edit v-model:type="doubanType" v-model:data="doubanData"/>
     </div>
 
     <div class="w-full" @contextmenu.prevent="onContextMenu" v-if="tags">
@@ -29,10 +28,8 @@
       <upload-image-preview :imgs="state.imgs"/>
       <music-preview v-if="state.music.id && state.music.type && state.music.server" :id="state.music.id"
                      :type="state.music.type" :server="state.music.server" :api="state.music.api"/>
-      <douban-book-preview :book="state.douban.data"
-                           v-if="state.douban && state.douban.data.title && state.douban.type === 'book'"/>
-      <douban-movie-preview :book="state.douban.data"
-                            v-if="state.douban && state.douban.data.title && state.douban.type === 'movie'"/>
+      <douban-book-preview :book="doubanData" v-if="doubanType === 'book' && doubanData.title"/>
+      <douban-movie-preview :movie="doubanData" v-if="doubanType === 'movie' && doubanData.title"/>
     </div>
     <div class="flex justify-between items-center">
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
@@ -69,7 +66,8 @@ import type {DoubanBook, DoubanMovie, ExtDTO, MemoVO, MetingMusicServer, MetingM
 import {toast} from "vue-sonner";
 import UploadImage from "~/components/UploadImage.vue";
 
-
+const doubanType = ref('book')
+const doubanData = ref<DoubanBook | DoubanMovie>({})
 const contentRef = ref(null)
 const props = defineProps<{ id?: number }>()
 const defaultState = {
@@ -91,10 +89,8 @@ const defaultState = {
     server: 'netease' as MetingMusicServer,
     type: 'song' as MetingMusicType
   },
-  douban: {
-    type: 'book',
-    data: {} as DoubanBook | DoubanMovie
-  }
+  doubanBook: {} as DoubanBook,
+  doubanMovie: {} as DoubanMovie,
 }
 
 const state = reactive({
@@ -152,6 +148,12 @@ onMounted(async () => {
     Object.assign(state, res)
     const ext = JSON.parse(res.ext) as ExtDTO
     Object.assign(state.music, ext.music)
+    console.log('ext is', ext)
+    doubanType.value = ext.doubanBook && ext.doubanBook.title ? 'book' : 'movie'
+    doubanData.value = doubanType.value === 'book' ? ext.doubanBook : ext.doubanMovie
+
+    console.log('doubanType.value ', doubanType.value)
+    console.log('doubanData.value ', ext.doubanBook)
     if (res.tags) {
       const tagsArray = res.tags.split(",")
       const len = tagsArray.length
@@ -178,12 +180,13 @@ onMounted(async () => {
 
 const saveMemo = async () => {
 
-
-  const res = await useMyFetch('/memo/save', {
+  const doubanKey = doubanType.value === 'book' ? 'doubanBook' : 'doubanMovie'
+  await useMyFetch('/memo/save', {
     id: state.id,
     content: state.content,
     ext: {
       music: state.music,
+      [doubanKey]: doubanData.value,
     },
     pinned: state.pinned,
     showType: state.showType,

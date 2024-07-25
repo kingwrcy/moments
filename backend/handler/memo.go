@@ -608,7 +608,7 @@ func (m MemoHandler) GetDoubanBookInfo(c echo.Context) error {
 	book.Keywords = doc.Find("meta[name='keywords']").AttrOr("content", "")
 	date := re.FindString(book.Keywords)
 	if date != "" {
-		book.Keywords = date
+		book.PubDate = date
 	}
 	book.Rating = doc.Find("strong.rating_num").Text()
 	if strings.TrimSpace(book.Rating) == "" {
