@@ -42,7 +42,9 @@ import type {MetingMusicServer, MetingMusicType} from "@/types"
 const id = defineModel<string>('id')
 const server = defineModel<MetingMusicServer>('server')
 const type = defineModel<MetingMusicType>('type')
-const api = defineModel<string>('api')
+const api = defineModel<string>('api',{
+  default:'https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r'
+})
 const reset = (close: Function) => {
   id.value = ""
   server.value = undefined

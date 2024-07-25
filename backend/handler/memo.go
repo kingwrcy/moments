@@ -30,10 +30,14 @@ import (
 
 type MemoHandler struct {
 	base BaseHandler
+	hc   http.Client
 }
 
 func NewMemoHandler(injector do.Injector) *MemoHandler {
-	return &MemoHandler{do.MustInvoke[BaseHandler](injector)}
+	return &MemoHandler{
+		base: do.MustInvoke[BaseHandler](injector),
+		hc:   http.Client{},
+	}
 }
 
 func (m MemoHandler) ListMemos(c echo.Context) error {
@@ -421,11 +425,11 @@ func (m MemoHandler) GetDoubanMovieInfo(c echo.Context) error {
 	id := c.QueryParam("id")
 	target := fmt.Sprintf("https://book.douban.com/subject/%s/", id)
 	// Request the HTML page.
-	client := &http.Client{}
+
 	req, _ := http.NewRequest("GET", target, nil)
 	req.Header.Set("User-Agent", userAgent)
 	start := time.Now()
-	res, err := client.Do(req)
+	res, err := m.hc.Do(req)
 	m.base.log.Info().Str("豆瓣读书ID", id).Str("耗时", fmt.Sprintf("%f秒", time.Since(start).Seconds()))
 	if err != nil {
 		m.base.log.Error().Msgf("获取豆瓣电影异常:%s", err.Error())
@@ -460,6 +464,7 @@ func (m MemoHandler) GetDoubanMovieInfo(c echo.Context) error {
 			}
 		}
 	})
+	book.Url = target
 	book.ReleaseDate = doc.Find("span[property='v:initialReleaseDate']").AttrOr("content", "")
 	book.Runtime = doc.Find("span[property='v:runtime']").AttrOr("content", "")
 	book.Rating = doc.Find("strong.rating_num").Text()
@@ -482,7 +487,7 @@ func (m MemoHandler) GetDoubanMovieInfo(c echo.Context) error {
 		}
 		req, _ := http.NewRequest("GET", target, nil)
 		req.Header.Set("User-Agent", userAgent)
-		response, err := client.Do(req)
+		response, err := m.hc.Do(req)
 		if err != nil {
 			return FailRespWithMsg(c, Fail, fmt.Sprintf("下载豆瓣电影图片异常:%s", err.Error()))
 		}
@@ -509,29 +514,33 @@ func (m MemoHandler) GetDoubanMovieInfo(c echo.Context) error {
 }
 
 func downloadImage(src string, log zerolog.Logger, conf vo.AppConfig) (string, error) {
+	start := time.Now()
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", src, nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3")
 	response, err := client.Do(req)
+	log.Info().Msgf("下载图片完成:%s,耗时:%f", src, time.Since(start).Seconds())
 	if err != nil {
 		return "", err
 	}
 	defer response.Body.Close()
 
-	filepath := fmt.Sprintf("%s/%s.jpg", conf.UploadDir, strings.ReplaceAll(uuid.NewString(), "-", ""))
+	key := strings.ReplaceAll(uuid.NewString(), "-", "")
+	filepath := fmt.Sprintf("%s/%s.jpg", conf.UploadDir, key)
 	dst, err := os.Create(filepath)
+	log.Info().Msgf("保存图片到本地完成:%s,耗时:%f", src, time.Since(start).Seconds())
 	if err != nil {
 		log.Error().Msgf("打开目标图片异常:%s", err)
 		return "", err
 	}
 	defer dst.Close()
-	start := time.Now()
+
 	_, err = io.Copy(dst, response.Body)
-	log.Info().Msgf("下载图片:%s,耗时:%f", src, time.Since(start).Seconds())
+	log.Info().Msgf("保存图片到本地完成:%s,耗时:%f", src, time.Since(start).Seconds())
 	if err != nil {
 		return "", err
 	}
-	return filepath, err
+	return fmt.Sprintf("/api/file/get/%s.jpg", key), err
 }
 
 func (m MemoHandler) GetDoubanBookInfo(c echo.Context) error {
@@ -540,6 +549,7 @@ func (m MemoHandler) GetDoubanBookInfo(c echo.Context) error {
 		book        vo.DoubanBook
 		sysConfigVo vo.FullSysConfigVO
 		sysConfig   db.SysConfig
+		re          = regexp.MustCompile(`\d{4}-\d{1,2}(-\d{1,2})?`)
 		userAgent   = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
 	)
 	if err := m.base.db.First(&sysConfig).Error; errors.Is(err, gorm.ErrRecordNotFound) {
@@ -594,10 +604,15 @@ func (m MemoHandler) GetDoubanBookInfo(c echo.Context) error {
 			}
 		}
 	})
+	book.Url = target
 	book.Keywords = doc.Find("meta[name='keywords']").AttrOr("content", "")
+	date := re.FindString(book.Keywords)
+	if date != "" {
+		book.Keywords = date
+	}
 	book.Rating = doc.Find("strong.rating_num").Text()
-	if book.Rating == "" {
-		book.Rating = "未知评分"
+	if strings.TrimSpace(book.Rating) == "" {
+		book.Rating = "暂无"
 	}
 
 	if !strings.HasPrefix(book.Image, "http") {

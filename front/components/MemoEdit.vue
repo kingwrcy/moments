@@ -7,7 +7,7 @@
       <upload-image v-model:imgs="state.imgs"/>
       <music v-model:id="state.music.id" v-model:type="state.music.type" v-model:server="state.music.server"/>
       <upload-video/>
-      <douban-edit/>
+      <douban-edit :data="state.douban"/>
 
     </div>
 
@@ -24,10 +24,16 @@
       </UContextMenu>
     </div>
 
-    <external-url-preview :favicon="state.externalFavicon" :title="state.externalTitle" :url="state.externalUrl"/>
-    <upload-image-preview :imgs="state.imgs"/>
-    <music-preview v-if="state.music.id && state.music.type && state.music.server" :id="state.music.id"
-                   :type="state.music.type" :server="state.music.server" :api="state.music.api" />
+    <div class="flex flex-col gap-2">
+      <external-url-preview :favicon="state.externalFavicon" :title="state.externalTitle" :url="state.externalUrl"/>
+      <upload-image-preview :imgs="state.imgs"/>
+      <music-preview v-if="state.music.id && state.music.type && state.music.server" :id="state.music.id"
+                     :type="state.music.type" :server="state.music.server" :api="state.music.api"/>
+      <douban-book-preview :book="state.douban.data"
+                           v-if="state.douban && state.douban.data.title && state.douban.type === 'book'"/>
+      <douban-movie-preview :book="state.douban.data"
+                            v-if="state.douban && state.douban.data.title && state.douban.type === 'movie'"/>
+    </div>
     <div class="flex justify-between items-center">
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
         <UPopover>
@@ -59,7 +65,7 @@
 
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from '@vueuse/core'
-import type {ExtDTO, MemoVO, MetingMusicServer, MetingMusicType} from "~/types";
+import type {DoubanBook, DoubanMovie, ExtDTO, MemoVO, MetingMusicServer, MetingMusicType} from "~/types";
 import {toast} from "vue-sonner";
 import UploadImage from "~/components/UploadImage.vue";
 
@@ -84,6 +90,10 @@ const defaultState = {
     api: '',
     server: 'netease' as MetingMusicServer,
     type: 'song' as MetingMusicType
+  },
+  douban: {
+    type: 'book',
+    data: {} as DoubanBook | DoubanMovie
   }
 }
 
@@ -167,6 +177,8 @@ onMounted(async () => {
 // }
 
 const saveMemo = async () => {
+
+
   const res = await useMyFetch('/memo/save', {
     id: state.id,
     content: state.content,

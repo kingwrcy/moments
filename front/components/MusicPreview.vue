@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type {MetingJSDTO} from "~/types";
+import type {MetingJSDTO} from "@/types";
 
 defineProps<MetingJSDTO>()
 </script>

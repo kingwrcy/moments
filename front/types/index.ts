@@ -70,7 +70,7 @@ export type SysConfigVO = {
 
 export type MetingJSDTO = {
     id: string | undefined
-    api:string | undefined
+    api: string | undefined
     server: "netease" | "tencent" | "kugou" | "xiami" | "baidu" | undefined,
     type: "song" | "playlist" | "album" | "search" | "artist" | undefined
 }
@@ -80,10 +80,45 @@ export type MetingMusicType = MetingJSDTO['type']
 
 
 export type ExtDTO = {
-    music: {
+    music?: {
         id: string,
         server: MetingMusicServer,
         type: MetingMusicType,
         api: string
+    },
+    douban?: {
+        type: 'book',
+        data: DoubanBook
+    } | {
+        type: 'movie',
+        data: DoubanMovie
     }
+}
+
+export type Douban = Exclude<ExtDTO['douban'], undefined>
+
+export type DoubanBook = {
+    url?: string
+    id?: string
+    title?: string
+    desc?: string
+    image?: string
+    isbn?: string
+    author?: string
+    rating?: string
+    pubDate?: string
+    keywords?: string
+}
+
+export type DoubanMovie = {
+    url?: string
+    id?: string
+    title?: string
+    desc?: string
+    image?: string
+    director?: string
+    releaseDate?: string
+    rating?: string
+    actors?: string
+    runtime?: string
 }

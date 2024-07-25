@@ -10,13 +10,13 @@
       <div class="p-4 flex flex-col gap-2">
         <URadioGroup
             legend="选择类型"
-            v-model="type"
+            v-model="state.type"
             :options="[{ value: 'book', label: '豆瓣读书' }, { value: 'movie', label: '豆瓣电影' }]"
         />
-        <UInput type="text" size="sm" placeholder="请输入豆瓣读书/豆瓣电影的ID"/>
+        <UInput v-model="state.data.id" type="text" size="sm" placeholder="请输入豆瓣读书/豆瓣电影的ID"/>
         <UButtonGroup>
-          <UButton>确定</UButton>
-          <UButton color="white">清空</UButton>
+          <UButton @click="doParse" :disabled="pending" :loading="pending">确定</UButton>
+          <UButton color="white" @click="reset(close)">清空并关闭</UButton>
         </UButtonGroup>
       </div>
     </template>
@@ -24,7 +24,32 @@
 </template>
 
 <script setup lang="ts">
-const type = ref('book')
+import type {Douban} from "~/types";
+
+const pending = ref(false)
+const doParse = async () => {
+  pending.value = true
+  const url = state.value.type === 'book' ? '/memo/getDoubanBookInfo' : '/memo/getDoubanMovieInfo'
+  try {
+    const res = await useMyFetch(`${url}?id=${state.value.data.id}`)
+    Object.assign(state.value.data, res)
+    close()
+  } finally {
+    pending.value = false
+  }
+}
+const state = defineModel<Douban>('data', {
+  default: {
+    type: "book",
+    data: {}
+  }
+})
+const reset = (close: Function) => {
+  Object.assign(state, {
+    type: 'book',
+    data: {}
+  })
+}
 </script>
 
 <style scoped>
