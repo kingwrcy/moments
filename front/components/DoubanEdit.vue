@@ -1,5 +1,5 @@
 <template>
-  <UPopover  :ui="{base:'w-[300px]'}">
+  <UPopover :ui="{base:'w-[300px]'}">
     <svg class="focus:outline-0 cursor-pointer w-[18px] h-[18px]" xmlns="http://www.w3.org/2000/svg"
          viewBox="0 0 24 24" fill="currentColor" data-state="closed">
       <path
@@ -13,9 +13,7 @@
             v-model="type"
             :options="[{ value: 'book', label: '豆瓣读书' }, { value: 'movie', label: '豆瓣电影' }]"
         />
-        <UInput type="text" size="sm" placeholder="请输入豆瓣读书/豆瓣电影的ID" />
-
-
+        <UInput type="text" size="sm" placeholder="请输入豆瓣读书/豆瓣电影的ID"/>
         <UButtonGroup>
           <UButton>确定</UButton>
           <UButton color="white">清空</UButton>

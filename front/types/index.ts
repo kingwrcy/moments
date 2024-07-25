@@ -39,7 +39,7 @@ export type  MemoVO = {
     showType: number
     user: UserVO,
     comments: Array<CommentVO>
-    tags:string
+    tags: string
 }
 
 export type UserVO = {
@@ -67,9 +67,23 @@ export type SysConfigVO = {
     timeFormat: 'timeAgo' | 'time',
 }
 
-export type ExternalUrlDTO = {
-    url: string
-    title: string
-    favicon: string
+
+export type MetingJSDTO = {
+    id: string | undefined
+    api:string | undefined
+    server: "netease" | "tencent" | "kugou" | "xiami" | "baidu" | undefined,
+    type: "song" | "playlist" | "album" | "search" | "artist" | undefined
 }
 
+export type MetingMusicServer = MetingJSDTO['server']
+export type MetingMusicType = MetingJSDTO['type']
+
+
+export type ExtDTO = {
+    music: {
+        id: string,
+        server: MetingMusicServer,
+        type: MetingMusicType,
+        api: string
+    }
+}

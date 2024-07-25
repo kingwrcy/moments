@@ -18,20 +18,19 @@
                v-html="content"></div>
           <div class="flex gap-2 mt-2" v-if="tags.length > 0">
             <span v-for="(tag,index) in tags" :key="`tag-${index}`">
-              <NuxtLink :to="`/tags/${item.user.username}/${tag}`"><UBadge size="xs" color="gray"
-                                                                           variant="solid">{{ tag }}</UBadge></NuxtLink>
+              <NuxtLink :to="`/tags/${item.user.username}/${tag}`">
+                <UBadge size="xs" color="gray" variant="solid">{{ tag }}</UBadge>
+              </NuxtLink>
             </span>
           </div>
         </div>
 
         <external-url-preview :favicon="item.externalFavicon" :title="item.externalTitle" :url="item.externalUrl"
                               v-if="item.externalFavicon&&item.externalTitle&&item.externalUrl"/>
-        <div class="grid " :class="`grid-cols-${gridCols}`" v-if="images.length>0">
-          <MyFancyBox v-for="(img,index) in images" :key="index">
-            <img class="cursor-zoom-in rounded object-cover" :src="img">
-          </MyFancyBox>
-        </div>
+        <upload-image-preview :imgs="item.imgs||''"/>
 
+        <MusicPreview v-if="extJSON.music" :id="extJSON.music.id" :server="extJSON.music.server"
+                      :type="extJSON.music.type" :api="extJSON.music.api"/>
 
         <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5"
              v-if="location">
@@ -116,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import type {MemoVO, SysConfigVO} from "~/types";
+import type {ExtDTO, MemoVO, SysConfigVO} from "~/types";
 import {toast} from "vue-sonner";
 import {memoChangedEvent, memoReloadEvent} from "~/event";
 import Comment from "~/components/Comment.vue";
@@ -135,6 +134,9 @@ const currentCommentBox = useState('currentCommentBox')
 const props = defineProps<{
   memo: MemoVO
 }>()
+const extJSON = computed(() => {
+  return JSON.parse(props.memo.ext || "{}") as ExtDTO
+})
 const item = computed(() => {
   return props.memo
 })
@@ -217,20 +219,7 @@ onMounted(() => {
 
 })
 
-const images = computed(() => {
-  if (!item.value.imgs) {
-    return []
-  }
-  return item.value.imgs.split(",")
-})
 
-const gridCols = computed(() => {
-  const len = images.value.length
-  if (len === 1) {
-    return 1
-  }
-  return 3
-})
 const content = computed(() => {
   if (item.value.content && item.value.content.length > 0) {
     return md.render(item.value.content)

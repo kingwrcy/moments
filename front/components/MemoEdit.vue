@@ -1,12 +1,11 @@
 <template>
   <div class="px-4 space-y-2">
     <div class="flex gap-2 text-lg text-gray-600">
-      <ExternalUrl @confirm="updateExternalUrl" :external-favicon="state.externalFavicon"
-                   v-if="state.externalUrl || $route.path==='/new'"
-                   :external-title="state.externalTitle" :external-url="state.externalUrl"/>
+      <ExternalUrl v-model:favicon="state.externalFavicon" v-model:title="state.externalTitle"
+                   v-model:url="state.externalUrl"/>
 
-      <upload-image/>
-      <music/>
+      <upload-image v-model:imgs="state.imgs"/>
+      <music v-model:id="state.music.id" v-model:type="state.music.type" v-model:server="state.music.server"/>
       <upload-video/>
       <douban-edit/>
 
@@ -26,7 +25,9 @@
     </div>
 
     <external-url-preview :favicon="state.externalFavicon" :title="state.externalTitle" :url="state.externalUrl"/>
-
+    <upload-image-preview :imgs="state.imgs"/>
+    <music-preview v-if="state.music.id && state.music.type && state.music.server" :id="state.music.id"
+                   :type="state.music.type" :server="state.music.server" :api="state.music.api" />
     <div class="flex justify-between items-center">
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
         <UPopover>
@@ -46,6 +47,7 @@
       </div>
 
       <UButtonGroup>
+        <UButton color="white" variant="solid" @click="navigateTo('/')">返回首页</UButton>
         <UButton @click="saveMemo">发表</UButton>
         <UButton color="white" @click="reset">清空</UButton>
       </UButtonGroup>
@@ -57,7 +59,7 @@
 
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from '@vueuse/core'
-import type {ExternalUrlDTO, MemoVO} from "~/types";
+import type {ExtDTO, MemoVO, MetingMusicServer, MetingMusicType} from "~/types";
 import {toast} from "vue-sonner";
 import UploadImage from "~/components/UploadImage.vue";
 
@@ -76,14 +78,15 @@ const defaultState = {
   externalUrl: "",
   music163Url: "",
   bilibiliUrl: "",
-  imgs: ""
+  imgs: "",
+  music: {
+    id: '',
+    api: '',
+    server: 'netease' as MetingMusicServer,
+    type: 'song' as MetingMusicType
+  }
 }
 
-const updateExternalUrl = ({title, favicon, url}: ExternalUrlDTO) => {
-  state.externalTitle = title
-  state.externalFavicon = favicon
-  state.externalUrl = url
-}
 const state = reactive({
   ...defaultState
 })
@@ -104,7 +107,7 @@ const isOpen = ref(false)
 const virtualElement = ref({getBoundingClientRect: () => ({})})
 
 function onContextMenu() {
-  if (tags.value.length<=0){
+  if (tags.value.length <= 0) {
     return
   }
   const top = unref(y) - unref(windowY)
@@ -137,6 +140,8 @@ onMounted(async () => {
   if (state.id > 0) {
     const res = await useMyFetch<MemoVO>('/memo/get?id=' + state.id)
     Object.assign(state, res)
+    const ext = JSON.parse(res.ext) as ExtDTO
+    Object.assign(state.music, ext.music)
     if (res.tags) {
       const tagsArray = res.tags.split(",")
       const len = tagsArray.length
@@ -165,14 +170,14 @@ const saveMemo = async () => {
   const res = await useMyFetch('/memo/save', {
     id: state.id,
     content: state.content,
-    ext: {},
+    ext: {
+      music: state.music,
+    },
     pinned: state.pinned,
     showType: state.showType,
     externalFavicon: state.externalFavicon,
     externalTitle: state.externalTitle,
     externalUrl: state.externalUrl,
-    music163Url: state.music163Url,
-    bilibiliUrl: state.bilibiliUrl,
     imgs: state.imgs.split(','),
     location: state.location,
   })

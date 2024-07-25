@@ -14,10 +14,18 @@ type ListMemoReq struct {
 	ShowType        *int       `json:"showType,omitempty"`
 }
 
+type Music struct {
+	ID     string `json:"id,omitempty"`
+	Server string `json:"server,omitempty"`
+	Type   string `json:"type,omitempty"`
+	Api    string `json:"api,omitempty"`
+}
+
 type MemoExt struct {
-	YoutubeUrl    string `json:"youtube_url,omitempty"`
-	VideoUrl      string `json:"video_url,omitempty"`
-	LocalVideoUrl string `json:"local_video_url,omitempty"`
+	//YoutubeUrl    string `json:"youtube_url,omitempty"`
+	//VideoUrl      string `json:"video_url,omitempty"`
+	//LocalVideoUrl string `json:"local_video_url,omitempty"`
+	Music Music `json:"music,omitempty"`
 }
 
 type SaveMemoReq struct {
@@ -33,4 +41,26 @@ type SaveMemoReq struct {
 	Music163Url     string   `json:"music163Url,omitempty"`
 	BilibiliUrl     string   `json:"bilibiliUrl,omitempty"`
 	Location        string   `json:"location,omitempty"`
+}
+
+type DoubanMovie struct {
+	Title       string `json:"title,omitempty"`
+	Desc        string `json:"desc,omitempty"`
+	Image       string `json:"image,omitempty"`
+	Director    string `json:"director,omitempty"`
+	Rating      string `json:"rating,omitempty"`
+	ReleaseDate string `json:"releaseDate,omitempty"`
+	Actors      string `json:"actors,omitempty"`
+	Runtime     string `json:"runtime,omitempty"`
+}
+
+type DoubanBook struct {
+	Title    string `json:"title,omitempty"`
+	Desc     string `json:"desc,omitempty"`
+	Image    string `json:"image,omitempty"`
+	Isbn     string `json:"isbn,omitempty"`
+	Author   string `json:"author,omitempty"`
+	Rating   string `json:"rating,omitempty"`
+	PubDate  string `json:"pubDate,omitempty"`
+	Keywords string `json:"keywords,omitempty"`
 }

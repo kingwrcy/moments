@@ -46,11 +46,8 @@ async function upload2S3(files: FileList) {
                 'Content-Type': null
             }
         })
-        console.log('----------', res)
         result.push(imageUrl)
     }
-
-    console.log('-----result is ', result)
     return result
 }
 
@@ -93,5 +90,4 @@ export async function useUpload(files: FileList | null) {
         }
         throw new Error("接口异常")
     }
-
 }

@@ -23,7 +23,7 @@ useHead({
       rel: 'shortcut icon',
       type: 'image/png',
       href: sysConfigVO.favicon || '/favicon.png',
-    },
+    }
   ],
   style: [
     {
@@ -34,7 +34,8 @@ useHead({
     {
       type: 'text/javascript',
       innerHTML: sysConfigVO.js || '',
-    }
+    },
+
   ]
 })
 

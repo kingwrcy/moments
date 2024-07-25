@@ -18,7 +18,7 @@
         <div class="w-fit ">
           <UButtonGroup>
             <UButton @click="confirmExternalUrl(close)">确定</UButton>
-            <UButton color="white" variant="solid" @click="clear(close)">清空</UButton>
+            <UButton color="white" variant="solid" @click="clear(close)">清空并关闭</UButton>
           </UButtonGroup>
         </div>
       </div>
@@ -29,40 +29,30 @@
 <script setup lang="ts">
 import {toast} from "vue-sonner";
 
-const props = defineProps<{
-  externalTitle: string,
-  externalUrl: string,
-  externalFavicon: string,
-}>()
-
-const emit = defineEmits(['confirm'])
+const url = defineModel<string>("url");
+const favicon = defineModel<string>("favicon");
+const title = defineModel<string>("title");
 const pending = ref(false)
-const url = ref(props.externalUrl)
-const title = ref(props.externalTitle)
-const favicon = ref(props.externalFavicon)
-
-
 const clear = (close: Function) => {
   favicon.value = ''
   url.value = ''
   title.value = ''
-  emit('confirm', {favicon: '', url: '', title: ''})
   close()
 }
 
 const confirmExternalUrl = async (close: Function) => {
   if (url.value && title.value && favicon.value) {
     close()
-    emit('confirm', {
-      url: url.value,
-      title: title.value,
-      favicon: favicon.value
-    })
+
     return
   }
   toast.error("请完整填写相关内容")
 }
 const getFavicon = async () => {
+  if (!url.value) {
+    toast.error("请先填写地址")
+    return
+  }
   pending.value = true
   try {
     const res = await useMyFetch<{
