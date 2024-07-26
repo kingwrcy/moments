@@ -18,6 +18,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -62,15 +63,19 @@ func (f FileHandler) Upload(c echo.Context) error {
 		}
 		// Destination
 		filename := fmt.Sprintf("%s/%s", time.Now().Format("2006/01/02"), strings.ReplaceAll(uuid.NewString(), "-", ""))
-		filepath := path.Join(f.base.cfg.UploadDir, filename)
-		dst, err := os.Create(filepath)
+		path := path.Join(f.base.cfg.UploadDir, filename)
+		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+			f.base.log.Error().Msgf("创建父级目录异常:%s", err)
+			return FailRespWithMsg(c, Fail, "创建父级目录异常")
+		}
+		dst, err := os.Create(path)
 		if err != nil {
 			f.base.log.Error().Msgf("打开目标图片异常:%s", err)
 			return FailRespWithMsg(c, Fail, "上传图片异常")
 		}
 		// Copy
 		if _, err = io.Copy(dst, src); err != nil {
-			f.base.log.Error().Msgf("负责图片异常:%s", err)
+			f.base.log.Error().Msgf("复制图片异常:%s", err)
 			return FailRespWithMsg(c, Fail, "上传图片异常")
 		}
 

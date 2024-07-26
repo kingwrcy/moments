@@ -14,7 +14,7 @@
           <NuxtLink :to="`/user/${item.user.username}`">{{ item.user.nickname }}</NuxtLink>
         </div>
         <div class="mb-2">
-          <div class="content overflow-hidden" :style="`max-height:${sysConfig.memoMaxHeight}px;`"
+          <div class="markdown-content overflow-hidden" :style="`max-height:${sysConfig.memoMaxHeight}px;`"
                v-html="content"></div>
           <div class="flex gap-2 mt-2" v-if="tags.length > 0">
             <span v-for="(tag,index) in tags" :key="`tag-${index}`">

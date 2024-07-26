@@ -2,7 +2,7 @@
   <UPopover :ui="{base:'w-[350px] min-h-[350px]'}">
     <UIcon name="i-carbon-music" class="cursor-pointer"/>
     <template #panel="{close}">
-      <div class="p-4 flex flex-col gap-2">
+      <div class="p-4 flex flex-col gap-2 max-h-[400px] overflow-auto">
         <div class="text-xs text-gray-400">嵌入在线音乐</div>
         <UFormGroup label="选择平台" :ui="{label:{base:'font-bold'}}">
           <template #hint>

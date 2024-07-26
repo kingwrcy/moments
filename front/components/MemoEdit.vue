@@ -25,7 +25,7 @@
 
     <div class="flex flex-col gap-2">
       <external-url-preview :favicon="state.externalFavicon" :title="state.externalTitle" :url="state.externalUrl"/>
-      <upload-image-preview :imgs="state.imgs" @remove-image="handleRemoveImage"/>
+      <upload-image-preview :imgs="state.imgs" @remove-image="handleRemoveImage" @drag-image="handleDragImage"/>
       <music-preview v-if="state.music && state.music.id && state.music.type && state.music.server" v-bind="state.music"/>
       <douban-book-preview :book="doubanData" v-if="doubanType === 'book' && doubanData&& doubanData.title"/>
       <douban-movie-preview :movie="doubanData" v-if="doubanType === 'movie' && doubanData&& doubanData.title"/>
@@ -104,11 +104,15 @@ const locationLabel = computed(() => {
   return state.location.split(" ").join(" · ")
 })
 
+const handleDragImage = (imgs:string[])=>{
+  state.imgs = imgs.join(",")
+}
+
 const updateMusic = (music: MusicDTO) => {
   console.log('confirmed:',music)
   state.music.id = ""
   setTimeout(()=>{
-    state.music = music
+    Object.assign(state.music,music)
   },500)
 
 }
@@ -162,7 +166,7 @@ onMounted(async () => {
     const res = await useMyFetch<MemoVO>('/memo/get?id=' + state.id)
     Object.assign(state, res)
     const ext = JSON.parse(res.ext) as ExtDTO
-    state.music = ext.music
+    Object.assign(state.music,ext.music)
     doubanType.value = ext.doubanBook && ext.doubanBook.title ? 'book' : 'movie'
     doubanData.value = doubanType.value === 'book' ? ext.doubanBook : ext.doubanMovie
 
