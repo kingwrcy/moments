@@ -34,6 +34,7 @@ func setupRouter(injector do.Injector) {
 	memoGroup.POST("/getFaviconAndTitle", memoHandler.GetFaviconAndTitle)
 	memoGroup.POST("/getDoubanMovieInfo", memoHandler.GetDoubanMovieInfo)
 	memoGroup.POST("/getDoubanBookInfo", memoHandler.GetDoubanBookInfo)
+	memoGroup.POST("/removeImage", memoHandler.RemoveImage)
 
 	commentGroup := api.Group("/comment")
 	commentGroup.POST("/add", commentHandler.AddComment)

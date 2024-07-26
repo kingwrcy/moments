@@ -4,8 +4,8 @@
       <ExternalUrl v-model:favicon="state.externalFavicon" v-model:title="state.externalTitle"
                    v-model:url="state.externalUrl"/>
 
-      <upload-image v-model:imgs="state.imgs"/>
-      <music v-model:id="state.music.id" v-model:type="state.music.type" v-model:server="state.music.server"/>
+      <upload-image v-model:imgs="state.imgs" />
+      <music v-bind="state.music" @confirm="updateMusic"/>
       <upload-video/>
       <douban-edit v-model:type="doubanType" v-model:data="doubanData"/>
     </div>
@@ -25,11 +25,10 @@
 
     <div class="flex flex-col gap-2">
       <external-url-preview :favicon="state.externalFavicon" :title="state.externalTitle" :url="state.externalUrl"/>
-      <upload-image-preview :imgs="state.imgs"/>
-      <music-preview v-if="state.music.id && state.music.type && state.music.server" :id="state.music.id"
-                     :type="state.music.type" :server="state.music.server" :api="state.music.api"/>
-      <douban-book-preview :book="doubanData" v-if="doubanType === 'book' && doubanData.title"/>
-      <douban-movie-preview :movie="doubanData" v-if="doubanType === 'movie' && doubanData.title"/>
+      <upload-image-preview :imgs="state.imgs" @remove-image="handleRemoveImage"/>
+      <music-preview v-if="state.music && state.music.id && state.music.type && state.music.server" v-bind="state.music"/>
+      <douban-book-preview :book="doubanData" v-if="doubanType === 'book' && doubanData&& doubanData.title"/>
+      <douban-movie-preview :movie="doubanData" v-if="doubanType === 'movie' && doubanData&& doubanData.title"/>
     </div>
     <div class="flex justify-between items-center">
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
@@ -62,11 +61,11 @@
 
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from '@vueuse/core'
-import type {DoubanBook, DoubanMovie, ExtDTO, MemoVO, MetingMusicServer, MetingMusicType} from "~/types";
+import type {DoubanBook, DoubanMovie, ExtDTO, MemoVO, MetingMusicServer, MetingMusicType, MusicDTO} from "~/types";
 import {toast} from "vue-sonner";
 import UploadImage from "~/components/UploadImage.vue";
 
-const doubanType = ref('book')
+const doubanType = ref<'book' | 'movie'>('book')
 const doubanData = ref<DoubanBook | DoubanMovie>({})
 const contentRef = ref(null)
 const props = defineProps<{ id?: number }>()
@@ -85,7 +84,7 @@ const defaultState = {
   imgs: "",
   music: {
     id: '',
-    api: '',
+    api: 'https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r',
     server: 'netease' as MetingMusicServer,
     type: 'song' as MetingMusicType
   },
@@ -99,18 +98,34 @@ const state = reactive({
 const tags = ref<string[]>([])
 const reset = () => {
   Object.assign(state, defaultState)
-
 }
 
 const locationLabel = computed(() => {
   return state.location.split(" ").join(" · ")
 })
 
+const updateMusic = (music: MusicDTO) => {
+  console.log('confirmed:',music)
+  state.music.id = ""
+  setTimeout(()=>{
+    state.music = music
+  },500)
+
+}
 
 const {x, y} = useMouse()
 const {y: windowY} = useWindowScroll()
 const isOpen = ref(false)
 const virtualElement = ref({getBoundingClientRect: () => ({})})
+const handleRemoveImage = (img:string)=>{
+  const imgs = state.imgs.split(",")
+  const index = imgs.findIndex(r=>r=== img)
+  if(index <0){
+    return
+  }
+  imgs.splice(index,1)
+  state.imgs = imgs.join(",")
+}
 
 function onContextMenu() {
   if (tags.value.length <= 0) {
@@ -147,13 +162,10 @@ onMounted(async () => {
     const res = await useMyFetch<MemoVO>('/memo/get?id=' + state.id)
     Object.assign(state, res)
     const ext = JSON.parse(res.ext) as ExtDTO
-    Object.assign(state.music, ext.music)
-    console.log('ext is', ext)
+    state.music = ext.music
     doubanType.value = ext.doubanBook && ext.doubanBook.title ? 'book' : 'movie'
     doubanData.value = doubanType.value === 'book' ? ext.doubanBook : ext.doubanMovie
 
-    console.log('doubanType.value ', doubanType.value)
-    console.log('doubanData.value ', ext.doubanBook)
     if (res.tags) {
       const tagsArray = res.tags.split(",")
       const len = tagsArray.length

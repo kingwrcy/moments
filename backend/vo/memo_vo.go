@@ -13,7 +13,9 @@ type ListMemoReq struct {
 	ContentContains string     `json:"contentContains,omitempty"`
 	ShowType        *int       `json:"showType,omitempty"`
 }
-
+type RemoveImageReq struct {
+	Img string `json:"img,omitempty"`
+}
 type Music struct {
 	ID     string `json:"id,omitempty"`
 	Server string `json:"server,omitempty"`

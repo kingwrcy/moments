@@ -6,15 +6,15 @@ const global = useGlobalState()
 
 export async function useMyFetch<T>(url: string, data?: any) {
     const userinfo = global.value.userinfo
-    const headers:Record<string, any> = {}
-    if (userinfo.token){
+    const headers: Record<string, any> = {}
+    if (userinfo.token) {
         headers["x-api-token"] = userinfo.token
     }
     try {
         const res = await $fetch<ResultVO<T>>(`/api${url}`, {
             method: "post",
             body: data ? JSON.stringify(data) : null,
-            headers:headers
+            headers: headers
         })
         if (res.code !== 0) {
             toast.error(res.message || "请求失败")
@@ -29,65 +29,93 @@ export async function useMyFetch<T>(url: string, data?: any) {
     }
 }
 
-async function upload2S3(files: FileList) {
+async function upload2S3(files: FileList, onProgress: Function) {
     const result = []
-    for (let i = files.length - 1; i >= 0; i--) {
+    for (let i = 0; i < files.length; i++) {
         const {preSignedUrl, imageUrl} = await useMyFetch<{
             preSignedUrl: string,
             imageUrl: string
-        }>('/file/s3PreSigned',{
-            contentType:files[0].type
+        }>('/file/s3PreSigned', {
+            contentType: files[0].type
         })
-        const res = await $fetch(preSignedUrl, {
-            method: "put",
-            body: files[i],
-            //@ts-ignore
-            headers:{
-                'Content-Type': null
-            }
+        await upload2S3WithProgress(preSignedUrl, files[i], (name: string, progress: number) => {
+            onProgress(files.length, i + 1, name, progress)
         })
         result.push(imageUrl)
     }
     return result
 }
 
+const upload2S3WithProgress = async (preSignedUrl: string, file: File, onProgress: Function) => {
+    new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', e => onProgress(file.name, e.loaded / e.total));
+        xhr.addEventListener('load', () => resolve(JSON.parse(xhr.responseText)));
+        xhr.addEventListener('error', () => reject(new Error('File upload failed')));
+        xhr.addEventListener('abort', () => reject(new Error('File upload aborted')));
+        xhr.open('PUT', preSignedUrl, true);
+        //@ts-ignore
+        xhr.setRequestHeader('Content-Type', null);
+        xhr.send(file);
+    })
+}
 
-export async function useUpload(files: FileList | null) {
+
+export async function useUpload(files: FileList | null, onProgress: Function) {
     const sysConfig = useState<SysConfigVO>('sysConfig')
-
+    const result = []
     if (!files || files.length === 0) {
         toast.error("没有选择文件")
         return
     }
 
     const userinfo = global.value.userinfo
-    const headers:Record<string, any> = {}
-    if (userinfo.token){
+    const headers: Record<string, any> = {}
+    if (userinfo.token) {
         headers["x-api-token"] = userinfo.token
     }
 
     if (sysConfig.value.enableS3) {
-        return await upload2S3(files)
+        return await upload2S3(files,onProgress)
     }
-    const form = new FormData()
-    for (let i = files.length - 1; i >= 0; i--) {
-        form.append("files", files[i])
-    }
-    try {
-        const res = await $fetch<ResultVO<string[]>>(`/api/file/upload`, {
-            method: "post",
-            body: form,
-            headers
-        })
-        if (res.code !== 0) {
-            toast.error(res.message || "请求失败")
-            throw new Error(res.message)
+    for (let i = 0; i < files.length; i++) {
+        try {
+            const res = await uploadFiles('/api/file/upload', files[i], (name: string, progress: number) => {
+                onProgress(files.length, i + 1, name, progress)
+            }) as {
+                code: number,
+                data: string[],
+                message: string
+            }
+            if (res.code !== 0) {
+                toast.error(res.message || "请求失败")
+                throw new Error(res.message)
+            }
+            result.push(...res.data)
+        } catch (e) {
+            if (e instanceof Error) {
+                throw new Error(e.message)
+            }
+            throw new Error("接口异常")
         }
-        return res.data
-    } catch (e) {
-        if (e instanceof Error) {
-            throw new Error(e.message)
-        }
-        throw new Error("接口异常")
     }
+    return result
 }
+
+
+export const uploadFiles = (url: string, file: File, onProgress: Function) =>
+    new Promise((resolve, reject) => {
+        const userinfo = global.value.userinfo
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', e => onProgress(file.name, e.loaded / e.total));
+        xhr.addEventListener('load', () => resolve(JSON.parse(xhr.responseText)));
+        xhr.addEventListener('error', () => reject(new Error('File upload failed')));
+        xhr.addEventListener('abort', () => reject(new Error('File upload aborted')));
+        xhr.open('POST', url, true);
+        if (userinfo.token) {
+            xhr.setRequestHeader('x-api-token', userinfo.token);
+        }
+        const formData = new FormData();
+        formData.append("files", file)
+        xhr.send(formData);
+    });

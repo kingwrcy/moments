@@ -61,7 +61,7 @@ func (f FileHandler) Upload(c echo.Context) error {
 			return FailRespWithMsg(c, Fail, "上传图片异常")
 		}
 		// Destination
-		filename := strings.ReplaceAll(uuid.New().String(), "-", "")
+		filename := fmt.Sprintf("%s/%s", time.Now().Format("2006/01/02"), strings.ReplaceAll(uuid.NewString(), "-", ""))
 		filepath := path.Join(f.base.cfg.UploadDir, filename)
 		dst, err := os.Create(filepath)
 		if err != nil {

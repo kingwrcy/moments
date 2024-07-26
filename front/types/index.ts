@@ -75,19 +75,21 @@ export type MetingJSDTO = {
     type: "song" | "playlist" | "album" | "search" | "artist" | undefined
 }
 
-export type MetingMusicServer = MetingJSDTO['server']
-export type MetingMusicType = MetingJSDTO['type']
+export type MetingMusicServer = Exclude<MetingJSDTO['server'], undefined>
+export type MetingMusicType = Exclude<MetingJSDTO['type'], undefined>
 
 
 export type ExtDTO = {
-    music?: {
-        id: string,
-        server: MetingMusicServer,
-        type: MetingMusicType,
-        api: string
-    },
+    music: MusicDTO,
     doubanBook: DoubanBook,
     doubanMovie: DoubanMovie,
+}
+
+export type MusicDTO = {
+    id?: string,
+    server?: MetingMusicServer,
+    type?: MetingMusicType,
+    api?: string
 }
 
 export type DoubanBook = {

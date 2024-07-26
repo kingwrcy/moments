@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -38,6 +39,23 @@ func NewMemoHandler(injector do.Injector) *MemoHandler {
 		base: do.MustInvoke[BaseHandler](injector),
 		hc:   http.Client{},
 	}
+}
+func (m MemoHandler) RemoveImage(c echo.Context) error {
+	var (
+		req vo.RemoveImageReq
+	)
+	err := c.Bind(&req)
+	if err != nil {
+		return FailResp(c, ParamError)
+	}
+	if !strings.HasPrefix(req.Img, "/api/file/get/") {
+		return SuccessResp(c, h{})
+	}
+	img := strings.ReplaceAll(req.Img, "/api/file/get/", "")
+	if err := os.Remove(filepath.Join(m.base.cfg.UploadDir, img)); err != nil {
+		return FailRespWithMsg(c, ParamError, fmt.Sprintf("删除图片失败:%s", err))
+	}
+	return SuccessResp(c, h{})
 }
 
 func (m MemoHandler) ListMemos(c echo.Context) error {

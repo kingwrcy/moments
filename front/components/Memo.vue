@@ -27,10 +27,9 @@
 
         <external-url-preview :favicon="item.externalFavicon" :title="item.externalTitle" :url="item.externalUrl"
                               v-if="item.externalFavicon&&item.externalTitle&&item.externalUrl"/>
-        <upload-image-preview :imgs="item.imgs||''"/>
+        <upload-image-preview :imgs="item.imgs||''" :memo-id="item.id"/>
 
-        <MusicPreview v-if="extJSON.music" :id="extJSON.music.id" :server="extJSON.music.server"
-                      :type="extJSON.music.type" :api="extJSON.music.api"/>
+        <music-preview v-if="extJSON.music && extJSON.music.id" v-bind="extJSON.music"/>
         <douban-book-preview v-if="extJSON.doubanBook && extJSON.doubanBook.title" :book="extJSON.doubanBook"/>
         <douban-movie-preview v-if="extJSON.doubanMovie && extJSON.doubanMovie.title" :movie="extJSON.doubanMovie"/>
 

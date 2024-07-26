@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import type {MetingJSDTO} from "@/types";
 
-defineProps<MetingJSDTO>()
+const props = defineProps<MetingJSDTO>()
 </script>
 
 <style scoped>
