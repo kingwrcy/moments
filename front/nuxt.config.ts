@@ -25,11 +25,11 @@ export default defineNuxtConfig({
     app: {
         head: {
             link: [
-                {href: `/css/APlayer.min.css`, rel: 'stylesheet'},
+                {href: `/public/css/APlayer.min.css`, rel: 'stylesheet'},
             ],
             script: [
-                {src: `/js/APlayer.min.js`, type: 'text/javascript', async: true, defer: true},
-                {src: `/js/Meting.min.js`, type: 'text/javascript', async: true, defer: true},
+                {src: `/public/js/APlayer.min.js`, type: 'text/javascript', async: true, defer: true},
+                {src: `/public/js/Meting.min.js`, type: 'text/javascript', async: true, defer: true},
             ]
         }
     },

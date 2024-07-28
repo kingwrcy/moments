@@ -67,6 +67,8 @@ func (m MemoHandler) ListMemos(c echo.Context) error {
 		sysConfig   db.SysConfig
 		sysConfigVO vo.FullSysConfigVO
 	)
+	ctx := c.(CustomContext)
+	currentUser := ctx.CurrentUser()
 	err := c.Bind(&req)
 	if err != nil {
 		return FailResp(c, ParamError)
@@ -103,6 +105,11 @@ func (m MemoHandler) ListMemos(c echo.Context) error {
 	if req.ShowType != nil && *req.ShowType >= 0 {
 		tx = tx.Where("showType=?", req.ShowType)
 		totalCondition = totalCondition.Where("showType=?", req.ShowType)
+	}
+	if currentUser == nil {
+		tx = tx.Where("showType = 1")
+	} else {
+		tx = tx.Where("userId = ? or (userId <> ? and showType = 1)", currentUser.Id, currentUser.Id)
 	}
 	if req.Tag != "" {
 		if strings.Contains(req.Tag, ",") {
@@ -147,8 +154,8 @@ func (m MemoHandler) ListMemos(c echo.Context) error {
 }
 
 func (m MemoHandler) RemoveMemo(c echo.Context) error {
-	context := c.(CustomContext)
-	currentUser := context.CurrentUser()
+	ctx := c.(CustomContext)
+	currentUser := ctx.CurrentUser()
 	id, err := strconv.Atoi(c.QueryParam("id"))
 	if err != nil {
 		return FailResp(c, ParamError)
@@ -188,38 +195,40 @@ func (m MemoHandler) LikeMemo(c echo.Context) error {
 	return SuccessResp(c, h{})
 }
 
-func parseTags(content string) (string, []string) {
-	var tags []string
+// FindAndReplaceTags 处理 markdown 文本
+func FindAndReplaceTags(content string) (string, []string) {
+	// 定义正则表达式来匹配标签
+	tagRegex := regexp.MustCompile(`#[^\s#,]+`)
+	headingRegex := regexp.MustCompile(`^#{1,6}\s+.+`)
 
-	// Regular expression to match tags
-	tagRegex := regexp.MustCompile(`#(\S+)(\s|$)`)
-	// Regular expression to match Markdown headers
-	headerRegex := regexp.MustCompile(`(?m)^(#+\s.*)`)
+	// 使用正则表达式找到所有标签
+	tags := tagRegex.FindAllString(content, -1)
 
-	// Function to check if a line is a Markdown header
-	isHeader := func(line string) bool {
-		return headerRegex.MatchString(line)
+	// 去掉重复的标签，并移除 # 号
+	tagMap := make(map[string]bool)
+	uniqueTags := []string{}
+	for _, tag := range tags {
+		trimmedTag := strings.Trim(tag, "#")
+		if trimmedTag != "" && !tagMap[trimmedTag] {
+			tagMap[trimmedTag] = true
+			uniqueTags = append(uniqueTags, trimmedTag)
+		}
 	}
 
-	lines := strings.Split(content, "\n")
-	for i, line := range lines {
-		if isHeader(line) {
-			continue
+	// 替换标签为空，并清理多余的逗号和空格，但不影响标题
+	replacedContent := strings.Split(content, "\n")
+	for i, line := range replacedContent {
+		if !headingRegex.MatchString(line) {
+			// 替换标签为空
+			line = tagRegex.ReplaceAllString(line, "")
+			// 清理多余的逗号和空格
+			line = strings.TrimSpace(line)
+			line = strings.ReplaceAll(line, ",", "")
+			replacedContent[i] = line
 		}
-		// Find all tags in the line
-		matches := tagRegex.FindAllStringSubmatch(line, -1)
-		for _, match := range matches {
-			if len(match) > 1 {
-				tags = append(tags, match[1])
-			}
-		}
-		// Replace tags in the line
-		lines[i] = tagRegex.ReplaceAllString(line, "")
 	}
 
-	// Join the lines back together
-	processedContent := strings.Join(lines, "\n")
-	return processedContent, tags
+	return strings.Join(replacedContent, "\n"), uniqueTags
 }
 
 func (m MemoHandler) SaveMemo(c echo.Context) error {
@@ -253,7 +262,7 @@ func (m MemoHandler) SaveMemo(c echo.Context) error {
 		memo.CommentCount = 0
 	}
 
-	content, tags := parseTags(req.Content)
+	content, tags := FindAndReplaceTags(req.Content)
 	memo.Tags = strings.Join(tags, ",")
 	if memo.Tags != "" {
 		memo.Tags = memo.Tags + ","
@@ -272,7 +281,7 @@ func (m MemoHandler) SaveMemo(c echo.Context) error {
 	memo.ExternalFavicon = req.ExternalFavicon
 	memo.Pinned = req.Pinned
 	memo.Ext = extJson
-	memo.ShowType = int32(req.ShowType)
+	memo.ShowType = req.ShowType
 
 	if req.ID > 0 {
 		m.base.db.Updates(&memo)

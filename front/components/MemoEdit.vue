@@ -4,9 +4,9 @@
       <ExternalUrl v-model:favicon="state.externalFavicon" v-model:title="state.externalTitle"
                    v-model:url="state.externalUrl"/>
 
-      <upload-image v-model:imgs="state.imgs" />
+      <upload-image v-model:imgs="state.imgs"/>
       <music v-bind="state.music" @confirm="updateMusic"/>
-      <upload-video/>
+      <upload-video @confirm="handleVideo" v-bind="state.video"/>
       <douban-edit v-model:type="doubanType" v-model:data="doubanData"/>
     </div>
 
@@ -26,9 +26,13 @@
     <div class="flex flex-col gap-2">
       <external-url-preview :favicon="state.externalFavicon" :title="state.externalTitle" :url="state.externalUrl"/>
       <upload-image-preview :imgs="state.imgs" @remove-image="handleRemoveImage" @drag-image="handleDragImage"/>
-      <music-preview v-if="state.music && state.music.id && state.music.type && state.music.server" v-bind="state.music"/>
+      <music-preview v-if="state.music && state.music.id && state.music.type && state.music.server"
+                     v-bind="state.music"/>
       <douban-book-preview :book="doubanData" v-if="doubanType === 'book' && doubanData&& doubanData.title"/>
       <douban-movie-preview :movie="doubanData" v-if="doubanType === 'movie' && doubanData&& doubanData.title"/>
+      <youtube-preview v-if="state.video.type === 'youtube' && state.video.value" :url="state.video.value"/>
+      <bilibili-preview v-if="state.video.type === 'bilibili' && state.video.value" :url="state.video.value"/>
+      <video-preview v-if="state.video.type === 'online' && state.video.value" :url="state.video.value"/>
     </div>
     <div class="flex justify-between items-center">
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
@@ -48,11 +52,17 @@
         </UPopover>
       </div>
 
-      <UButtonGroup>
-        <UButton color="white" variant="solid" @click="navigateTo('/')">返回首页</UButton>
-        <UButton @click="saveMemo">发表</UButton>
-        <UButton color="white" @click="reset">清空</UButton>
-      </UButtonGroup>
+      <div class="flex gap-1 text-gray-500 gap-4">
+        <div class="flex gap-1 items-center">
+          <span>{{ state.showType ? '公开' : '私密' }}</span>
+          <UToggle v-model="state.showType"/>
+        </div>
+
+        <UButtonGroup>
+          <UButton @click="saveMemo">发表</UButton>
+          <UButton color="white" @click="reset">清空</UButton>
+        </UButtonGroup>
+      </div>
     </div>
   </div>
 
@@ -61,7 +71,16 @@
 
 <script setup lang="ts">
 import {useMouse, useWindowScroll} from '@vueuse/core'
-import type {DoubanBook, DoubanMovie, ExtDTO, MemoVO, MetingMusicServer, MetingMusicType, MusicDTO} from "~/types";
+import type {
+  DoubanBook,
+  DoubanMovie,
+  ExtDTO,
+  MemoVO,
+  MetingMusicServer,
+  MetingMusicType,
+  MusicDTO,
+  Video
+} from "~/types";
 import {toast} from "vue-sonner";
 import UploadImage from "~/components/UploadImage.vue";
 
@@ -88,6 +107,10 @@ const defaultState = {
     server: 'netease' as MetingMusicServer,
     type: 'song' as MetingMusicType
   },
+  video: {
+    type: 'youtube',
+    value: ""
+  },
   doubanBook: {} as DoubanBook,
   doubanMovie: {} as DoubanMovie,
 }
@@ -104,30 +127,33 @@ const locationLabel = computed(() => {
   return state.location.split(" ").join(" · ")
 })
 
-const handleDragImage = (imgs:string[])=>{
+const handleDragImage = (imgs: string[]) => {
   state.imgs = imgs.join(",")
 }
 
 const updateMusic = (music: MusicDTO) => {
-  console.log('confirmed:',music)
+  console.log('confirmed:', music)
   state.music.id = ""
-  setTimeout(()=>{
-    Object.assign(state.music,music)
-  },500)
+  setTimeout(() => {
+    Object.assign(state.music, music)
+  }, 500)
+}
 
+const handleVideo = (video: Video) => {
+  state.video = video
 }
 
 const {x, y} = useMouse()
 const {y: windowY} = useWindowScroll()
 const isOpen = ref(false)
 const virtualElement = ref({getBoundingClientRect: () => ({})})
-const handleRemoveImage = (img:string)=>{
+const handleRemoveImage = (img: string) => {
   const imgs = state.imgs.split(",")
-  const index = imgs.findIndex(r=>r=== img)
-  if(index <0){
+  const index = imgs.findIndex(r => r === img)
+  if (index < 0) {
     return
   }
-  imgs.splice(index,1)
+  imgs.splice(index, 1)
   state.imgs = imgs.join(",")
 }
 
@@ -166,7 +192,8 @@ onMounted(async () => {
     const res = await useMyFetch<MemoVO>('/memo/get?id=' + state.id)
     Object.assign(state, res)
     const ext = JSON.parse(res.ext) as ExtDTO
-    Object.assign(state.music,ext.music)
+    Object.assign(state.music, ext.music)
+    Object.assign(state.video, ext.video)
     doubanType.value = ext.doubanBook && ext.doubanBook.title ? 'book' : 'movie'
     doubanData.value = doubanType.value === 'book' ? ext.doubanBook : ext.doubanMovie
 
@@ -201,12 +228,13 @@ const saveMemo = async () => {
     id: state.id,
     content: state.content,
     ext: {
-      music: state.music,
+      music: state.music.id ? state.music : {},
       [doubanKey]: doubanData.value,
+      video: state.video.value ? state.video : {},
     },
     pinned: state.pinned,
-    showType: state.showType,
-    externalFavicon: state.externalFavicon,
+    showType: state.showType ? 1 : 0,
+    externalFavicon: state.externalUrl ? state.externalFavicon : "",
     externalTitle: state.externalTitle,
     externalUrl: state.externalUrl,
     imgs: state.imgs.split(','),

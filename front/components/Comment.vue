@@ -7,11 +7,11 @@
     <span v-else class="text-[#576b95] text-nowrap">{{ props.comment.username }}</span>
    <template v-if="props.comment.replyTo">
      <span class="mx-1">回复</span>
-     <span>{{props.comment.replyTo}}</span>
+     <span  class="text-[#576b95] text-nowrap">{{props.comment.replyTo}}</span>
    </template>
     <span class="mx-0.5">:</span>
     <span class="inline break-all cursor-pointer" @click="toggle">{{ props.comment.content }}</span>
-    <span >{{ $dayjs(props.comment.createdAt).fromNow()  }}</span>
+    <span class="text-xs text-gray-400 ml-4">{{$dayjs(props.comment.createdAt).fromNow()}}</span>
     <UIcon v-if="(global.userinfo.id === props.memoUserId || global.userinfo.id === 1)" name="i-carbon-trash-can"
            @click="removeComment" class="cursor-pointer ml-4 text-red-400"/>
 

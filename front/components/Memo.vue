@@ -1,6 +1,6 @@
 <template>
-  <div :class="[item.pinned ? 'bg-slate-100' : '']">
-    <div class="flex gap-4 text-sm dark:bg-neutral-800 p-4">
+  <div >
+    <div class="flex gap-4 text-sm dark:bg-neutral-800 p-4" :class="[item.pinned ? 'bg-slate-100 dark:bg-neutral-700' : '']">
       <div class="avatar ">
         <NuxtLink :to="`/memo/${item.id}`">
           <UAvatar
@@ -10,11 +10,13 @@
         </NuxtLink>
       </div>
       <div class="flex flex-col gap-1  w-full">
-        <div class="username text-[#576b95] mb-1 dark:text-white cursor-pointer">
-          <NuxtLink :to="`/user/${item.user.username}`">{{ item.user.nickname }}</NuxtLink>
+        <div class="username text-[#576b95] mb-1 dark:text-white  flex justify-between">
+          <NuxtLink class="cursor-pointer" :to="`/user/${item.user.username}`">{{ item.user.nickname }}</NuxtLink>
+          <UIcon v-if="item.pinned" name="i-carbon-pin"/>
+          <UIcon v-if="item.showType === 0" name="i-carbon-locked" class="text-red-500"/>
         </div>
         <div class="mb-2">
-          <div class="markdown-content overflow-hidden" :style="`max-height:${sysConfig.memoMaxHeight}px;`"
+          <div class="markdown-content overflow-hidden" :style="getMemoMaxHeightStyle()"
                v-html="content"></div>
           <div class="flex gap-2 mt-2" v-if="tags.length > 0">
             <span v-for="(tag,index) in tags" :key="`tag-${index}`">
@@ -25,13 +27,18 @@
           </div>
         </div>
 
-        <external-url-preview :favicon="item.externalFavicon" :title="item.externalTitle" :url="item.externalUrl"
-                              v-if="item.externalFavicon&&item.externalTitle&&item.externalUrl"/>
-        <upload-image-preview :imgs="item.imgs||''" :memo-id="item.id"/>
+        <div class="flex flex-col gap-2">
+          <external-url-preview :favicon="item.externalFavicon" :title="item.externalTitle" :url="item.externalUrl"
+                                v-if="item.externalFavicon&&item.externalTitle&&item.externalUrl"/>
+          <upload-image-preview :imgs="item.imgs||''" :memo-id="item.id"/>
 
-        <music-preview v-if="extJSON.music && extJSON.music.id" v-bind="extJSON.music"/>
-        <douban-book-preview v-if="extJSON.doubanBook && extJSON.doubanBook.title" :book="extJSON.doubanBook"/>
-        <douban-movie-preview v-if="extJSON.doubanMovie && extJSON.doubanMovie.title" :movie="extJSON.doubanMovie"/>
+          <music-preview v-if="extJSON.music && extJSON.music.id" v-bind="extJSON.music"/>
+          <douban-book-preview v-if="extJSON.doubanBook && extJSON.doubanBook.title" :book="extJSON.doubanBook"/>
+          <douban-movie-preview v-if="extJSON.doubanMovie && extJSON.doubanMovie.title" :movie="extJSON.doubanMovie"/>
+          <youtube-preview v-if="extJSON.video && extJSON.video.type === 'youtube' && extJSON.video.value" :url="extJSON.video.value"/>
+          <bilibili-preview v-if="extJSON.video && extJSON.video.type === 'bilibili' && extJSON.video.value" :url="extJSON.video.value"/>
+          <video-preview v-if="extJSON.video && extJSON.video.type === 'online' && extJSON.video.value" :url="extJSON.video.value"/>
+        </div>
 
         <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5"
              v-if="location">
@@ -101,8 +108,8 @@
           </div>
           <div class="flex flex-col gap-1" v-if="sysConfig.enableComment">
             <CommentBox :comment-id="0" :memo-id="item.id"/>
-            <div :class="[item.comments && item.comments.length>0 ? 'py-2' : '']">
-              <div class="px-4 relative flex-col text-sm" v-for="c in item.comments" :key="c.id"
+            <div class="space-y-1" :class="[item.comments && item.comments.length>0 ? 'py-2' : '']">
+              <div class="px-4 relative flex-col text-sm " v-for="c in item.comments" :key="c.id"
                    v-if="item.comments && item.comments.length>0">
                 <Comment :comment="c" :memo-id="item.id" :memo-user-id="item.user.id"/>
               </div>
@@ -131,6 +138,12 @@ const md = markdownit({
   typographer: true,
   breaks: true,
 })
+const getMemoMaxHeightStyle = () => {
+  if (sysConfig.value.memoMaxHeight) {
+    return `max-height:${sysConfig.value.memoMaxHeight}px`
+  }
+  return ""
+}
 const currentCommentBox = useState('currentCommentBox')
 const props = defineProps<{
   memo: MemoVO

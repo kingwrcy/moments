@@ -27,6 +27,9 @@ func Auth(injector do.Injector) echo.MiddlewareFunc {
 	}
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
+			if !strings.HasPrefix(c.Request().URL.Path, "/api") {
+				return next(c)
+			}
 			tokenStr := c.Request().Header.Get("x-api-token")
 			cc := handler.CustomContext{Context: c}
 			//zlog.Info().Msgf("token :%s", tokenStr)

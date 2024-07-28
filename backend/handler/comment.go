@@ -118,7 +118,7 @@ func (c CommentHandler) AddComment(ctx echo.Context) error {
 		if currentUser == nil {
 			comment.Username = req.Username
 		} else {
-			comment.Username = currentUser.Username
+			comment.Username = currentUser.Nickname
 			comment.Author = fmt.Sprintf("%d", currentUser.Id)
 		}
 	}

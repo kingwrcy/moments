@@ -1,6 +1,6 @@
 <template>
   <Header :user="currentUser"/>
-  <div class="space-y-4  flex flex-col p-4 my-4">
+  <div class="space-y-4  flex flex-col p-4 my-4 dark:bg-neutral-800">
     <div class="flex justify-end text-xs text-gray-400">
       <div>版本号:v0.3</div>
     </div>
@@ -11,7 +11,7 @@
       <UInput v-model="state.title"/>
     </UFormGroup>
     <UFormGroup label="Favicon" name="favicon"
-                :ui="{wrapper:'border rounded p-2 border-gray-300',label:{base:'font-bold'}}">
+                :ui="{label:{base:'font-bold'}}">
       <UInput type="file" size="sm" icon="i-heroicons-folder" @change="uploadFavicon"/>
       <div class="text-gray-500 text-sm my-2">或者输入在线地址</div>
       <UInput v-model="state.favicon" class="mb-2"/>
@@ -32,8 +32,8 @@
     <UFormGroup label="评论最大字数" name="maxCommentLength" :ui="{label:{base:'font-bold'}}">
       <UInput v-model="state.maxCommentLength"/>
     </UFormGroup>
-    <UFormGroup label="发言最大高度(单位px)" name="memoMaxHeight" :ui="{label:{base:'font-bold'}}">
-      <UInput v-model="state.memoMaxHeight"/>
+    <UFormGroup label="发言最大高度(单位px,填0时则不限制高度)" name="memoMaxHeight" :ui="{label:{base:'font-bold'}}">
+      <UInput v-model.number="state.memoMaxHeight"/>
     </UFormGroup>
     <UFormGroup label="评论排序方式(按日期)" name="commentOrder" :ui="{label:{base:'font-bold'}}">
       <USelectMenu v-model="state.commentOrder"
@@ -45,7 +45,6 @@
                    :options="[{label:'几分钟前',value:'timeAgo'},{label:'2024-07-24 09:56:55',value:'time'}]"
                    value-attribute="value" option-attribute="label"></USelectMenu>
     </UFormGroup>
-    <div class="border rounded border-gray-300 p-2 space-y-4  flex flex-col">
       <UFormGroup label="是否启用Google Recaptcha" name="enableGoogleRecaptcha" :ui="{label:{base:'font-bold'}}">
         <UToggle v-model="state.enableGoogleRecaptcha"/>
       </UFormGroup>
@@ -57,8 +56,6 @@
           <UInput v-model="state.googleSecretKey"/>
         </UFormGroup>
       </template>
-    </div>
-    <div class="border rounded border-gray-300 p-2 space-y-4  flex flex-col">
       <UFormGroup label="是否启用S3存储" name="s3" :ui="{label:{base:'font-bold'}}">
         <UToggle v-model="state.enableS3"/>
       </UFormGroup>
@@ -85,7 +82,6 @@
           <UInput v-model="state.s3.thumbnailSuffix"/>
         </UFormGroup>
       </template>
-    </div>
 
     <UButton class="justify-center" @click="save">保存</UButton>
   </div>

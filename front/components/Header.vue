@@ -12,13 +12,29 @@
       </div>
     </div>
     <div class="absolute shadow -right-10 top-0 rounded p-1 flex flex-col gap-2 bg-white rounded p-2">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FDE047"
+      <svg v-if="mode==='light'" @click="toggleMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="#FDE047"
            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
            class="lucide lucide-moon-star-icon cursor-pointer">
         <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9"></path>
         <path d="M20 3v4"></path>
         <path d="M22 5h-4"></path>
       </svg>
+
+      <svg  v-if="mode==='dark'" @click="toggleMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="#FDE047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+           class="lucide lucide-sun-icon cursor-pointer">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2"></path>
+        <path d="M12 20v2"></path>
+        <path d="m4.93 4.93 1.41 1.41"></path>
+        <path d="m17.66 17.66 1.41 1.41"></path>
+        <path d="M2 12h2"></path>
+        <path d="M20 12h2"></path>
+        <path d="m6.34 17.66-1.41 1.41"></path>
+        <path d="m19.07 4.93-1.41 1.41"></path>
+      </svg>
+
       <NuxtLink to="/user/login" v-if="!global.userinfo.token" title="登录">
         <UIcon name="i-carbon-login" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
       </NuxtLink>
@@ -45,13 +61,21 @@
 <script setup lang="ts">
 import type {UserVO} from "~/types";
 import {useGlobalState} from "~/store";
+import {useColorMode} from '@vueuse/core'
 
 const global = useGlobalState()
 const props = defineProps<{ user: UserVO }>()
-
+const mode = useColorMode()
 const logout = async () => {
   global.value.userinfo = {}
   await navigateTo('/')
+}
+const toggleMode = () => {
+  if (mode.value === 'dark') {
+    mode.value = 'light'
+  } else {
+    mode.value = 'dark'
+  }
 }
 </script>
 

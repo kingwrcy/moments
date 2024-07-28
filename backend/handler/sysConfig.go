@@ -67,6 +67,7 @@ func (s SysConfigHandler) SaveConfig(c echo.Context) error {
 	}
 
 	if err := c.Bind(&result); err != nil {
+		s.base.log.Info().Msgf("保存配置错误,%s", err)
 		return FailResp(c, ParamError)
 	}
 

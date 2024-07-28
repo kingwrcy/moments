@@ -21,7 +21,7 @@ type Memo struct {
 	ExternalFavicon string     `gorm:"column:externalFavicon;default:/favicon.png;NOT NULL" json:"externalFavicon,omitempty"`
 	Pinned          *bool      `gorm:"column:pinned;default:false;NOT NULL" json:"pinned,omitempty"`
 	Ext             string     `gorm:"column:ext;default:{};NOT NULL" json:"ext,omitempty"`
-	ShowType        int32      `gorm:"column:showType;default:1;NOT NULL" json:"showType,omitempty"`
+	ShowType        *int32     `gorm:"column:showType;default:1;NOT NULL" json:"showType,omitempty"`
 	User            *User      `json:"user,omitempty"`
 	Comments        []Comment  `json:"comments,omitempty"`
 	Tags            string     `json:"tags,omitempty"`

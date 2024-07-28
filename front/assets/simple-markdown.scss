@@ -1,6 +1,16 @@
 .markdown-content {
   line-height: 1.5rem;
 
+
+
+  a{
+    color: rgb(132 204 22);
+    margin: 0 2px;
+    &:hover{
+      color: rgb(101 163 13);
+    }
+  }
+
   ul {
     list-style-type: disc;
     margin-left: 1rem;
@@ -14,8 +24,9 @@
   }
 
   code {
-    background-color: rgb(236 252 203);
-    padding: 0 .2rem;
+    background-color: rgb(190 242 100);
+    color:white;
+    padding: 0 0.4rem;
     border-radius: .4rem;
   }
 

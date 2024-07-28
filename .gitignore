@@ -2,5 +2,7 @@ node_modules
 data.sqlite
 .env
 backend/.env
+backend/public
 front-end/.env
 .idea
+moments.exe

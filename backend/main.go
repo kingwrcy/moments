@@ -1,24 +1,30 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"github.com/ilyakaznacheev/cleanenv"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/kingwrcy/moments/db"
 	"github.com/kingwrcy/moments/handler"
 	"github.com/kingwrcy/moments/log"
-	"github.com/kingwrcy/moments/middleware"
+	myMiddleware "github.com/kingwrcy/moments/middleware"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
 	"github.com/samber/do/v2"
 	"gorm.io/gorm"
+	"net/http"
 )
 
 func newEchoEngine(_ do.Injector) (*echo.Echo, error) {
 	e := echo.New()
 	return e, nil
 }
+
+//go:embed public/*
+var staticFiles embed.FS
 
 func main() {
 
@@ -41,9 +47,16 @@ func main() {
 	tx := do.MustInvoke[*gorm.DB](injector)
 
 	e := do.MustInvoke[*echo.Echo](injector)
-	e.Use(middleware.Auth(injector))
-
+	e.Use(myMiddleware.Auth(injector))
 	setupRouter(injector)
+
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		HTML5:      true,
+		Root:       "public", // because files are located in `web` directory in `webAssets` fs
+		Filesystem: http.FS(staticFiles),
+	}))
+
+	e.FileFS("/*", "public/index.html", staticFiles)
 
 	migrateTo3(tx, myLogger)
 	myLogger.Info().Msgf("服务端启动成功,监听:%d端口...", cfg.Port)

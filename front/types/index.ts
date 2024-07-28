@@ -83,6 +83,7 @@ export type ExtDTO = {
     music: MusicDTO,
     doubanBook: DoubanBook,
     doubanMovie: DoubanMovie,
+    video: Video,
 }
 
 export type MusicDTO = {
@@ -117,3 +118,10 @@ export type DoubanMovie = {
     actors?: string
     runtime?: string
 }
+
+export type Video = {
+    type: 'youtube' | 'bilibili' | 'online'
+    value: string
+}
+
+export type VideoType = Video["type"]

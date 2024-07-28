@@ -24,12 +24,15 @@ type Music struct {
 }
 
 type MemoExt struct {
-	//YoutubeUrl    string `json:"youtube_url,omitempty"`
-	//VideoUrl      string `json:"video_url,omitempty"`
-	//LocalVideoUrl string `json:"local_video_url,omitempty"`
 	Music       Music       `json:"music,omitempty"`
 	DoubanBook  DoubanBook  `json:"doubanBook,omitempty"`
 	DoubanMovie DoubanMovie `json:"doubanMovie,omitempty"`
+	Video       Video       `json:"video,omitempty"`
+}
+
+type Video struct {
+	Type  string `json:"type,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 type SaveMemoReq struct {
@@ -37,7 +40,7 @@ type SaveMemoReq struct {
 	Content         string   `json:"content,omitempty"`
 	Ext             MemoExt  `json:"ext"`
 	Pinned          *bool    `json:"pinned,omitempty"`
-	ShowType        int      `json:"show_type,omitempty"`
+	ShowType        *int32   `json:"showType,omitempty"`
 	ExternalFavicon string   `json:"externalFavicon,omitempty"`
 	ExternalTitle   string   `json:"externalTitle,omitempty"`
 	ExternalUrl     string   `json:"externalUrl,omitempty"`
