@@ -33,11 +33,12 @@ func NewFileHandler(injector do.Injector) *FileHandler {
 
 func (f FileHandler) Get(c echo.Context) error {
 	filename := c.Param("filename")
+	f.base.log.Info().Msgf("Getting file %s", filename)
 	if filename == "" {
 		return c.HTML(404, "not found")
 	}
-	filepath := path.Join(f.base.cfg.UploadDir, filename)
-	if _, err := os.Stat(filepath); errors.Is(err, os.ErrNotExist) {
+	fp := path.Join(f.base.cfg.UploadDir, filename)
+	if _, err := os.Stat(fp); errors.Is(err, os.ErrNotExist) {
 		return c.HTML(404, "not found")
 	}
 	return c.File(path.Join(f.base.cfg.UploadDir, filename))
@@ -62,7 +63,7 @@ func (f FileHandler) Upload(c echo.Context) error {
 			return FailRespWithMsg(c, Fail, "上传图片异常")
 		}
 		// Destination
-		filename := fmt.Sprintf("%s/%s", time.Now().Format("2006/01/02"), strings.ReplaceAll(uuid.NewString(), "-", ""))
+		filename := strings.ReplaceAll(uuid.NewString(), "-", "")
 		path := path.Join(f.base.cfg.UploadDir, filename)
 		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 			f.base.log.Error().Msgf("创建父级目录异常:%s", err)
@@ -81,7 +82,7 @@ func (f FileHandler) Upload(c echo.Context) error {
 
 		src.Close()
 		dst.Close()
-		result = append(result, "/api/file/get/"+filename)
+		result = append(result, "/upload/"+filename)
 	}
 	return SuccessResp(c, result)
 }

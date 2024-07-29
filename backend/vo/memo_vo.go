@@ -45,8 +45,6 @@ type SaveMemoReq struct {
 	ExternalTitle   string   `json:"externalTitle,omitempty"`
 	ExternalUrl     string   `json:"externalUrl,omitempty"`
 	Imgs            []string `json:"imgs,omitempty"`
-	Music163Url     string   `json:"music163Url,omitempty"`
-	BilibiliUrl     string   `json:"bilibiliUrl,omitempty"`
 	Location        string   `json:"location,omitempty"`
 }
 

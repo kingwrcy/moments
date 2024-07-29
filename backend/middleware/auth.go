@@ -56,7 +56,7 @@ func Auth(injector do.Injector) echo.MiddlewareFunc {
 						return next(cc)
 					}
 				}
-				if strings.HasPrefix(path, "/api/file/get") {
+				if strings.HasPrefix(path, "/upload") {
 					return next(cc)
 				}
 				return handler.FailResp(c, handler.TokenMissing)

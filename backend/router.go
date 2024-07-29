@@ -48,7 +48,7 @@ func setupRouter(injector do.Injector) {
 	tagGroup := api.Group("/tag")
 	tagGroup.POST("/list", tagHandler.List)
 
-	e.GET("/api/file/get/:filename", fileHandler.Get)
+	e.GET("/upload/:filename", fileHandler.Get)
 	e.POST("/api/file/upload", fileHandler.Upload)
 	e.POST("/api/file/s3PreSigned", fileHandler.S3PreSigned)
 }

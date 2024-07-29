@@ -21,7 +21,7 @@ func (t TagHandler) List(c echo.Context) error {
 	context := c.(CustomContext)
 	currentUser := context.CurrentUser()
 	var tags []sql.NullString
-	t.base.db.Debug().Table("Memo").Select("tags").Where("userId = ?", currentUser.Id).Find(&tags)
+	t.base.db.Table("Memo").Select("tags").Where("userId = ?", currentUser.Id).Find(&tags)
 	for _, tagLine := range tags {
 		if tagLine.Valid {
 			split := strings.Split(tagLine.String, ",")

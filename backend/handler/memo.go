@@ -48,10 +48,10 @@ func (m MemoHandler) RemoveImage(c echo.Context) error {
 	if err != nil {
 		return FailResp(c, ParamError)
 	}
-	if !strings.HasPrefix(req.Img, "/api/file/get/") {
+	if !strings.HasPrefix(req.Img, "/upload/") {
 		return SuccessResp(c, h{})
 	}
-	img := strings.ReplaceAll(req.Img, "/api/file/get/", "")
+	img := strings.ReplaceAll(req.Img, "/upload/", "")
 	if err := os.Remove(filepath.Join(m.base.cfg.UploadDir, img)); err != nil {
 		return FailRespWithMsg(c, ParamError, fmt.Sprintf("删除图片失败:%s", err))
 	}
@@ -273,8 +273,6 @@ func (m MemoHandler) SaveMemo(c echo.Context) error {
 	extJson = string(bytes)
 
 	memo.Imgs = strings.Join(req.Imgs, ",")
-	memo.Music163Url = req.Music163Url
-	memo.BilibiliUrl = req.BilibiliUrl
 	memo.Location = req.Location
 	memo.ExternalUrl = req.ExternalUrl
 	memo.ExternalTitle = req.ExternalTitle
@@ -567,7 +565,7 @@ func downloadImage(src string, log zerolog.Logger, conf vo.AppConfig) (string, e
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("/api/file/get/%s.jpg", key), err
+	return fmt.Sprintf("/upload/%s.jpg", key), err
 }
 
 func (m MemoHandler) GetDoubanBookInfo(c echo.Context) error {

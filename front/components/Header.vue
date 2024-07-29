@@ -35,10 +35,7 @@
         <path d="m19.07 4.93-1.41 1.41"></path>
       </svg>
 
-      <NuxtLink to="/user/login" v-if="!global.userinfo.token" title="登录">
-        <UIcon name="i-carbon-login" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
-      </NuxtLink>
-      <UIcon @click="logout" name="i-carbon-logout" v-else class="text-[#9fc84a] w-5 h-5 cursor-pointer" title="登出"/>
+
       <NuxtLink to="/new" v-if="global.userinfo.token " title="发言">
         <UIcon name="i-carbon-edit" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
       </NuxtLink>
@@ -54,6 +51,10 @@
       <NuxtLink to="/user/settings" v-if="global.userinfo.token" title="用户设置">
         <UIcon name="i-carbon-user-profile" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
       </NuxtLink>
+      <NuxtLink to="/user/login" v-if="!global.userinfo.token" title="登录">
+        <UIcon name="i-carbon-login" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
+      </NuxtLink>
+      <UIcon @click="logout" name="i-carbon-logout" v-else class="text-[#9fc84a] w-5 h-5 cursor-pointer" title="登出"/>
     </div>
   </div>
 </template>

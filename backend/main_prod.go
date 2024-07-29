@@ -1,21 +1,28 @@
-//go:build !prod
+//go:build prod
 
 package main
 
 import (
+	"embed"
 	"fmt"
 	"github.com/ilyakaznacheev/cleanenv"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/kingwrcy/moments/db"
 	"github.com/kingwrcy/moments/handler"
 	"github.com/kingwrcy/moments/log"
-	"github.com/kingwrcy/moments/middleware"
+	myMiddleware "github.com/kingwrcy/moments/middleware"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
 	"github.com/samber/do/v2"
 	"gorm.io/gorm"
+	"io/fs"
+	"net/http"
 )
+
+//go:embed public/*
+var staticFiles embed.FS
 
 func newEchoEngine(_ do.Injector) (*echo.Echo, error) {
 	e := echo.New()
@@ -43,9 +50,16 @@ func main() {
 	tx := do.MustInvoke[*gorm.DB](injector)
 
 	e := do.MustInvoke[*echo.Echo](injector)
-	e.Use(middleware.Auth(injector))
+	e.Use(myMiddleware.Auth(injector))
 	setupRouter(injector)
-	//e.StaticFS("/upload", http.Dir("public"))
+
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		HTML5:      true,
+		Root:       "public", // because files are located in `web` directory in `webAssets` fs
+		Filesystem: http.FS(staticFiles),
+	}))
+
+	e.FileFS("/*", "public/index.html", staticFiles)
 
 	migrateTo3(tx, myLogger)
 	myLogger.Info().Msgf("服务端启动成功,监听:%d端口...", cfg.Port)
@@ -53,4 +67,12 @@ func main() {
 	if err != nil {
 		myLogger.Fatal().Msgf("服务启动失败,错误原因:%s", err)
 	}
+}
+
+func isEmbedFSEmpty(e embed.FS, path string) (bool, error) {
+	entries, err := fs.ReadDir(e, path)
+	if err != nil {
+		return false, err
+	}
+	return len(entries) == 0, nil
 }

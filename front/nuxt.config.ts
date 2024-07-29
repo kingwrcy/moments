@@ -25,11 +25,11 @@ export default defineNuxtConfig({
     app: {
         head: {
             link: [
-                {href: `/public/css/APlayer.min.css`, rel: 'stylesheet'},
+                {href: `/css/APlayer.min.css`, rel: 'stylesheet'},
             ],
             script: [
-                {src: `/public/js/APlayer.min.js`, type: 'text/javascript', async: true, defer: true},
-                {src: `/public/js/Meting.min.js`, type: 'text/javascript', async: true, defer: true},
+                {src: `/js/APlayer.min.js`, type: 'text/javascript', async: true, defer: true},
+                {src: `/js/Meting.min.js`, type: 'text/javascript', async: true, defer: true},
             ]
         }
     },
@@ -41,6 +41,10 @@ export default defineNuxtConfig({
                     changeOrigin: true,
                     // rewrite: (path) => path.replace(/^\/api/, ""),
                 },
+                "/upload": {
+                    target: "http://localhost:37892",
+                    changeOrigin: true,
+                }
             },
         },
     }

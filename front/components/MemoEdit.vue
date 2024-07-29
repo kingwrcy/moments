@@ -79,7 +79,7 @@ import type {
   MetingMusicServer,
   MetingMusicType,
   MusicDTO,
-  Video
+  Video, VideoType
 } from "~/types";
 import {toast} from "vue-sonner";
 import UploadImage from "~/components/UploadImage.vue";
@@ -93,13 +93,11 @@ const defaultState = {
   content: "",
   ext: "",
   pinned: false,
-  showType: 1,
+  showType: true,
   location: "",
   externalFavicon: "",
   externalTitle: "",
   externalUrl: "",
-  music163Url: "",
-  bilibiliUrl: "",
   imgs: "",
   music: {
     id: '',
@@ -108,7 +106,7 @@ const defaultState = {
     type: 'song' as MetingMusicType
   },
   video: {
-    type: 'youtube',
+    type: 'youtube' as VideoType,
     value: ""
   },
   doubanBook: {} as DoubanBook,
@@ -130,6 +128,7 @@ const locationLabel = computed(() => {
 const handleDragImage = (imgs: string[]) => {
   state.imgs = imgs.join(",")
 }
+
 
 const updateMusic = (music: MusicDTO) => {
   console.log('confirmed:', music)
@@ -191,6 +190,7 @@ onMounted(async () => {
   if (state.id > 0) {
     const res = await useMyFetch<MemoVO>('/memo/get?id=' + state.id)
     Object.assign(state, res)
+    state.showType = res.showType === 1
     const ext = JSON.parse(res.ext) as ExtDTO
     Object.assign(state.music, ext.music)
     Object.assign(state.video, ext.video)
