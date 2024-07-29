@@ -95,7 +95,7 @@ const handleUploadVideo = async (files: FileList) => {
   }
 }
 const confirm = (close: Function) => {
-  const match = bilibiliUrl.value.match(/src="(.*?)"/)
+  const match = bilibiliUrl.value.match(/src=['"]([^'"]+)['"]/)
   if (bilibiliUrl.value.trim()) {
     videoType.value = 'bilibili'
     if (match && match.length > 1) {

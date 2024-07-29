@@ -1,5 +1,5 @@
 <template>
-  <iframe v-if="url" class="w-full min-h-[315px] rounded" :src="youtubeUrl"
+  <iframe v-if="url" class="w-full h-[250px] rounded" :src="youtubeUrl"
           title="YouTube video player" frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -16,7 +16,7 @@ const youtubeUrl = computed(() => {
       return `https://www.youtube.com/embed/${id}?autoplay=0&frameborder="0"`
     }
   }
-  return ""
+  return props.url
 })
 
 

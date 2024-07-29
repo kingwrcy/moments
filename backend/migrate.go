@@ -3,10 +3,12 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/kingwrcy/moments/db"
 	"github.com/kingwrcy/moments/handler"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/rs/zerolog"
+	"github.com/tidwall/gjson"
 	"gorm.io/gorm"
 	"strings"
 )
@@ -97,7 +99,31 @@ func migrateTo3(tx *gorm.DB, log zerolog.Logger) {
 			}
 			if memo.BilibiliUrl != "" {
 				ext.Video.Type = "bilibili"
-				ext.Video.Value = memo.BilibiliUrl
+				ext.Video.Value = fmt.Sprintf("<iframe src=\"%s\" scrolling=\"no\" border=\"0\" frameborder=\"no\" framespacing=\"0\" allowfullscreen=\"true\"></iframe>", memo.BilibiliUrl)
+			}
+			if value, exist := extMap["doubanBook"]; exist && value != nil {
+				val := gjson.Get(memo.Ext, "doubanBook")
+				ext.DoubanBook.Title = val.Get("title").Str
+				ext.DoubanBook.Desc = val.Get("desc").Str
+				ext.DoubanBook.Image = val.Get("image").Str
+				ext.DoubanBook.Author = val.Get("author").Str
+				ext.DoubanBook.Isbn = val.Get("isbn").Str
+				ext.DoubanBook.Url = val.Get("url").Str
+				ext.DoubanBook.Rating = val.Get("rating").Str
+				ext.DoubanBook.PubDate = val.Get("pubDate").Str
+				ext.DoubanBook.Id = val.Get("id").Str
+			}
+			if value, exist := extMap["doubanMovie"]; exist && value != nil {
+				val := gjson.Get(memo.Ext, "doubanMovie")
+				ext.DoubanMovie.Title = val.Get("title").Str
+				ext.DoubanMovie.Desc = val.Get("desc").Str
+				ext.DoubanMovie.Image = val.Get("image").Str
+				ext.DoubanMovie.Director = val.Get("director").Str
+				ext.DoubanMovie.ReleaseDate = val.Get("releaseDate").Str
+				ext.DoubanMovie.Url = val.Get("url").Str
+				ext.DoubanMovie.Rating = val.Get("rating").Str
+				ext.DoubanMovie.Actors = val.Get("actors").Str
+				ext.DoubanMovie.Id = val.Get("id").Str
 			}
 
 			content, _ := json.Marshal(ext)

@@ -45,7 +45,6 @@ func main() {
 	e := do.MustInvoke[*echo.Echo](injector)
 	e.Use(middleware.Auth(injector))
 	setupRouter(injector)
-	//e.StaticFS("/upload", http.Dir("public"))
 
 	migrateTo3(tx, myLogger)
 	myLogger.Info().Msgf("服务端启动成功,监听:%d端口...", cfg.Port)
