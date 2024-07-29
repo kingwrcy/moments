@@ -55,18 +55,21 @@ document.addEventListener("DOMContentLoaded", () => {
 自定义js
 
 ```js
-function changeFont() { 
+function changeFont() {
   const link = document.createElement("link");
   link.rel = "stylesheet";
   link.type = "text/css";
   link.href = "https://cdn.staticfile.org/lxgw-wenkai-screen-webfont/1.6.0/lxgwwenkaiscreen.css";
   document.head.append(link);
-};
+
+  const style = document.createElement("style");
+  style.type = "text/css";
+  style.innerHTML = `
+    * {
+      font-family: "LXGW WenKai Screen", sans-serif !important;
+    }
+  `;
+  document.head.append(style);
+}
 changeFont();
-```
-
-自定义css
-
-```css
-*{font-family: "LXGW WenKai Screen", sans-serif !important;}
 ```
