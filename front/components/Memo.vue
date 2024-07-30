@@ -182,7 +182,6 @@ const tags = computed(() => {
 
 const doComment = () => {
   const value = item.value.id + '#0'
-  console.log('value is ', value, '===>', currentCommentBox.value)
   if (currentCommentBox.value === value) {
     currentCommentBox.value = ''
   } else {
@@ -198,7 +197,6 @@ const go2Edit = async (id: number) => {
 const removeMemo = async (id: number) => {
   await useMyFetch('/memo/remove?id=' + id)
   toast.success("删除成功!")
-  console.log('isDetailPage', isDetailPage.value)
   if (isDetailPage.value) {
     await navigateTo('/')
   } else {

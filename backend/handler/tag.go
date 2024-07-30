@@ -16,6 +16,19 @@ func NewTagHandler(injector do.Injector) *TagHandler {
 	return &TagHandler{do.MustInvoke[BaseHandler](injector)}
 }
 
+type tagListResp struct {
+	Tags []string `json:"tags,omitempty"` //标签列表
+}
+
+// List godoc
+//
+//	@Tags		Tag
+//	@Summary	标签列表
+//	@Accept		json
+//	@Produce	json
+//	@Param		x-api-token	header		string	true	"登录TOKEN"
+//	@Success	200			{object}	tagListResp
+//	@Router		/api/file/s3PreSigned [post]
 func (t TagHandler) List(c echo.Context) error {
 	mySet := mapset.NewSet[string]()
 	context := c.(CustomContext)
@@ -32,7 +45,7 @@ func (t TagHandler) List(c echo.Context) error {
 			}
 		}
 	}
-	return SuccessResp(c, h{
-		"tags": mySet.ToSlice(),
+	return SuccessResp(c, tagListResp{
+		Tags: mySet.ToSlice(),
 	})
 }

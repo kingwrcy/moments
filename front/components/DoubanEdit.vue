@@ -44,7 +44,6 @@ const data = defineModel<DoubanBook | DoubanMovie>('data', {
     id: ""
   }
 })
-console.log('---data is ', type.value)
 
 const reset = (close: Function) => {
   type.value = 'book'

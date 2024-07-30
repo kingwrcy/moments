@@ -25,6 +25,16 @@ func NewCommentHandler(injector do.Injector) *CommentHandler {
 	return &CommentHandler{do.MustInvoke[BaseHandler](injector)}
 }
 
+// RemoveComment godoc
+//
+//	@Tags		Comment
+//	@Summary	删除评论
+//	@Accept		json
+//	@Produce	json
+//	@Param		id			query	int		true	"评论ID"
+//	@Param		x-api-token	header	string	true	"登录TOKEN"
+//	@Success	200
+//	@Router		/api/comment/remove [post]
 func (c CommentHandler) RemoveComment(ctx echo.Context) error {
 	context := ctx.(CustomContext)
 	currentUser := context.CurrentUser()
@@ -95,6 +105,15 @@ func checkGoogleRecaptcha(logger zerolog.Logger, sysConfigVO vo.FullSysConfigVO,
 	return nil
 }
 
+// AddComment godoc
+//
+//	@Tags		Comment
+//	@Summary	添加评论
+//	@Accept		json
+//	@Produce	json
+//	@Param		object	body	vo.AddCommentReq	true	"添加评论"
+//	@Success	200
+//	@Router		/api/comment/add [post]
 func (c CommentHandler) AddComment(ctx echo.Context) error {
 	var (
 		req         vo.AddCommentReq

@@ -131,7 +131,6 @@ const handleDragImage = (imgs: string[]) => {
 
 
 const updateMusic = (music: MusicDTO) => {
-  console.log('confirmed:', music)
   state.music.id = ""
   setTimeout(() => {
     Object.assign(state.music, music)

@@ -60,7 +60,6 @@ const loadMore = async () => {
 }
 
 memoReloadEvent.on(async () => {
-  console.log('memoReloadEvent')
   await reload()
 })
 

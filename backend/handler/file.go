@@ -44,6 +44,15 @@ func (f FileHandler) Get(c echo.Context) error {
 	return c.File(path.Join(f.base.cfg.UploadDir, filename))
 }
 
+// Upload godoc
+//
+//	@Tags		File
+//	@Summary	上传图片
+//	@Accept		json
+//	@Produce	json
+//	@Param		x-api-token	header	string	true	"登录TOKEN"
+//	@Success	200
+//	@Router		/api/file/upload [post]
 func (f FileHandler) Upload(c echo.Context) error {
 	var (
 		result []string
@@ -88,9 +97,24 @@ func (f FileHandler) Upload(c echo.Context) error {
 }
 
 type PreSignedReq struct {
-	ContentType string `json:"contentType,omitempty"`
+	ContentType string `json:"contentType,omitempty"` //图片mime类型
 }
 
+type s3PresignedResp struct {
+	PreSignedUrl string `json:"preSignedUrl,omitempty"` //S3预签名上传地址
+	ImageUrl     string `json:"imageUrl,omitempty"`     //实际的图片地址
+}
+
+// S3PreSigned godoc
+//
+//	@Tags		File
+//	@Summary	S3预签名
+//	@Accept		json
+//	@Produce	json
+//	@Param		object		body		PreSignedReq	true	"S3预签名"
+//	@Param		x-api-token	header		string			true	"登录TOKEN"
+//	@Success	200			{object}	s3PresignedResp
+//	@Router		/api/file/s3PreSigned [post]
 func (f FileHandler) S3PreSigned(c echo.Context) error {
 
 	var (
@@ -139,8 +163,8 @@ func (f FileHandler) S3PreSigned(c echo.Context) error {
 	if !strings.HasPrefix(suffix, "?") {
 		suffix = "?" + suffix
 	}
-	return SuccessResp(c, h{
-		"preSignedUrl": presignedResult.URL,
-		"imageUrl":     fmt.Sprintf("%s/%s%s", sysConfigVo.S3.Domain, key, suffix),
+	return SuccessResp(c, s3PresignedResp{
+		PreSignedUrl: presignedResult.URL,
+		ImageUrl:     fmt.Sprintf("%s/%s%s", sysConfigVo.S3.Domain, key, suffix),
 	})
 }

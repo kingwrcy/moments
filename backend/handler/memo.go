@@ -40,6 +40,18 @@ func NewMemoHandler(injector do.Injector) *MemoHandler {
 		hc:   http.Client{},
 	}
 }
+
+// RemoveImage godoc
+//
+//	@Tags			Memo
+//	@Summary		删除memo的图片
+//	@Description	目前只会删除本地上传的,不会删除S3上的
+//	@Accept			json
+//	@Produce		json
+//	@Param			object		body	vo.RemoveImageReq	true	"删除memo的图片"
+//	@Param			x-api-token	header	string				true	"登录TOKEN"
+//	@Success		200
+//	@Router			/memo/removeImage [post]
 func (m MemoHandler) RemoveImage(c echo.Context) error {
 	var (
 		req vo.RemoveImageReq
@@ -58,6 +70,21 @@ func (m MemoHandler) RemoveImage(c echo.Context) error {
 	return SuccessResp(c, h{})
 }
 
+type memoListResp struct {
+	List    []db.Memo `json:"list,omitempty"`    //memo列表
+	HasNext bool      `json:"hasNext,omitempty"` //是否有下一页
+	Total   int64     `json:"total,omitempty"`   //总数
+}
+
+// ListMemos godoc
+//
+//	@Tags		Memo
+//	@Summary	查询memos列表
+//	@Accept		json
+//	@Produce	json
+//	@Param		object	body		vo.ListMemoReq	true	"查询memos列表"
+//	@Success	200		{object}	memoListResp
+//	@Router		/api/memo/list [post]
 func (m MemoHandler) ListMemos(c echo.Context) error {
 	var (
 		req         vo.ListMemoReq
@@ -67,6 +94,7 @@ func (m MemoHandler) ListMemos(c echo.Context) error {
 		sysConfig   db.SysConfig
 		sysConfigVO vo.FullSysConfigVO
 	)
+
 	ctx := c.(CustomContext)
 	currentUser := ctx.CurrentUser()
 	err := c.Bind(&req)
@@ -146,13 +174,23 @@ func (m MemoHandler) ListMemos(c echo.Context) error {
 		list[i].Comments = comments
 	}
 
-	return SuccessResp(c, h{
-		"list":    list,
-		"total":   total,
-		"hasNext": int64(req.Page*req.Size) < total,
+	return SuccessResp(c, memoListResp{
+		List:    list,
+		Total:   total,
+		HasNext: int64(req.Page*req.Size) < total,
 	})
 }
 
+// RemoveMemo godoc
+//
+//	@Tags		Memo
+//	@Summary	删除memos
+//	@Accept		json
+//	@Produce	json
+//	@Param		id			query	int		true	"memoID"
+//	@Param		x-api-token	header	string	true	"登录TOKEN"
+//	@Success	200
+//	@Router		/api/memo/remove [post]
 func (m MemoHandler) RemoveMemo(c echo.Context) error {
 	ctx := c.(CustomContext)
 	currentUser := ctx.CurrentUser()
@@ -176,6 +214,15 @@ func (m MemoHandler) RemoveMemo(c echo.Context) error {
 	return SuccessResp(c, h{})
 }
 
+// LikeMemo godoc
+//
+//	@Tags		Memo
+//	@Summary	点赞memo
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	query	int	true	"memoID"
+//	@Success	200
+//	@Router		/api/memo/like [post]
 func (m MemoHandler) LikeMemo(c echo.Context) error {
 	var (
 		memo db.Memo
@@ -206,7 +253,7 @@ func FindAndReplaceTags(content string) (string, []string) {
 
 	// 去掉重复的标签，并移除 # 号
 	tagMap := make(map[string]bool)
-	uniqueTags := []string{}
+	var uniqueTags []string
 	for _, tag := range tags {
 		trimmedTag := strings.Trim(tag, "#")
 		if trimmedTag != "" && !tagMap[trimmedTag] {
@@ -231,6 +278,16 @@ func FindAndReplaceTags(content string) (string, []string) {
 	return strings.Join(replacedContent, "\n"), uniqueTags
 }
 
+// SaveMemo godoc
+//
+//	@Tags		Memo
+//	@Summary	保存memos
+//	@Accept		json
+//	@Produce	json
+//	@Param		x-api-token	header	string			true	"登录TOKEN"
+//	@Param		object		body	vo.SaveMemoReq	true	"保存memos"
+//	@Success	200
+//	@Router		/api/memo/save [post]
 func (m MemoHandler) SaveMemo(c echo.Context) error {
 	var (
 		req     vo.SaveMemoReq
@@ -244,8 +301,8 @@ func (m MemoHandler) SaveMemo(c echo.Context) error {
 
 	var memo db.Memo
 	var now = time.Now()
-	context := c.(CustomContext)
-	currentUser := context.CurrentUser()
+	ctx := c.(CustomContext)
+	currentUser := ctx.CurrentUser()
 
 	if req.ID > 0 {
 		if err = m.base.db.First(&memo, req.ID).Error; errors.Is(err, gorm.ErrRecordNotFound) {
@@ -263,9 +320,15 @@ func (m MemoHandler) SaveMemo(c echo.Context) error {
 	}
 
 	content, tags := FindAndReplaceTags(req.Content)
-	memo.Tags = strings.Join(tags, ",")
-	if memo.Tags != "" {
-		memo.Tags = memo.Tags + ","
+	m.base.log.Info().Msgf("tags is %+v,content is %s", tags, content)
+	if len(tags) == 0 {
+		memo.Tags = nil
+	} else {
+		memoTags := strings.Join(tags, ",")
+		if memoTags != "" {
+			memoTags = fmt.Sprintf("%s,", memoTags)
+			memo.Tags = &memoTags
+		}
 	}
 	memo.Content = strings.TrimSpace(content)
 
@@ -281,7 +344,12 @@ func (m MemoHandler) SaveMemo(c echo.Context) error {
 	memo.Ext = extJson
 	memo.ShowType = req.ShowType
 
+	m.base.log.Info().Msgf("memo is %+v", memo)
+
 	if req.ID > 0 {
+		if memo.Tags == nil || *memo.Tags == "" {
+			m.base.db.Select("tags").Updates(&memo)
+		}
 		m.base.db.Updates(&memo)
 	} else {
 		m.base.db.Save(&memo)
@@ -290,6 +358,15 @@ func (m MemoHandler) SaveMemo(c echo.Context) error {
 	return SuccessResp(c, h{})
 }
 
+// GetMemo godoc
+//
+//	@Tags		Memo
+//	@Summary	获取单个memo详情
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	query		int	true	"memoID"
+//	@Success	200	{object}	db.Memo
+//	@Router		/api/memo/get [post]
 func (m MemoHandler) GetMemo(c echo.Context) error {
 	var (
 		memo db.Memo
@@ -318,9 +395,19 @@ func (m MemoHandler) GetMemo(c echo.Context) error {
 	return SuccessResp(c, memo)
 }
 
+// SetPinned godoc
+//
+//	@Tags		Memo
+//	@Summary	置顶单个memo
+//	@Accept		json
+//	@Produce	json
+//	@Param		id			query	int		true	"memoID"
+//	@Param		x-api-token	header	string	true	"登录TOKEN"
+//	@Success	200
+//	@Router		/api/memo/setPinned [post]
 func (m MemoHandler) SetPinned(c echo.Context) error {
-	context := c.(CustomContext)
-	currentUser := context.CurrentUser()
+	ctx := c.(CustomContext)
+	currentUser := ctx.CurrentUser()
 	id, err := strconv.Atoi(c.QueryParam("id"))
 	if err != nil {
 		return FailResp(c, ParamError)
@@ -344,15 +431,30 @@ func (m MemoHandler) SetPinned(c echo.Context) error {
 	return SuccessResp(c, h{})
 }
 
+type externalWebsite struct {
+	Favicon string `json:"favicon,omitempty"` //favicon
+	Title   string `json:"title,omitempty"`   //标题
+}
+
+// GetFaviconAndTitle godoc
+//
+//	@Tags		Memo
+//	@Summary	获取外部链接的相关信息
+//	@Accept		json
+//	@Produce	json
+//	@Param		url			query		string	true	"memoID"
+//	@Param		x-api-token	header		string	true	"登录TOKEN"
+//	@Success	200			{object}	externalWebsite
+//	@Router		/api/memo/getFaviconAndTitle [post]
 func (m MemoHandler) GetFaviconAndTitle(c echo.Context) error {
 	websiteURL := c.QueryParam("url")
 	favicon, title, err := getFaviconAndTitle(websiteURL)
 	if err != nil {
 		return FailResp(c, ParamError)
 	}
-	return SuccessResp(c, h{
-		"favicon": favicon,
-		"title":   title,
+	return SuccessResp(c, externalWebsite{
+		Favicon: favicon,
+		Title:   title,
 	})
 }
 
@@ -430,6 +532,16 @@ func getFaviconAndTitle(websiteURL string) (string, string, error) {
 	return favicon, title, nil
 }
 
+// GetDoubanMovieInfo godoc
+//
+//	@Tags		Memo
+//	@Summary	获取豆瓣电影详情
+//	@Accept		json
+//	@Produce	json
+//	@Param		id			query		int		true	"豆瓣电影ID"
+//	@Param		x-api-token	header		string	true	"登录TOKEN"
+//	@Success	200			{object}	vo.DoubanMovie
+//	@Router		/api/memo/getDoubanMovieInfo [post]
 func (m MemoHandler) GetDoubanMovieInfo(c echo.Context) error {
 
 	var (
@@ -449,13 +561,12 @@ func (m MemoHandler) GetDoubanMovieInfo(c echo.Context) error {
 
 	id := c.QueryParam("id")
 	target := fmt.Sprintf("https://book.douban.com/subject/%s/", id)
-	// Request the HTML page.
 
 	req, _ := http.NewRequest("GET", target, nil)
 	req.Header.Set("User-Agent", userAgent)
 	start := time.Now()
 	res, err := m.hc.Do(req)
-	m.base.log.Info().Str("豆瓣读书ID", id).Str("耗时", fmt.Sprintf("%f秒", time.Since(start).Seconds()))
+	m.base.log.Info().Str("豆瓣读书ID", id).Str("URL", target).Str("耗时", fmt.Sprintf("%f秒", time.Since(start).Seconds())).Msgf("获取豆瓣读书")
 	if err != nil {
 		m.base.log.Error().Msgf("获取豆瓣电影异常:%s", err.Error())
 		return FailRespWithMsg(c, Fail, err.Error())
@@ -538,7 +649,7 @@ func (m MemoHandler) GetDoubanMovieInfo(c echo.Context) error {
 	return SuccessResp(c, book)
 }
 
-func downloadImage(src string, log zerolog.Logger, conf vo.AppConfig) (string, error) {
+func downloadImage(src string, log zerolog.Logger, conf *vo.AppConfig) (string, error) {
 	start := time.Now()
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", src, nil)
@@ -568,6 +679,16 @@ func downloadImage(src string, log zerolog.Logger, conf vo.AppConfig) (string, e
 	return fmt.Sprintf("/upload/%s.jpg", key), err
 }
 
+// GetDoubanBookInfo godoc
+//
+//	@Tags		Memo
+//	@Summary	获取豆瓣读书详情
+//	@Accept		json
+//	@Produce	json
+//	@Param		id			query		int		true	"豆瓣读书ID"
+//	@Param		x-api-token	header		string	true	"登录TOKEN"
+//	@Success	200			{object}	vo.DoubanBook
+//	@Router		/api/memo/getDoubanBookInfo [post]
 func (m MemoHandler) GetDoubanBookInfo(c echo.Context) error {
 
 	var (

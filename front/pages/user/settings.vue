@@ -22,7 +22,9 @@
     <UFormGroup label="心情状态" name="slogan" :ui="{label:{base:'font-bold'}}">
       <UInput v-model="state.slogan"/>
     </UFormGroup>
-
+    <UFormGroup label="密码" name="slogan" :ui="{label:{base:'font-bold'}}">
+      <UInput v-model="state.password" type="password" placeholder="留空则不修改密码"/>
+    </UFormGroup>
     <UButton class="justify-center" @click="save">保存</UButton>
   </div>
 </template>
@@ -34,6 +36,7 @@ import {useUpload} from "~/utils";
 
 const currentUser = useState<UserVO>('userinfo')
 const state = reactive({
+  password: "",
   username: "",
   nickname: "",
   slogan: "",

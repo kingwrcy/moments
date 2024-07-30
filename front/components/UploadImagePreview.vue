@@ -29,7 +29,6 @@ const props = defineProps<{ imgs: string }>()
 const emit = defineEmits(['removeImage', 'dragImage'])
 const images = ref<string[]>((!props.imgs || props.imgs === ',') ? [] : props.imgs.split(","))
 watch(props, () => {
-  console.log('changed')
   if (!props.imgs || props.imgs === ',') {
     images.value = []
   } else {
@@ -57,7 +56,6 @@ const removeImage = async (img: string) => {
 onMounted(() => {
   if (route.path.startsWith('/new') || route.path.startsWith('/edit')) {
     setTimeout(() => {
-      console.log('1234')
       useSortable(el, images)
     }, 500)
   }

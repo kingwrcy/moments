@@ -8,6 +8,7 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/kingwrcy/moments/db"
+	_ "github.com/kingwrcy/moments/docs"
 	"github.com/kingwrcy/moments/handler"
 	"github.com/kingwrcy/moments/log"
 	myMiddleware "github.com/kingwrcy/moments/middleware"
@@ -16,6 +17,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog"
 	"github.com/samber/do/v2"
+	_ "github.com/swaggo/echo-swagger"
 	"gorm.io/gorm"
 	"io/fs"
 	"net/http"
@@ -42,15 +44,19 @@ func main() {
 
 	do.ProvideValue(injector, cfg)
 	do.Provide(injector, log.NewLogger)
+
+	myLogger := do.MustInvoke[zerolog.Logger](injector)
+	handleEmptyConfig(myLogger, cfg)
+
 	do.Provide(injector, db.NewDB)
 	do.Provide(injector, newEchoEngine)
 	do.Provide(injector, handler.NewBaseHandler)
 
-	myLogger := do.MustInvoke[zerolog.Logger](injector)
 	tx := do.MustInvoke[*gorm.DB](injector)
 
 	e := do.MustInvoke[*echo.Echo](injector)
 	e.Use(myMiddleware.Auth(injector))
+
 	setupRouter(injector)
 
 	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{

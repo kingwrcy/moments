@@ -2,8 +2,10 @@ package main
 
 import (
 	"github.com/kingwrcy/moments/handler"
+	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
 	"github.com/samber/do/v2"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func setupRouter(injector do.Injector) {
@@ -14,6 +16,7 @@ func setupRouter(injector do.Injector) {
 	fileHandler := handler.NewFileHandler(injector)
 	tagHandler := handler.NewTagHandler(injector)
 	e := do.MustInvoke[*echo.Echo](injector)
+	cfg := do.MustInvoke[*vo.AppConfig](injector)
 
 	api := e.Group("/api")
 
@@ -51,4 +54,9 @@ func setupRouter(injector do.Injector) {
 	e.GET("/upload/:filename", fileHandler.Get)
 	e.POST("/api/file/upload", fileHandler.Upload)
 	e.POST("/api/file/s3PreSigned", fileHandler.S3PreSigned)
+
+	if cfg.EnableSwagger {
+		e.GET("/swagger/*", echoSwagger.WrapHandler)
+	}
+
 }

@@ -12,7 +12,7 @@ import (
 )
 
 func Auth(injector do.Injector) echo.MiddlewareFunc {
-	cfg := do.MustInvoke[vo.AppConfig](injector)
+	cfg := do.MustInvoke[*vo.AppConfig](injector)
 	db := do.MustInvoke[*gorm.DB](injector)
 	//zlog := do.MustInvoke[zerolog.Logger](injector)
 	ignores := []string{

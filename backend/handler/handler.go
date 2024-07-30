@@ -30,7 +30,7 @@ var errorMessageMap = map[BizError]string{
 
 type BaseHandler struct {
 	injector do.Injector
-	cfg      vo.AppConfig
+	cfg      *vo.AppConfig
 	db       *gorm.DB
 	log      zerolog.Logger
 }
@@ -38,7 +38,7 @@ type BaseHandler struct {
 func NewBaseHandler(injector do.Injector) (BaseHandler, error) {
 	return BaseHandler{
 		injector: injector,
-		cfg:      do.MustInvoke[vo.AppConfig](injector),
+		cfg:      do.MustInvoke[*vo.AppConfig](injector),
 		db:       do.MustInvoke[*gorm.DB](injector),
 		log:      do.MustInvoke[zerolog.Logger](injector),
 	}, nil

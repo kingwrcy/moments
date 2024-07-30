@@ -18,6 +18,15 @@ func NewSysConfigHandler(injector do.Injector) *SysConfigHandler {
 	return &SysConfigHandler{do.MustInvoke[BaseHandler](injector)}
 }
 
+// GetConfig godoc
+//
+//	@Tags			SysConfig
+//	@Summary		获取系统设置(部分不敏感的)
+//	@Description	敏感信息不返回,包括各种key密钥
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	vo.SysConfigVO
+//	@Router			/sysConfig/get [post]
 func (s SysConfigHandler) GetConfig(c echo.Context) error {
 	var (
 		config db.SysConfig
@@ -34,6 +43,16 @@ func (s SysConfigHandler) GetConfig(c echo.Context) error {
 	return SuccessResp(c, result)
 }
 
+// GetFullConfig godoc
+//
+//	@Tags		SysConfig
+//	@Summary	获取系统设置(完整的)
+//	@Accept		json
+//	@Produce	json
+//	@Param		x-api-token	header		string	true	"登录TOKEN"
+//	@Success	200			{object}	vo.FullSysConfigVO
+//	@Success	200
+//	@Router		/api/sysConfig/get [post]
 func (s SysConfigHandler) GetFullConfig(c echo.Context) error {
 	var (
 		config db.SysConfig
@@ -55,6 +74,16 @@ func (s SysConfigHandler) GetFullConfig(c echo.Context) error {
 	return SuccessResp(c, result)
 }
 
+// SaveConfig godoc
+//
+//	@Tags		SysConfig
+//	@Summary	保存系统设置
+//	@Accept		json
+//	@Produce	json
+//	@Param		object		body	vo.FullSysConfigVO	true	"保存系统设置"
+//	@Param		x-api-token	header	string				true	"登录TOKEN"
+//	@Success	200
+//	@Router		/api/sysConfig/save [post]
 func (s SysConfigHandler) SaveConfig(c echo.Context) error {
 	var (
 		config db.SysConfig

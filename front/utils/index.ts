@@ -17,6 +17,11 @@ export async function useMyFetch<T>(url: string, data?: any) {
             headers: headers
         })
         if (res.code !== 0) {
+            if (res.code === 3){
+                global.value.userinfo = {}
+                window.location.reload()
+                return
+            }
             toast.error(res.message || "请求失败")
             throw new Error(res.message)
         }

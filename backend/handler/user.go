@@ -14,10 +14,25 @@ type UserHandler struct {
 	base BaseHandler
 }
 
+type loginSuccessDTO struct {
+	Token    string `json:"token,omitempty"`    // token
+	Username string `json:"username,omitempty"` //用户名
+	Id       int32  `json:"id,omitempty"`       //用户ID
+}
+
 func NewUserHandler(injector do.Injector) *UserHandler {
 	return &UserHandler{do.MustInvoke[BaseHandler](injector)}
 }
 
+// Login godoc
+//
+//	@Tags		User
+//	@Summary	用户登录
+//	@Accept		json
+//	@Produce	json
+//	@Param		object	body		vo.LoginReq	true	"用户登录"
+//	@Success	200		{object}	loginSuccessDTO
+//	@Router		/api/user/login [post]
 func (u UserHandler) Login(c echo.Context) error {
 	var req vo.LoginReq
 	err := c.Bind(&req)
@@ -44,13 +59,22 @@ func (u UserHandler) Login(c echo.Context) error {
 		u.base.log.Error().Msgf("生成jwt token异常:%s", err)
 		return FailRespWithMsg(c, Fail, "登录异常")
 	}
-	return SuccessResp(c, h{
-		"token":    tokenString,
-		"username": user.Username,
-		"id":       user.Id,
+	return SuccessResp(c, loginSuccessDTO{
+		Token:    tokenString,
+		Username: user.Username,
+		Id:       user.Id,
 	})
 }
 
+// Reg godoc
+//
+//	@Tags		User
+//	@Summary	用户注册
+//	@Accept		json
+//	@Produce	json
+//	@Param		object	body	vo.RegReq	true	"用户注册"
+//	@Success	200
+//	@Router		/api/user/reg [post]
 func (u UserHandler) Reg(c echo.Context) error {
 	var (
 		req   vo.RegReq
@@ -93,6 +117,15 @@ func (u UserHandler) Reg(c echo.Context) error {
 	return SuccessResp(c, h{})
 }
 
+// ProfileForUser godoc
+//
+//	@Tags		User
+//	@Summary	获取指定用户信息
+//	@Accept		json
+//	@Produce	json
+//	@param		string	path		string	true	"用户名"
+//	@Success	200		{object}	db.User
+//	@Router		/api/user/profile/{username} [post]
 func (u UserHandler) ProfileForUser(c echo.Context) error {
 	username := c.Param("username")
 	var user db.User
@@ -100,6 +133,15 @@ func (u UserHandler) ProfileForUser(c echo.Context) error {
 	return SuccessResp(c, user)
 }
 
+// Profile godoc
+//
+//	@Tags			User
+//	@Summary		获取用户信息
+//	@Description	当前如果已经登录了,获取当前用户信息,否则获取管理员的用户信息
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	db.User
+//	@Router			/user/profile [post]
 func (u UserHandler) Profile(c echo.Context) error {
 
 	context := c.(CustomContext)
@@ -111,6 +153,16 @@ func (u UserHandler) Profile(c echo.Context) error {
 	return SuccessResp(c, currentUser)
 }
 
+// SaveProfile godoc
+//
+//	@Tags		User
+//	@Summary	保存用户信息
+//	@Accept		json
+//	@Produce	json
+//	@Param		object		body	vo.ProfileReq	true	"保存用户信息"
+//	@Param		x-api-token	header	string			true	"登录TOKEN"
+//	@Success	200
+//	@Router		/api/user/saveProfile [post]
 func (u UserHandler) SaveProfile(c echo.Context) error {
 	var (
 		req  vo.ProfileReq

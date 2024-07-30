@@ -5,15 +5,15 @@ import (
 )
 
 type User struct {
-	Id              int32      `gorm:"column:id;primary_key;NOT NULL" json:"id,omitempty"`
-	Username        string     `gorm:"column:username;NOT NULL;unique"  json:"username,omitempty"`
-	Nickname        string     `gorm:"column:nickname" json:"nickname,omitempty"`
-	Password        string     `gorm:"column:password;NOT NULL" json:"password,omitempty"`
-	AvatarUrl       string     `gorm:"column:avatarUrl" json:"avatarUrl,omitempty"`
-	Slogan          string     `gorm:"column:slogan" json:"slogan,omitempty"`
-	CoverUrl        string     `gorm:"column:coverUrl" json:"coverUrl,omitempty"`
-	CreatedAt       *time.Time `gorm:"column:createdAt;default:CURRENT_TIMESTAMP;NOT NULL" json:"createdAt,omitempty"`
-	UpdatedAt       *time.Time `gorm:"column:updatedAt;NOT NULL" json:"updatedAt,omitempty"`
+	Id              int32      `gorm:"column:id;primary_key;NOT NULL" json:"id,omitempty"`                             //用户ID
+	Username        string     `gorm:"column:username;NOT NULL;unique"  json:"username,omitempty"`                     //用户名
+	Nickname        string     `gorm:"column:nickname" json:"nickname,omitempty"`                                      //昵称
+	Password        string     `gorm:"column:password;NOT NULL" json:"password,omitempty"`                             //密码
+	AvatarUrl       string     `gorm:"column:avatarUrl" json:"avatarUrl,omitempty"`                                    //头像URL
+	Slogan          string     `gorm:"column:slogan" json:"slogan,omitempty"`                                          //标语
+	CoverUrl        string     `gorm:"column:coverUrl" json:"coverUrl,omitempty"`                                      //封面URL
+	CreatedAt       *time.Time `gorm:"column:createdAt;default:CURRENT_TIMESTAMP;NOT NULL" json:"createdAt,omitempty"` //创建时间
+	UpdatedAt       *time.Time `gorm:"column:updatedAt;NOT NULL" json:"updatedAt,omitempty"`                           //更新时间
 	EnableS3        string     `gorm:"column:enableS3;default:false;NOT NULL" json:"enableS3,omitempty"`
 	Domain          string     `gorm:"column:domain" json:"domain,omitempty"`
 	Bucket          string     `gorm:"column:bucket" json:"bucket,omitempty"`

@@ -36,7 +36,6 @@ const upload = async (files: FileList) => {
     total.value = totalSize
     current.value = index
   }) as string[]
-  console.log('result is ', result)
   toast.success("上传成功")
   if (result) {
     imgs.value = (imgs.value ? ',' : '') + result.join(",")

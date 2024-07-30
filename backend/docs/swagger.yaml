@@ -1,0 +1,1034 @@
+definitions:
+  db.Comment:
+    properties:
+      author:
+        type: string
+      content:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      memo:
+        $ref: '#/definitions/db.Memo'
+      memoId:
+        type: integer
+      replyTo:
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+      website:
+        type: string
+    type: object
+  db.Memo:
+    properties:
+      bilibiliUrl:
+        type: string
+      commentCount:
+        type: integer
+      comments:
+        items:
+          $ref: '#/definitions/db.Comment'
+        type: array
+      content:
+        type: string
+      createdAt:
+        type: string
+      ext:
+        type: string
+      externalFavicon:
+        type: string
+      externalTitle:
+        type: string
+      externalUrl:
+        type: string
+      favCount:
+        type: integer
+      id:
+        type: integer
+      imgs:
+        type: string
+      location:
+        type: string
+      music163Url:
+        type: string
+      pinned:
+        type: boolean
+      showType:
+        type: integer
+      tags:
+        type: string
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/db.User'
+      userId:
+        type: integer
+    type: object
+  db.User:
+    properties:
+      accessKey:
+        type: string
+      avatarUrl:
+        description: 头像URL
+        type: string
+      beianNo:
+        type: string
+      bucket:
+        type: string
+      coverUrl:
+        description: 封面URL
+        type: string
+      createdAt:
+        description: 创建时间
+        type: string
+      css:
+        type: string
+      domain:
+        type: string
+      enableS3:
+        type: string
+      endpoint:
+        type: string
+      favicon:
+        type: string
+      id:
+        description: 用户ID
+        type: integer
+      js:
+        type: string
+      memos:
+        items:
+          $ref: '#/definitions/db.Memo'
+        type: array
+      nickname:
+        description: 昵称
+        type: string
+      password:
+        description: 密码
+        type: string
+      region:
+        type: string
+      secretKey:
+        type: string
+      slogan:
+        description: 标语
+        type: string
+      thumbnailSuffix:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+  handler.PreSignedReq:
+    properties:
+      contentType:
+        description: 图片mime类型
+        type: string
+    type: object
+  handler.externalWebsite:
+    properties:
+      favicon:
+        description: favicon
+        type: string
+      title:
+        description: 标题
+        type: string
+    type: object
+  handler.loginSuccessDTO:
+    properties:
+      id:
+        description: 用户ID
+        type: integer
+      token:
+        description: token
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+  handler.memoListResp:
+    properties:
+      hasNext:
+        description: 是否有下一页
+        type: boolean
+      list:
+        description: memo列表
+        items:
+          $ref: '#/definitions/db.Memo'
+        type: array
+      total:
+        description: 总数
+        type: integer
+    type: object
+  handler.s3PresignedResp:
+    properties:
+      imageUrl:
+        description: 实际的图片地址
+        type: string
+      preSignedUrl:
+        description: S3预签名上传地址
+        type: string
+    type: object
+  handler.tagListResp:
+    properties:
+      tags:
+        description: 标签列表
+        items:
+          type: string
+        type: array
+    type: object
+  vo.AddCommentReq:
+    properties:
+      content:
+        description: 正文
+        type: string
+      email:
+        description: 作者邮箱
+        type: string
+      memoId:
+        description: 回复的memoID
+        type: integer
+      replyTo:
+        description: 回复给某人
+        type: string
+      token:
+        description: google recaptcha的token,开启的话必填
+        type: string
+      username:
+        description: 作者用户名,未登录时才有效
+        type: string
+      website:
+        description: 作者网站
+        type: string
+    type: object
+  vo.DoubanBook:
+    properties:
+      author:
+        description: 作者
+        type: string
+      desc:
+        description: 描述
+        type: string
+      id:
+        description: 豆瓣读书ID
+        type: string
+      image:
+        description: 主图
+        type: string
+      isbn:
+        description: ISBN
+        type: string
+      keywords:
+        description: 关键字
+        type: string
+      pubDate:
+        description: 发布日期
+        type: string
+      rating:
+        description: 评分
+        type: string
+      title:
+        description: 标题
+        type: string
+      url:
+        description: 豆瓣读书URL
+        type: string
+    type: object
+  vo.DoubanMovie:
+    properties:
+      actors:
+        description: 演员
+        type: string
+      desc:
+        description: 描述
+        type: string
+      director:
+        description: 导演
+        type: string
+      id:
+        description: 豆瓣电影ID
+        type: string
+      image:
+        description: 主图
+        type: string
+      rating:
+        description: 评分
+        type: string
+      releaseDate:
+        description: 上映日期
+        type: string
+      runtime:
+        description: 片长
+        type: string
+      title:
+        description: 标题
+        type: string
+      url:
+        description: 豆瓣电影URL
+        type: string
+    type: object
+  vo.FullSysConfigVO:
+    properties:
+      adminUserName:
+        description: 管理员名称
+        type: string
+      beiAnNo:
+        description: 备案号码
+        type: string
+      commentOrder:
+        description: 评论展示的顺序,asc:顺序,desc:逆序
+        type: string
+      css:
+        description: 自定义css
+        type: string
+      enableComment:
+        description: 是否启用评论
+        type: boolean
+      enableGoogleRecaptcha:
+        description: 是否启用google recaptcha
+        type: boolean
+      enableRegister:
+        description: 是否开启注册用户
+        type: boolean
+      enableS3:
+        description: 是否启用S3
+        type: boolean
+      favicon:
+        description: favicon
+        type: string
+      googleSecretKey:
+        description: google recaptcha secretKey
+        type: string
+      googleSiteKey:
+        description: google recaptcha siteKey
+        type: string
+      js:
+        description: 自定义js
+        type: string
+      maxCommentLength:
+        description: 发言最大长度
+        type: integer
+      memoMaxHeight:
+        description: 单个memo的最大高度,单位px
+        type: integer
+      s3:
+        allOf:
+        - $ref: '#/definitions/vo.S3VO'
+        description: S3相关信息
+      timeFormat:
+        description: 时间格式
+        type: string
+      title:
+        description: 标题
+        type: string
+    type: object
+  vo.ListMemoReq:
+    properties:
+      contentContains:
+        description: 内容包含
+        type: string
+      end:
+        description: 结束时间
+        type: string
+      page:
+        description: 页码,从1开始
+        type: integer
+      showType:
+        description: 是否是公开的,1:公开,0:私有
+        type: integer
+      size:
+        description: 页大小,默认10
+        type: integer
+      source:
+        description: 来源,暂无实现
+        type: string
+      start:
+        description: 开始时间
+        type: string
+      tag:
+        description: 标签名称,不支持同时多个标签搜索
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+  vo.LoginReq:
+    properties:
+      password:
+        description: 密码
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+  vo.MemoExt:
+    properties:
+      doubanBook:
+        allOf:
+        - $ref: '#/definitions/vo.DoubanBook'
+        description: 豆瓣读书
+      doubanMovie:
+        allOf:
+        - $ref: '#/definitions/vo.DoubanMovie'
+        description: 豆瓣电影
+      music:
+        allOf:
+        - $ref: '#/definitions/vo.Music'
+        description: 音乐
+      video:
+        allOf:
+        - $ref: '#/definitions/vo.Video'
+        description: 视频
+    type: object
+  vo.Music:
+    properties:
+      api:
+        description: MetingJS的服务端API地址
+        type: string
+      id:
+        description: MetingJS的音乐ID
+        type: string
+      server:
+        description: 音乐的平台
+        type: string
+      type:
+        description: 音乐的类型
+        type: string
+    type: object
+  vo.ProfileReq:
+    properties:
+      avatarUrl:
+        description: 头像URL
+        type: string
+      coverUrl:
+        description: 封面URL
+        type: string
+      id:
+        description: 用户ID
+        type: integer
+      nickname:
+        description: 昵称
+        type: string
+      password:
+        description: 密码,不修改不要填写
+        type: string
+      slogan:
+        description: 标语
+        type: string
+    type: object
+  vo.RegReq:
+    properties:
+      password:
+        description: 密码
+        type: string
+      repeatPassword:
+        description: 重复密码
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+  vo.RemoveImageReq:
+    properties:
+      img:
+        description: 图片路径
+        type: string
+    type: object
+  vo.S3VO:
+    properties:
+      accessKey:
+        description: AK
+        type: string
+      bucket:
+        description: 桶名称
+        type: string
+      domain:
+        description: S3 域名
+        type: string
+      endpoint:
+        description: S3接口地址
+        type: string
+      region:
+        description: 地区
+        type: string
+      secretKey:
+        description: SK
+        type: string
+      thumbnailSuffix:
+        description: 图片后缀
+        type: string
+    type: object
+  vo.SaveMemoReq:
+    properties:
+      content:
+        description: 正文
+        type: string
+      ext:
+        allOf:
+        - $ref: '#/definitions/vo.MemoExt'
+        description: 扩展
+      externalFavicon:
+        description: 外部站点favicon
+        type: string
+      externalTitle:
+        description: 外部站点标题
+        type: string
+      externalUrl:
+        description: 外部站点URL
+        type: string
+      id:
+        description: Memo's ID
+        type: integer
+      imgs:
+        description: 图片列表,最多9张
+        items:
+          type: string
+        type: array
+      location:
+        description: 地理位置
+        type: string
+      pinned:
+        description: 是否置顶
+        type: boolean
+      showType:
+        description: 是否公开,1:公开,0:私有
+        type: integer
+    type: object
+  vo.SysConfigVO:
+    properties:
+      adminUserName:
+        description: 管理员名称
+        type: string
+      beiAnNo:
+        description: 备案号码
+        type: string
+      commentOrder:
+        description: 评论展示的顺序,asc:顺序,desc:逆序
+        type: string
+      css:
+        description: 自定义css
+        type: string
+      enableComment:
+        description: 是否启用评论
+        type: boolean
+      enableGoogleRecaptcha:
+        description: 是否启用google recaptcha
+        type: boolean
+      enableRegister:
+        description: 是否开启注册用户
+        type: boolean
+      enableS3:
+        description: 是否启用S3
+        type: boolean
+      favicon:
+        description: favicon
+        type: string
+      googleSiteKey:
+        description: google recaptcha siteKey
+        type: string
+      js:
+        description: 自定义js
+        type: string
+      maxCommentLength:
+        description: 发言最大长度
+        type: integer
+      memoMaxHeight:
+        description: 单个memo的最大高度,单位px
+        type: integer
+      timeFormat:
+        description: 时间格式
+        type: string
+      title:
+        description: 标题
+        type: string
+    type: object
+  vo.Video:
+    properties:
+      type:
+        description: 视频类型,online:在线视频,youtube,bilibili
+        type: string
+      value:
+        description: 视频地址
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Moments API
+  version: 0.2.1
+paths:
+  /api/comment/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 添加评论
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/vo.AddCommentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 添加评论
+      tags:
+      - Comment
+  /api/comment/remove:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 评论ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 删除评论
+      tags:
+      - Comment
+  /api/file/s3PreSigned:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.tagListResp'
+      summary: 标签列表
+      tags:
+      - Tag
+  /api/file/upload:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 上传图片
+      tags:
+      - File
+  /api/memo/get:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: memoID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.Memo'
+      summary: 获取单个memo详情
+      tags:
+      - Memo
+  /api/memo/getDoubanBookInfo:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 豆瓣读书ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.DoubanBook'
+      summary: 获取豆瓣读书详情
+      tags:
+      - Memo
+  /api/memo/getDoubanMovieInfo:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 豆瓣电影ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.DoubanMovie'
+      summary: 获取豆瓣电影详情
+      tags:
+      - Memo
+  /api/memo/getFaviconAndTitle:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: memoID
+        in: query
+        name: url
+        required: true
+        type: string
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.externalWebsite'
+      summary: 获取外部链接的相关信息
+      tags:
+      - Memo
+  /api/memo/like:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: memoID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 点赞memo
+      tags:
+      - Memo
+  /api/memo/list:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 查询memos列表
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/vo.ListMemoReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.memoListResp'
+      summary: 查询memos列表
+      tags:
+      - Memo
+  /api/memo/remove:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: memoID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 删除memos
+      tags:
+      - Memo
+  /api/memo/save:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      - description: 保存memos
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/vo.SaveMemoReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 保存memos
+      tags:
+      - Memo
+  /api/memo/setPinned:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: memoID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 置顶单个memo
+      tags:
+      - Memo
+  /api/sysConfig/get:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 获取系统设置(完整的)
+      tags:
+      - SysConfig
+  /api/sysConfig/save:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 保存系统设置
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/vo.FullSysConfigVO'
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 保存系统设置
+      tags:
+      - SysConfig
+  /api/user/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户登录
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/vo.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.loginSuccessDTO'
+      summary: 用户登录
+      tags:
+      - User
+  /api/user/profile/{username}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户名
+        in: path
+        name: string
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.User'
+      summary: 获取指定用户信息
+      tags:
+      - User
+  /api/user/reg:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户注册
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/vo.RegReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 用户注册
+      tags:
+      - User
+  /api/user/saveProfile:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 保存用户信息
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/vo.ProfileReq'
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 保存用户信息
+      tags:
+      - User
+  /memo/removeImage:
+    post:
+      consumes:
+      - application/json
+      description: 目前只会删除本地上传的,不会删除S3上的
+      parameters:
+      - description: 删除memo的图片
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/vo.RemoveImageReq'
+      - description: 登录TOKEN
+        in: header
+        name: x-api-token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: 删除memo的图片
+      tags:
+      - Memo
+  /sysConfig/get:
+    post:
+      consumes:
+      - application/json
+      description: 敏感信息不返回,包括各种key密钥
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.SysConfigVO'
+      summary: 获取系统设置(部分不敏感的)
+      tags:
+      - SysConfig
+  /user/profile:
+    post:
+      consumes:
+      - application/json
+      description: 当前如果已经登录了,获取当前用户信息,否则获取管理员的用户信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/db.User'
+      summary: 获取用户信息
+      tags:
+      - User
+swagger: "2.0"

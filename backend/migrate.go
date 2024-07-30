@@ -33,9 +33,9 @@ func migrateTo3(tx *gorm.DB, log zerolog.Logger) {
 			admin.CoverUrl = "/cover.webp"
 			admin.AvatarUrl = "/avatar.webp"
 			if err := tx.Save(&admin).Error; err != nil {
-				log.Info().Msgf("用户不存在,初始化[admin]用户... 失败:%s", err)
+				log.Info().Msgf("用户不存在,初始化[admin/a123456]用户... 失败:%s", err)
 			} else {
-				log.Info().Msg("用户不存在,初始化[admin]用户... 成功!")
+				log.Info().Msg("用户不存在,初始化[admin/a123456]用户... 成功!")
 			}
 		}
 		item.AdminUserName = admin.Username
@@ -132,9 +132,9 @@ func migrateTo3(tx *gorm.DB, log zerolog.Logger) {
 			memoContent, tags := handler.FindAndReplaceTags(memo.Content)
 			if len(tags) > 0 {
 				memo.Content = memoContent
-				memo.Tags = strings.Join(tags, ",")
-				if memo.Tags != "" {
-					memo.Tags = memo.Tags + ","
+				*memo.Tags = strings.Join(tags, ",")
+				if *memo.Tags != "" {
+					*memo.Tags = *memo.Tags + ","
 				}
 			}
 

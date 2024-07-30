@@ -10,7 +10,6 @@ const props = defineProps<{ url: string }>()
 const bilibiliUrl = computed(() => {
   const match = props.url.match(/src=['"]([^'"]+)['"]/)
   if (match && match.length > 1) {
-    console.log(match[1])
     const url = match[1]
     return url + '&autoplay=0&high_quality=1&as_wide=1'
   }
