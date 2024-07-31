@@ -23,6 +23,8 @@ import (
 	"net/http"
 )
 
+var gitCommitID string
+
 //go:embed public/*
 var staticFiles embed.FS
 
@@ -48,6 +50,8 @@ func main() {
 	do.Provide(injector, log.NewLogger)
 
 	myLogger := do.MustInvoke[zerolog.Logger](injector)
+	myLogger.Info().Msgf("git commit id = %s", gitCommitID)
+
 	handleEmptyConfig(myLogger, &cfg)
 
 	do.Provide(injector, db.NewDB)

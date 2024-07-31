@@ -19,6 +19,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var gitCommitID string
+
 func newEchoEngine(_ do.Injector) (*echo.Echo, error) {
 	e := echo.New()
 	return e, nil
@@ -41,6 +43,7 @@ func main() {
 	do.Provide(injector, log.NewLogger)
 
 	myLogger := do.MustInvoke[zerolog.Logger](injector)
+	myLogger.Info().Msgf("git commit id = %s", gitCommitID)
 	handleEmptyConfig(myLogger, &cfg)
 
 	do.Provide(injector, db.NewDB)
