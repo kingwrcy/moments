@@ -15,7 +15,7 @@
        </UFormGroup>
        <UButtonGroup size="sm">
          <UButton @click="doLogin" :disabled="pending" :loading="pending">登录</UButton>
-         <UButton color="gray" variant="solid" to="/user/reg">去注册</UButton>
+         <UButton color="gray" v-if="sysConfig.enableRegister" variant="solid" to="/user/reg">去注册</UButton>
        </UButtonGroup>
 
      </UForm>
@@ -25,9 +25,10 @@
 </template>
 
 <script setup lang="ts">
-import type {LoginResp, UserVO} from "~/types";
+import type {LoginResp, SysConfigVO, UserVO} from "~/types";
 import {useGlobalState} from "~/store";
 import {toast} from "vue-sonner";
+const sysConfig = useState<SysConfigVO>('sysConfig')
 const currentUser = useState<UserVO>('userinfo')
 const global = useGlobalState()
 const state = reactive({

@@ -2,7 +2,7 @@
   <Header :user="currentUser"/>
   <div class="space-y-4  flex flex-col p-4 my-4 dark:bg-neutral-800">
     <div class="flex justify-end text-xs text-gray-400">
-      <div>版本号:v0.3</div>
+      <div v-if="version">版本号:v{{version }}</div>
     </div>
     <UFormGroup label="管理员账号" name="adminUserName" :ui="{label:{base:'font-bold'}}">
       <UInput v-model="state.adminUserName"/>
@@ -19,6 +19,9 @@
     </UFormGroup>
     <UFormGroup label="是否启用评论" name="enableComment" :ui="{label:{base:'font-bold'}}">
       <UToggle v-model="state.enableComment"/>
+    </UFormGroup>
+    <UFormGroup label="是否开启注册用户" name="enableRegister" :ui="{label:{base:'font-bold'}}">
+      <UToggle v-model="state.enableRegister"/>
     </UFormGroup>
     <UFormGroup label="备案号" name="beiAnNo" :ui="{label:{base:'font-bold'}}">
       <UInput v-model="state.beiAnNo" placeholder="没有可以不填写"/>
@@ -88,16 +91,18 @@
 </template>
 
 <script setup lang="ts">
-import type {UserVO} from "~/types";
+import type {SysConfigVO, UserVO} from "~/types";
 import {toast} from "vue-sonner";
 import {useUpload} from "~/utils";
 
 const currentUser = useState<UserVO>('userinfo')
+const version = ref('')
 const state = reactive({
   enableGoogleRecaptcha: false,
   googleSiteKey:"",
   googleSecretKey:"",
   enableComment: true,
+  enableRegister: true,
   maxCommentLength: 120,
   memoMaxHeight: 300,
   commentOrder: 'desc',
@@ -121,9 +126,10 @@ const state = reactive({
 })
 
 const reload = async () => {
-  const res = await useMyFetch('/sysConfig/getFull')
+  const res = await useMyFetch<SysConfigVO>('/sysConfig/getFull')
   if (res) {
     Object.assign(state, res)
+    version.value = res.version
   }
 }
 

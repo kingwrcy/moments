@@ -11,13 +11,21 @@ RUN npm run generate
 FROM golang:alpine as backend
 ENV CGO_ENABLED 1
 WORKDIR /app
+ARG UPX_VER=4.2.4
+
+RUN wget --quiet https://github.com/upx/upx/releases/download/v${UPX_VER}/upx-${UPX_VER}-amd64_linux.tar.xz 2>&1 && \
+    tar -xJf ./upx-${UPX_VER}-amd64_linux.tar.xz && \
+    mv upx-${UPX_VER}-amd64_linux/upx /usr/bin/ && \
+    chmod +x /usr/bin/upx
+
 COPY backend/go.mod .
 COPY backend/go.sum .
 RUN go mod download
 COPY --from=front /app/.output/public /app/public
-COPY . .
+COPY backend/* .
 RUN apk update --no-cache && apk add --no-cache tzdata
-RUN go build -ldflags="-s -w" -o /app/moments .
+RUN go build -tags prod -ldflags="-s -w" -o /app/moments .
+RUN upx --best --lzma /app/moments
 
 FROM alpine
 ARG VERSION

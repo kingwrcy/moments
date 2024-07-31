@@ -31,6 +31,8 @@ func newEchoEngine(_ do.Injector) (*echo.Echo, error) {
 	return e, nil
 }
 
+// @title		Moments API
+// @version	0.2.1
 func main() {
 
 	injector := do.New()
@@ -42,11 +44,11 @@ func main() {
 		return
 	}
 
-	do.ProvideValue(injector, cfg)
+	do.ProvideValue(injector, &cfg)
 	do.Provide(injector, log.NewLogger)
 
 	myLogger := do.MustInvoke[zerolog.Logger](injector)
-	handleEmptyConfig(myLogger, cfg)
+	handleEmptyConfig(myLogger, &cfg)
 
 	do.Provide(injector, db.NewDB)
 	do.Provide(injector, newEchoEngine)
@@ -68,6 +70,7 @@ func main() {
 	e.FileFS("/*", "public/index.html", staticFiles)
 
 	migrateTo3(tx, myLogger)
+	e.HideBanner = true
 	myLogger.Info().Msgf("服务端启动成功,监听:%d端口...", cfg.Port)
 	err = e.Start(fmt.Sprintf(":%d", cfg.Port))
 	if err != nil {

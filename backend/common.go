@@ -26,7 +26,7 @@ func handleEmptyConfig(log zerolog.Logger, cfg *vo.AppConfig) {
 	if cfg.DB != "" && cfg.UploadDir != "" {
 		return
 	}
-	log.Debug().Msgf("没有配置默认所必需的环境变量,在当前目录[%s]生成[数据库文件-db.sqlite]和[上传目录-upload文件夹]...", currentDir)
+	log.Debug().Msgf("没有配置默认所必需的环境变量,使用当前目录[%s]作为项目目录", currentDir)
 
 	if cfg.DB == "" {
 		cfg.DB = filepath.Join(currentDir, "db.sqlite")
@@ -36,11 +36,13 @@ func handleEmptyConfig(log zerolog.Logger, cfg *vo.AppConfig) {
 	}
 	if cfg.UploadDir == "" {
 		cfg.UploadDir = filepath.Join(currentDir, "upload")
-		err = os.MkdirAll(cfg.UploadDir, 0755)
-		if err != nil {
-			log.Fatal().Msgf("创建upload文件夹异常:%s", err.Error())
-		} else {
-			log.Debug().Msgf("没有配置[上传目录-upload文件夹],在当前目录[%s]生成[upload]文件夹成功", currentDir)
+		if _, err = os.Stat(cfg.UploadDir); err != nil {
+			err = os.MkdirAll(cfg.UploadDir, 0755)
+			if err != nil {
+				log.Fatal().Msgf("创建upload文件夹异常:%s", err.Error())
+			} else {
+				log.Debug().Msgf("没有配置[上传目录-upload文件夹],在当前目录[%s]生成[upload]文件夹成功", currentDir)
+			}
 		}
 	}
 	if cfg.JwtKey == "" {

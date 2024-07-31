@@ -10,7 +10,7 @@
       <douban-edit v-model:type="doubanType" v-model:data="doubanData"/>
     </div>
 
-    <div class="w-full" @contextmenu.prevent="onContextMenu" v-if="tags">
+    <div class="w-full" @contextmenu.prevent="onContextMenu">
       <UTextarea ref="contentRef" v-model="state.content" :rows="8" autoresize padded autofocus/>
 
       <UContextMenu v-model="isOpen" :virtual-element="virtualElement">

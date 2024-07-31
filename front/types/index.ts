@@ -51,6 +51,7 @@ export type UserVO = {
     coverUrl: string
 }
 export type SysConfigVO = {
+    version: string,
     adminUserName: string,
     title: string,
     favicon: string,
@@ -58,6 +59,7 @@ export type SysConfigVO = {
     css: string,
     js: string,
     enableS3: boolean
+    enableRegister: boolean
     enableGoogleRecaptcha: boolean,
     googleSiteKey: string,
     enableComment: boolean,

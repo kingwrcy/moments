@@ -17,24 +17,21 @@ export async function useMyFetch<T>(url: string, data?: any) {
             headers: headers
         })
         if (res.code !== 0) {
-            if (res.code === 3){
+            if (res.code === 3||res.code === 4){
                 global.value.userinfo = {}
-                window.location.reload()
-                return
+                window.location.href='/'
+                throw new Error(res.message)
             }
             toast.error(res.message || "请求失败")
             throw new Error(res.message)
         }
         return res.data
-    } catch (e) {
-        if (e instanceof Error) {
-            throw new Error(e.message)
-        }
-        throw new Error("接口异常")
+    } finally{
+
     }
 }
 
-async function upload2S3(files: FileList, onProgress: Function) {
+async function upload2S3(files: FileList, onProgress: Function|undefined) {
     const result = []
     for (let i = 0; i < files.length; i++) {
         const {preSignedUrl, imageUrl} = await useMyFetch<{
@@ -44,7 +41,7 @@ async function upload2S3(files: FileList, onProgress: Function) {
             contentType: files[0].type
         })
         await upload2S3WithProgress(preSignedUrl, files[i], (name: string, progress: number) => {
-            onProgress(files.length, i + 1, name, progress)
+            onProgress && onProgress(files.length, i + 1, name, progress)
         })
         result.push(imageUrl)
     }
@@ -66,7 +63,7 @@ const upload2S3WithProgress = async (preSignedUrl: string, file: File, onProgres
 }
 
 
-export async function useUpload(files: FileList | null, onProgress: Function) {
+export async function useUpload(files: FileList | null, onProgress: Function|undefined = undefined) {
     const sysConfig = useState<SysConfigVO>('sysConfig')
     const result = []
     if (!files || files.length === 0) {
@@ -86,7 +83,7 @@ export async function useUpload(files: FileList | null, onProgress: Function) {
     for (let i = 0; i < files.length; i++) {
         try {
             const res = await uploadFiles('/api/file/upload', files[i], (name: string, progress: number) => {
-                onProgress(files.length, i + 1, name, progress)
+                onProgress && onProgress(files.length, i + 1, name, progress)
             }) as {
                 code: number,
                 data: string[],

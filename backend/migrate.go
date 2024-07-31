@@ -78,6 +78,7 @@ func migrateTo3(tx *gorm.DB, log zerolog.Logger) {
 		var memos []db.Memo
 		tx.Find(&memos)
 		for _, memo := range memos {
+			log.Info().Msgf("开始迁移memo id:%d", memo.Id)
 			var extMap = map[string]interface{}{}
 			var ext vo.MemoExt
 			err := json.Unmarshal([]byte(memo.Ext), &extMap)
@@ -126,19 +127,23 @@ func migrateTo3(tx *gorm.DB, log zerolog.Logger) {
 				ext.DoubanMovie.Id = val.Get("id").Str
 			}
 
-			content, _ := json.Marshal(ext)
-			memo.Ext = string(content)
+			extContent, _ := json.Marshal(ext)
+			memo.Ext = string(extContent)
+			newTags := ""
 
 			memoContent, tags := handler.FindAndReplaceTags(memo.Content)
 			if len(tags) > 0 {
 				memo.Content = memoContent
-				*memo.Tags = strings.Join(tags, ",")
-				if *memo.Tags != "" {
-					*memo.Tags = *memo.Tags + ","
+				newTags = strings.Join(tags, ",")
+				if newTags != "" {
+					newTags = newTags + ","
 				}
+				memo.Tags = &newTags
 			}
 
-			tx.Save(&memo)
+			if err = tx.Save(&memo).Error; err != nil {
+				log.Info().Msgf("迁移memo id:%d 成功", memo.Id)
+			}
 
 		}
 	}

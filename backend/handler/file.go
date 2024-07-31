@@ -33,7 +33,6 @@ func NewFileHandler(injector do.Injector) *FileHandler {
 
 func (f FileHandler) Get(c echo.Context) error {
 	filename := c.Param("filename")
-	f.base.log.Info().Msgf("Getting file %s", filename)
 	if filename == "" {
 		return c.HTML(404, "not found")
 	}

@@ -25,7 +25,8 @@ type SysConfigVO struct {
 	MemoMaxHeight         int    `json:"memoMaxHeight,omitempty"`    //单个memo的最大高度,单位px
 	CommentOrder          string `json:"commentOrder,omitempty"`     //评论展示的顺序,asc:顺序,desc:逆序
 	TimeFormat            string `json:"timeFormat,omitempty"`       //时间格式
-	EnableRegister        bool   `json:"enableRegister,omitempty"`   //是否开启注册用户
+	EnableRegister        bool   `json:"enableRegister"`             //是否开启注册用户
+	Version               string `json:"version,omitempty"`
 }
 
 type FullSysConfigVO struct {
@@ -45,5 +46,6 @@ type FullSysConfigVO struct {
 	MemoMaxHeight         int    `json:"memoMaxHeight,omitempty"`    //单个memo的最大高度,单位px
 	CommentOrder          string `json:"commentOrder,omitempty"`     //评论展示的顺序,asc:顺序,desc:逆序
 	TimeFormat            string `json:"timeFormat,omitempty"`       //时间格式
-	EnableRegister        bool   `json:"enableRegister,omitempty"`   //是否开启注册用户
+	EnableRegister        bool   `json:"enableRegister"`             //是否开启注册用户
+	Version               string `json:"version,omitempty"`
 }

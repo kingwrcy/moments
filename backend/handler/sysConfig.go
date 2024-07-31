@@ -40,6 +40,7 @@ func (s SysConfigHandler) GetConfig(c echo.Context) error {
 	if err != nil {
 		return FailRespWithMsg(c, Fail, "读取系统配置异常")
 	}
+	result.Version = s.base.cfg.Version
 	return SuccessResp(c, result)
 }
 
@@ -71,6 +72,7 @@ func (s SysConfigHandler) GetFullConfig(c echo.Context) error {
 	if err != nil {
 		return FailRespWithMsg(c, Fail, "读取系统配置异常")
 	}
+	result.Version = s.base.cfg.Version
 	return SuccessResp(c, result)
 }
 

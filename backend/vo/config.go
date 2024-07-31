@@ -1,6 +1,7 @@
 package vo
 
 type AppConfig struct {
+	Version         string `env:"VERSION"`
 	DB              string `env:"DB"`
 	Port            int    `env:"PORT" env-default:"37892"`
 	JwtKey          string `env:"JWT_KEY"`

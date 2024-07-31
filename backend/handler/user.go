@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/kingwrcy/moments/db"
 	"github.com/kingwrcy/moments/vo"
@@ -77,11 +78,21 @@ func (u UserHandler) Login(c echo.Context) error {
 //	@Router		/api/user/reg [post]
 func (u UserHandler) Reg(c echo.Context) error {
 	var (
-		req   vo.RegReq
-		count int64
-		user  db.User
-		now   = time.Now()
+		req         vo.RegReq
+		count       int64
+		user        db.User
+		now         = time.Now()
+		sysConfig   db.SysConfig
+		sysConfigVO vo.FullSysConfigVO
 	)
+
+	u.base.db.First(&sysConfig)
+	_ = json.Unmarshal([]byte(sysConfig.Content), &sysConfigVO)
+
+	if !sysConfigVO.EnableRegister {
+		return FailRespWithMsg(c, Fail, "当前未开启注册用户")
+	}
+
 	err := c.Bind(&req)
 	if err != nil {
 		return FailResp(c, ParamError)
