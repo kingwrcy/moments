@@ -5,7 +5,7 @@ RUN npm install
 COPY . .
 RUN npm run generate
 
-FROM golang:alpine as backend
+FROM golang:1.22 as backend
 ENV CGO_ENABLED 1
 RUN apk add build-base
 WORKDIR /app
@@ -15,6 +15,8 @@ RUN go mod download
 RUN go mod tidy
 COPY backend/. .
 COPY --from=front /app/.output/public /app/public
+RUN ls -l /app/
+RUN ls -l /app/public
 RUN apk update --no-cache && apk add --no-cache tzdata
 RUN go build -tags prod -ldflags="-s -w" -o /app/moments
 
