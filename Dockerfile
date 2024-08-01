@@ -8,6 +8,7 @@ RUN npm run generate
 COPY front/replace_underscore.sh ./
 RUN ls -l /app/
 RUN chmod +x /app/replace_underscore.sh
+RUN apk add --no-cache dos2unix && dos2unix /app/replace_underscore.sh
 RUN /app/replace_underscore.sh
 RUN ls -l /app/.output/public
 

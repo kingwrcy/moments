@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 TARGET_DIR="/app/.output/public"
 # 遍历当前目录及子目录中的所有以 _ 开头的文件
