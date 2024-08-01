@@ -23,8 +23,9 @@ ARG VERSION
 RUN apk update --no-cache && apk add --no-cache ca-certificates
 COPY --from=backend /usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/Shanghai
 ENV TZ Asia/Shanghai
-WORKDIR /app
+WORKDIR /app/data
 ENV VERSION $VERSION
 COPY --from=backend /app/moments /app/moments
 EXPOSE 37892
+RUN chmod +x /app/moments
 CMD ["/app/moments"]
