@@ -3,7 +3,10 @@ WORKDIR /app
 COPY front/package*.json ./
 RUN npm install
 COPY front/. .
+RUN ls -l /app/
 RUN npm run generate
+COPY front/replace_underscore.sh ./
+RUN ls -l /app/
 RUN chmod +x /app/replace_underscore.sh
 RUN /app/replace_underscore.sh
 RUN ls -l /app/.output/public
