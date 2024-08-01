@@ -1,49 +1,25 @@
-#!/bin/sh
+#!/bin/bash
 
-# 目标目录
+# 定义要处理的目录
 TARGET_DIR="/app/.output/public"
 
-# 列出目标目录中的文件
-echo "Listing files in $TARGET_DIR:"
-ls -l "$TARGET_DIR"
-
-# 遍历目标目录中的所有以 _ 开头的文件
-find "$TARGET_DIR" -type f -name '_*' | while read -r file; do
-    # 获取文件的目录和新文件名
+# 遍历所有以_开头的文件
+find "$TARGET_DIR" -type f -name "_*" | while read -r file; do
+    # 获取文件的目录和扩展名
     dir=$(dirname "$file")
+    base=$(basename "$file")
+    ext="${base##*.}"
+    new_base=$(echo "$base" | sed 's/^_//') # 去掉开头的下划线
 
-    # 使用 basename 提取文件名
-    base_file=$(basename "$file")
+    # 生成一个随机字符串作为新文件名
+    random_string=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 8)
+    new_file="${dir}/${random_string}.${ext}"
 
-    # 检查文件名的第一个字符是否为下划线
-    if [ "${base_file:0:1}" = "_" ]; then
-        new_file="a${base_file:1}"  # 替换开头的下划线为 'a'
+    # 重命名文件
+    mv "$file" "$new_file"
 
-        # 调试信息
-        echo "Current file: $file"
-        echo "New file name: $new_file"
+    # 在整个public目录中替换旧文件名为新文件名
+    find "$TARGET_DIR" -type f -exec sed -i "s|$base|$random_string.$ext|g" {} +
 
-        # 检查文件是否存在
-        if [ -f "$file" ]; then
-            # 重命名文件
-            echo "Renaming $file to $new_file"
-            mv "$file" "$dir/$new_file"  # 确保使用目录路径
-        else
-            echo "File $file does not exist."
-        fi
-
-        # 更新所有引用到这个文件的地方，并输出替换的文件
-        find "$dir" -type f -exec sh -c '
-            for f; do
-                if grep -q "$1" "$f"; then
-                    echo "Updating references in: $f"
-                    sed -i "s|$1|$2|g" "$f"
-                fi
-            done
-        ' sh {} + "$base_file" "$new_file"
-    else
-        echo "File $file does not start with an underscore, skipping."
-    fi
+    echo "Renamed '$file' to '$new_file' and updated references."
 done
-
-echo "Replacement complete."
