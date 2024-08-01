@@ -61,6 +61,7 @@
         <UButtonGroup>
           <UButton @click="saveMemo">发表</UButton>
           <UButton color="white" @click="reset">清空</UButton>
+          <UButton color="white" @click="navigateTo('/')">返回首页</UButton>
         </UButtonGroup>
       </div>
     </div>

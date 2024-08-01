@@ -9,4 +9,7 @@ v0.2.1使用了golang作为服务端重写,目前已经基本实现了0.2.0版�
 5. 支持了完整的markdown,但是目前样式只适配了常用的几个标签,更多的待接下来完善.
 6. 默认用户名密码`admin/a123456`,登陆后后台可以修改.
 
+[更多说明](https://discussion.mblog.club/post/pto2hqoFzDKzZMpvoPZKYuP)
+
+
 [0.2.0的README](https://github.com/kingwrcy/moments/blob/master/README.md)

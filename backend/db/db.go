@@ -3,10 +3,10 @@ package db
 import (
 	"context"
 	"errors"
+	"github.com/glebarez/sqlite"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/rs/zerolog"
 	"github.com/samber/do/v2"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/utils"

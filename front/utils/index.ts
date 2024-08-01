@@ -52,7 +52,12 @@ const upload2S3WithProgress = async (preSignedUrl: string, file: File, onProgres
     new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener('progress', e => onProgress(file.name, e.loaded / e.total));
-        xhr.addEventListener('load', () => resolve(JSON.parse(xhr.responseText)));
+        xhr.addEventListener('load', () => {
+            if(xhr.responseType === 'json'){
+                return resolve(JSON.parse(xhr.responseText))
+            }
+            return resolve(null);
+        });
         xhr.addEventListener('error', () => reject(new Error('File upload failed')));
         xhr.addEventListener('abort', () => reject(new Error('File upload aborted')));
         xhr.open('PUT', preSignedUrl, true);

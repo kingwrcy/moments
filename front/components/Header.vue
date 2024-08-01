@@ -1,5 +1,5 @@
 <template>
-  <div class="header relative mb-14">
+  <div class="header relative mb-14" v-if="$route.path!=='/new' && $route.path.indexOf('/edit/') < 0">
 
     <div class="dark:bg-neutral-800 sm:absolute sm:-right-10 sm:rounded sm:p-2 sm:flex-col sm:w-fit justify-end shadow w-full flex-row  top-0  p-1 flex  gap-2 bg-white ">
       <NuxtLink to="/" v-if="$route.path !== '/'" title="去首页">

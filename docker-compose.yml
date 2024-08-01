@@ -1,0 +1,14 @@
+version: '3'
+services:
+  moments:
+    image: kingwrcy/moments:latest
+    environment:
+      JWT_KEY: "BbYS93dHHfIC1cQR8rI6"
+    ports:
+      - "3000:3000"
+    volumes:
+      - moments-data:/app/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+volumes:
+  moments-data:

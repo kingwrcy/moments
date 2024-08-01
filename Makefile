@@ -26,8 +26,8 @@ frontend:
 	cp -r $(WORK_DIR_FRONTEND)/.output/public  $(WORK_DIR_BACKEND)/
 
 backend:
-	cd $(WORK_DIR_BACKEND) && CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 $(GO) build -tags prod -ldflags="-s -w -X 'main.gitCommitID=$(COMMIT)'" -o $(WORK_DIR_BACKEND)/dist/$(MACOS_BINARY_NAME)
-	cd $(WORK_DIR_BACKEND) && CGO_ENABLED=1 GOOS=linux GOARCH=amd64 $(GO) build -tags prod -ldflags="-s -w -X 'main.gitCommitID=$(COMMIT)'" -o $(WORK_DIR_BACKEND)/dist/$(LINUX_BINARY_NAME)
-	cd $(WORK_DIR_BACKEND) && CGO_ENABLED=1 GOOS=windows GOARCH=amd64 $(GO) build -tags prod -ldflags="-s -w -X 'main.gitCommitID=$(COMMIT)'" -o $(WORK_DIR_BACKEND)/dist/$(WINDOWS_BINARY_NAME)
+	cd $(WORK_DIR_BACKEND) && CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GO) build -tags prod -ldflags="-s -w -X 'main.gitCommitID=$(COMMIT)'" -o $(WORK_DIR_BACKEND)/dist/$(MACOS_BINARY_NAME)
+	cd $(WORK_DIR_BACKEND) && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build -tags prod -ldflags="-s -w -X 'main.gitCommitID=$(COMMIT)'" -o $(WORK_DIR_BACKEND)/dist/$(LINUX_BINARY_NAME)
+	cd $(WORK_DIR_BACKEND) && CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GO) build -tags prod -ldflags="-s -w -X 'main.gitCommitID=$(COMMIT)'" -o $(WORK_DIR_BACKEND)/dist/$(WINDOWS_BINARY_NAME)
 	cd $(WORK_DIR_BACKEND) && upx --best --lzma $(WORK_DIR_BACKEND)/dist/$(WINDOWS_BINARY_NAME)
 	cd $(WORK_DIR_BACKEND) && upx --best --lzma $(WORK_DIR_BACKEND)/dist/$(LINUX_BINARY_NAME)
