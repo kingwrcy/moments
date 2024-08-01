@@ -1,17 +1,10 @@
 <template>
   <div class="header relative mb-14">
-    <img class="header-img w-full" :src="props.user.coverUrl"
-         alt="">
-    <div class="absolute right-2 bottom-[-40px]">
-      <div class="userinfo flex flex-col">
-        <div class="flex flex-row items-center gap-4 justify-end">
-          <div class="username text-lg font-bold text-white">{{ props.user.nickname }}</div>
-          <img :src="props.user.avatarUrl"
-               class="avatar w-[70px] h-[70px] rounded-xl"></div>
-        <div class="slogon text-gray truncate w-full text-end text-xs mt-2">{{ props.user.slogan }}</div>
-      </div>
-    </div>
-    <div class="absolute shadow -right-10 top-0 rounded p-1 flex flex-col gap-2 bg-white rounded p-2">
+
+    <div class="dark:bg-neutral-800 sm:absolute sm:-right-10 sm:rounded sm:p-2 sm:flex-col sm:w-fit justify-end shadow w-full flex-row  top-0  p-1 flex  gap-2 bg-white ">
+      <NuxtLink to="/" v-if="$route.path !== '/'" title="去首页">
+        <UIcon name="i-carbon-arrow-left" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
+      </NuxtLink>
       <svg v-if="mode==='light'" @click="toggleMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
            stroke="#FDE047"
            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -21,9 +14,9 @@
         <path d="M22 5h-4"></path>
       </svg>
 
-      <svg  v-if="mode==='dark'" @click="toggleMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-           stroke="#FDE047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-           class="lucide lucide-sun-icon cursor-pointer">
+      <svg  v-else @click="toggleMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="#FDE047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-sun-icon cursor-pointer">
         <circle cx="12" cy="12" r="4"></circle>
         <path d="M12 2v2"></path>
         <path d="M12 20v2"></path>
@@ -42,9 +35,7 @@
       <NuxtLink to="/user/calendar" v-if="global.userinfo.token" title="日历">
         <UIcon name="i-carbon-calendar" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
       </NuxtLink>
-      <NuxtLink to="/" v-if="$route.path !== '/'" title="去首页">
-        <UIcon name="i-carbon-arrow-left" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
-      </NuxtLink>
+
       <NuxtLink to="/sys/settings" v-if="global.userinfo.id === 1" title="系统设置">
         <UIcon name="i-carbon-settings" class="text-[#9fc84a] w-5 h-5 cursor-pointer"/>
       </NuxtLink>
@@ -56,6 +47,19 @@
       </NuxtLink>
       <UIcon @click="logout" name="i-carbon-logout" v-else class="text-[#9fc84a] w-5 h-5 cursor-pointer" title="登出"/>
     </div>
+
+    <img class="header-img w-full" :src="props.user.coverUrl"
+         alt="">
+    <div class="absolute right-2 bottom-[-40px]">
+      <div class="userinfo flex flex-col">
+        <div class="flex flex-row items-center gap-4 justify-end">
+          <div class="username text-lg font-bold text-white">{{ props.user.nickname }}</div>
+          <img :src="props.user.avatarUrl"
+               class="avatar w-[70px] h-[70px] rounded-xl"></div>
+        <div class="slogon text-gray truncate w-full text-end text-xs mt-2">{{ props.user.slogan }}</div>
+      </div>
+    </div>
+
   </div>
 </template>
 

@@ -6,3 +6,4 @@ backend/public
 front-end/.env
 .idea
 moments.exe
+backend/dist

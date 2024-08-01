@@ -37,7 +37,6 @@ jobs:
         with:
           push: true
           context: .
-          platforms: linux/amd64,linux/arm64
           tags: |
             ${{env.VERSION_TAG}}
             ${{env.LASTEST_TAG}}

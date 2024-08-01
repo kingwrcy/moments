@@ -43,7 +43,9 @@ func main() {
 	do.Provide(injector, log.NewLogger)
 
 	myLogger := do.MustInvoke[zerolog.Logger](injector)
-	myLogger.Info().Msgf("git commit id = %s", gitCommitID)
+	if gitCommitID != "" {
+		myLogger.Info().Msgf("git commit id = %s", gitCommitID)
+	}
 	handleEmptyConfig(myLogger, &cfg)
 
 	do.Provide(injector, db.NewDB)
