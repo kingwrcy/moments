@@ -26,4 +26,5 @@ ENV TZ Asia/Shanghai
 WORKDIR /app
 ENV VERSION $VERSION
 COPY --from=backend /app/moments /app/moments
+EXPOSE 37892
 CMD ["/app/moments"]
