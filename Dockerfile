@@ -11,8 +11,9 @@ WORKDIR /app
 COPY backend/go.mod .
 COPY backend/go.sum .
 RUN go mod download
+RUN go mod tidy
 COPY --from=front /app/.output/public /app/public
-COPY backend/* .
+COPY backend/. .
 RUN apk update --no-cache && apk add --no-cache tzdata
 RUN go build -tags prod -ldflags="-s -w" -o /app/moments
 
