@@ -12,9 +12,12 @@ find "$TARGET_DIR" -type f -name '_*' | while read -r file; do
     # 获取文件的目录和新文件名
     dir=$(dirname "$file")
 
+    # 使用 basename 提取文件名
+    base_file=$(basename "$file")
+
     # 检查文件名的第一个字符是否为下划线
-    if [ "${file:0:1}" = "_" ]; then
-        new_file="a${file:1}"  # 替换开头的下划线为 'a'
+    if [ "${base_file:0:1}" = "_" ]; then
+        new_file="a${base_file:1}"  # 替换开头的下划线为 'a'
 
         # 调试信息
         echo "Current file: $file"
@@ -24,13 +27,13 @@ find "$TARGET_DIR" -type f -name '_*' | while read -r file; do
         if [ -f "$file" ]; then
             # 重命名文件
             echo "Renaming $file to $new_file"
-            mv "$file" "$new_file"
+            mv "$file" "$dir/$new_file"  # 确保使用目录路径
         else
             echo "File $file does not exist."
         fi
 
         # 更新所有引用到这个文件的地方
-        find "$dir" -type f -exec sed -i "s|$file|$new_file|g" {} +
+        find "$dir" -type f -exec sed -i "s|$file|$dir/$new_file|g" {} +
     else
         echo "File $file does not start with an underscore, skipping."
     fi
