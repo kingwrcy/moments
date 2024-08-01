@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # 定义要处理的目录
 TARGET_DIR="/app/.output/public"
