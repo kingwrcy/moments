@@ -30,6 +30,6 @@ ENV TZ Asia/Shanghai
 WORKDIR /app/data
 ENV VERSION $VERSION
 COPY --from=backend /app/moments /app/moments
-EXPOSE 37892
+EXPOSE 3000
 RUN chmod +x /app/moments
 CMD ["/app/moments"]
