@@ -33,7 +33,7 @@ find "$TARGET_DIR" -type f -name '_*' | while read -r file; do
         fi
 
         # 更新所有引用到这个文件的地方
-        find "$dir" -type f -exec sed -i "s|$file|$dir/$new_file|g" {} +
+        find "$dir" -type f -exec sed -i "s|$base_file|$new_file|g" {} +
     else
         echo "File $file does not start with an underscore, skipping."
     fi
