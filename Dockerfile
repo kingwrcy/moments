@@ -2,7 +2,7 @@ FROM node:22.2.0-alpine as front
 WORKDIR /app
 COPY front/package*.json ./
 RUN npm install
-COPY . .
+COPY front/. .
 RUN npm run generate
 
 FROM golang:1.22.5-alpine as backend
@@ -15,8 +15,6 @@ RUN go mod download
 RUN go mod tidy
 COPY backend/. .
 COPY --from=front /app/.output/public /app/public
-RUN ls -l /app/
-RUN ls -l /app/public
 RUN apk update --no-cache && apk add --no-cache tzdata
 RUN go build -tags prod -ldflags="-s -w" -o /app/moments
 
