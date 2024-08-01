@@ -7,6 +7,7 @@ RUN npm run generate
 
 FROM golang:alpine as backend
 ENV CGO_ENABLED 1
+RUN apk add build-base
 WORKDIR /app
 COPY backend/go.mod .
 COPY backend/go.sum .
