@@ -3,7 +3,7 @@ package vo
 type AppConfig struct {
 	Version         string `env:"VERSION"`
 	DB              string `env:"DB"`
-	Port            int    `env:"PORT" env-default:"37892"`
+	Port            int    `env:"PORT" env-default:"3000"`
 	JwtKey          string `env:"JWT_KEY"`
 	UploadDir       string `env:"UPLOAD_DIR"`
 	LogLevel        string `env:"LOG_LEVEL" env-default:"INFO"`

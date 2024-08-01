@@ -162,11 +162,12 @@ func (m MemoHandler) ListMemos(c echo.Context) error {
 	tx.Order("createdAt desc").Limit(req.Size).Offset(offset).Find(&list)
 	totalCondition.Count(&total)
 
-	m.base.db.Preload("User", func(x *gorm.DB) *gorm.DB {
-		return x.Select("username", "nickname", "slogan", "id", "avatarUrl", "coverUrl")
-	}).Where("pinned = 1").Find(&pinnedList)
-
-	list = append(pinnedList, list...)
+	if req.Page == 1 {
+		m.base.db.Preload("User", func(x *gorm.DB) *gorm.DB {
+			return x.Select("username", "nickname", "slogan", "id", "avatarUrl", "coverUrl")
+		}).Where("pinned = 1").Find(&pinnedList)
+		list = append(pinnedList, list...)
+	}
 
 	for i, memo := range list {
 		var comments []db.Comment
