@@ -11,21 +11,29 @@ ls -l "$TARGET_DIR"
 find "$TARGET_DIR" -type f -name '_*' | while read -r file; do
     # 获取文件的目录和新文件名
     dir=$(dirname "$file")
-    new_file="${file/_/a}"
 
-    # 检查文件是否存在
-    if [ -f "$file" ]; then
-        # 重命名文件
-        echo "Renamed $file to $new_file"
-        mv "$file" "$new_file"
-        echo "Renamed $file to $new_file"
+    # 检查文件名的第一个字符是否为下划线
+    if [ "${file:0:1}" = "_" ]; then
+        new_file="a${file:1}"  # 替换开头的下划线为 'a'
+
+        # 调试信息
+        echo "Current file: $file"
+        echo "New file name: $new_file"
+
+        # 检查文件是否存在
+        if [ -f "$file" ]; then
+            # 重命名文件
+            echo "Renaming $file to $new_file"
+            mv "$file" "$new_file"
+        else
+            echo "File $file does not exist."
+        fi
+
+        # 更新所有引用到这个文件的地方
+        find "$dir" -type f -exec sed -i "s|$file|$new_file|g" {} +
     else
-        echo "File $file does not exist."
+        echo "File $file does not start with an underscore, skipping."
     fi
-
-    # 更新所有引用到这个文件的地方
-    # 使用 sed 替换文件内容中的引用
-    find "$dir" -type f -exec sed -i "s|$file|$new_file|g" {} +
 done
 
 echo "Replacement complete."
