@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # 目标目录
-TARGET_DIR="/app/.output/public/_nuxt"
+TARGET_DIR="/app/.output/public"
 
 # 列出目标目录中的文件
 echo "Listing files in $TARGET_DIR:"
@@ -32,8 +32,15 @@ find "$TARGET_DIR" -type f -name '_*' | while read -r file; do
             echo "File $file does not exist."
         fi
 
-        # 更新所有引用到这个文件的地方
-        find "$dir" -type f -exec sed -i "s|$base_file|$new_file|g" {} +
+        # 更新所有引用到这个文件的地方，并输出替换的文件
+        find "$dir" -type f -exec sh -c '
+            for f; do
+                if grep -q "$1" "$f"; then
+                    echo "Updating references in: $f"
+                    sed -i "s|$1|$2|g" "$f"
+                fi
+            done
+        ' sh {} + "$base_file" "$new_file"
     else
         echo "File $file does not start with an underscore, skipping."
     fi
