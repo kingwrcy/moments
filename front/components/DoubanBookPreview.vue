@@ -8,15 +8,14 @@
           <div class="douban-card-img" :style="`background-image: url('${book?.image}')`">
           </div>
         </div>
-        <div class="douban-card-right w-fit max-w-[120px]">
+        <div class="douban-card-right w-fit max-w-[120px] overflow-hidden">
           <div class="douban-card-item"><span>书名: </span><strong>{{ book?.title }}</strong></div>
           <div class="douban-card-item"><span>作者: </span><span>{{ book?.author }}</span></div>
           <div class="douban-card-item"><span>出版年份: </span><span>{{ book?.pubDate }}</span></div>
           <div class="douban-card-item"><span>评分: </span><span>{{ book?.rating }}</span></div>
         </div>
-        <div class="flex-1 z-10 indent-2	text-sm">{{ book?.desc }}</div>
+        <div class="flex-1 z-10 indent-2	text-sm hidden sm:block line-clamp-6">{{ book?.desc }}</div>
       </div>
-      <!--      -->
     </a>
   </div>
 </template>
