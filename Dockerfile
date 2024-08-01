@@ -5,7 +5,7 @@ RUN npm install
 COPY . .
 RUN npm run generate
 
-FROM golang:1.22 as backend
+FROM golang:1.22.5-alpine as backend
 ENV CGO_ENABLED 1
 RUN apk add build-base
 WORKDIR /app
