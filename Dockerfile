@@ -4,6 +4,9 @@ COPY front/package*.json ./
 RUN npm install
 COPY front/. .
 RUN npm run generate
+RUN chmod +x /app/replace_underscore.sh
+RUN /app/replace_underscore.sh
+RUN ls -l /app/.output/public
 
 FROM golang:1.22.5-alpine as backend
 ENV CGO_ENABLED 1
