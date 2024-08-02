@@ -22,7 +22,8 @@
                  v-html="content"></div>
           </div>
           <div class="text-[#576b95] text-sm my-1 cursor-pointer"
-               @click="doShowMore" v-if="showMore">{{getMemoMaxHeightStyle() === '' ? '收起' : '全文'}}</div>
+               @click="doShowMore" v-if="showMore">{{ getMemoMaxHeightStyle() === '' ? '收起' : '全文' }}
+          </div>
           <div class="flex gap-2 mt-2" v-if="tags.length > 0">
 
             <span v-for="(tag,index) in tags" :key="`tag-${index}`">
@@ -207,7 +208,7 @@ const doComment = () => {
 }
 
 const doShowMore = () => {
-  showMoreClicked.value= !showMoreClicked.value
+  showMoreClicked.value = !showMoreClicked.value
 }
 
 const go2Edit = async (id: number) => {
@@ -230,6 +231,19 @@ const setPinned = async (id: number) => {
   showToolbar.value = false
   memoReloadEvent.emit()
 }
+
+
+const doLike = async (id: number, token: string = '') => {
+  const likes = JSON.parse(localStorage.getItem('likeMemos') || '[]') as Array<number>
+  await useMyFetch(`/memo/like?id=${id}&token=${token}`)
+  toast.success("点赞成功!")
+  likes.push(id)
+  localStorage.setItem('likeMemos', JSON.stringify(likes))
+  memoChangedEvent.emit(id)
+  liked.value = true
+}
+
+
 const likeMemo = async (id: number) => {
   showToolbar.value = false
   const likes = JSON.parse(localStorage.getItem('likeMemos') || '[]') as Array<number>
@@ -237,12 +251,18 @@ const likeMemo = async (id: number) => {
     toast.warning("您已经点赞过了!")
     return
   }
-  await useMyFetch('/memo/like?id=' + id)
-  toast.success("点赞成功!")
-  likes.push(id)
-  localStorage.setItem('likeMemos', JSON.stringify(likes))
-  memoChangedEvent.emit(id)
-  liked.value = true
+
+  if (sysConfig.value.enableGoogleRecaptcha) {
+    grecaptcha.ready(() => {
+      grecaptcha.execute(sysConfig.value.googleSiteKey, {action: 'newComment'}).then(async (token) => {
+        await doLike(id, token)
+      })
+    })
+  } else {
+    await doLike(id)
+  }
+
+
 }
 
 

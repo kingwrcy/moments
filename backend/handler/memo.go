@@ -230,13 +230,28 @@ func (m MemoHandler) RemoveMemo(c echo.Context) error {
 //	@Router		/api/memo/like [post]
 func (m MemoHandler) LikeMemo(c echo.Context) error {
 	var (
-		memo db.Memo
+		memo        db.Memo
+		sysConfig   db.SysConfig
+		sysConfigVO vo.FullSysConfigVO
+		token       string
 	)
 	id, err := strconv.Atoi(c.QueryParam("id"))
 	if err != nil {
 		return FailResp(c, ParamError)
 	}
 
+	m.base.db.First(&sysConfig)
+	_ = json.Unmarshal([]byte(sysConfig.Content), &sysConfigVO)
+
+	if sysConfigVO.EnableGoogleRecaptcha {
+		token = c.QueryParam("token")
+		if token == "" {
+			return FailRespWithMsg(c, ParamError, "token不能为空")
+		}
+		if err := checkGoogleRecaptcha(m.base.log, sysConfigVO, token); err != nil {
+			return FailRespWithMsg(c, Fail, err.Error())
+		}
+	}
 	if err = m.base.db.First(&memo, id).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		return FailResp(c, ParamError)
 	}
