@@ -159,6 +159,10 @@ func (m MemoHandler) ListMemos(c echo.Context) error {
 		tx = tx.Where("userId = ?", target.Id)
 		totalCondition = totalCondition.Where("userId = ?", target.Id)
 	}
+	if req.UserId != nil {
+		tx = tx.Where("userId = ?", req.UserId)
+		totalCondition = totalCondition.Where("userId = ?", req.UserId)
+	}
 	tx.Order("createdAt desc").Limit(req.Size).Offset(offset).Find(&list)
 	totalCondition.Count(&total)
 

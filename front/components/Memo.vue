@@ -11,7 +11,7 @@
       </div>
       <div class="flex flex-col gap-1  w-full">
         <div class="username text-[#576b95] mb-1 dark:text-white  flex justify-between">
-          <NuxtLink class="cursor-pointer" :to="`/user/${item.user.username}`">{{ item.user.nickname }}</NuxtLink>
+          <NuxtLink class="cursor-pointer" :to="`/user/${item.user.id}`">{{ item.user.nickname }}</NuxtLink>
           <UIcon v-if="item.pinned" name="i-carbon-pin"/>
           <UIcon v-if="item.showType === 0" name="i-carbon-locked" class="text-red-500"/>
         </div>
@@ -65,26 +65,26 @@
               <template v-if="global.userinfo.id === 1">
                 <div class="flex flex-row gap-1 cursor-pointer items-center" @click="setPinned(item.id)">
                   <UIcon name="i-carbon-pin"/>
-                  <div>{{ item.pinned ? '取消' : '' }}置顶</div>
+                  <div class="hidden sm:block">{{ item.pinned ? '取消' : '' }}置顶</div>
                 </div>
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
               </template>
               <div class="flex flex-row gap-1 cursor-pointer items-center" @click="likeMemo(item.id)">
                 <UIcon name="i-carbon-favorite" :class="[liked ? 'text-red-400' : '']"/>
-                <div>赞</div>
+                <div class="hidden sm:block">赞</div>
               </div>
               <template v-if="sysConfig.enableComment">
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
                 <div class="flex flex-row gap-1 cursor-pointer items-center" @click="doComment">
                   <UIcon name="i-carbon-chat"/>
-                  <div>评论</div>
+                  <div class="hidden sm:block">评论</div>
                 </div>
               </template>
               <template v-if="global&&global.userinfo.id === item.userId">
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
                 <div class="flex flex-row gap-1 cursor-pointer items-center" @click="go2Edit(item.id)">
                   <UIcon name="i-carbon-edit"/>
-                  <div>编辑</div>
+                  <div class="hidden sm:block">编辑</div>
                 </div>
               </template>
               <template v-if="(global.userinfo.id === 1 || global.userinfo.id === item.userId) ">
@@ -92,7 +92,7 @@
                 <Confirm @ok="removeMemo(item.id)" @cancel="showToolbar = false">
                   <div class="flex flex-row gap-1 cursor-pointer items-center">
                     <UIcon name="i-carbon-trash-can"/>
-                    <div>删除</div>
+                    <div class="hidden sm:block">删除</div>
                   </div>
                 </Confirm>
               </template>

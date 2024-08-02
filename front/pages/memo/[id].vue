@@ -1,5 +1,10 @@
 <template>
   <Header v-if="memo && memo.user" v-bind:user="memo.user"/>
+
+  <div class="flex justify-end gap-2 sm:hidden px-4">
+    <UButton @click="navigateTo('/')" icon="i-carbon-arrow-left" size="xs" color="gray" variant="solid">返回</UButton>
+  </div>
+
   <Memo v-if="memo" v-bind:memo="memo"/>
 
 </template>

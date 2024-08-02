@@ -1,5 +1,10 @@
 <template>
   <Header v-if="memos.length>0" v-bind:user="memos[0].user"/>
+
+  <div class="flex justify-end gap-2 sm:hidden px-4">
+    <UButton @click="navigateTo('/')" icon="i-carbon-arrow-left" size="xs" color="gray" variant="solid">返回</UButton>
+  </div>
+
   <div class="flex flex-col divide-y divide-[#C0BEBF]/20 ">
     <Memo v-bind:memo="m" v-for="m in memos" :key="m.id"/>
   </div>
@@ -25,7 +30,7 @@ watch(targetIsVisible, async (visible) => {
 })
 const hasNext = ref(false)
 const route = useRoute()
-const username = route.params.username as any as string
+const userId = route.params.id as any as string
 const state = reactive({
   page: 1,
   size: 10,
@@ -42,7 +47,7 @@ const reload = async () => {
     total: number,
     hasNext: boolean
   }>('/memo/list', {
-    ...state, username,
+    ...state, userId:parseInt(userId),
   })
   memos.value = res.list
   hasNext.value = res.hasNext

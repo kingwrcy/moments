@@ -1,6 +1,11 @@
 <template>
   <Header :user="currentUser"/>
   <div class="space-y-4  flex flex-col p-4 my-4 dark:bg-neutral-800">
+
+    <div class="flex justify-end gap-2 sm:hidden">
+      <UButton @click="navigateTo('/')" icon="i-carbon-arrow-left" size="xs" color="gray" variant="solid">返回</UButton>
+    </div>
+
     <div class="flex justify-end text-xs text-gray-400">
       <div v-if="version">版本号:v{{version }}</div>
     </div>

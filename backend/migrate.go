@@ -147,4 +147,29 @@ func migrateTo3(tx *gorm.DB, log zerolog.Logger) {
 
 		}
 	}
+
+	// 修复之前版本的时间格式问题
+	tx.Exec(`UPDATE memo
+SET 
+    createdAt = datetime(createdAt / 1000, 'unixepoch'),
+    updatedAt = datetime(updatedAt / 1000, 'unixepoch')
+WHERE 
+    ((createdAt NOT LIKE '%-%' AND length(createdAt) = 13) OR 
+    (updatedAt NOT LIKE '%-%' AND length(updatedAt) = 13))`)
+
+	tx.Exec(`UPDATE comment
+SET 
+    createdAt = datetime(createdAt / 1000, 'unixepoch'),
+    updatedAt = datetime(updatedAt / 1000, 'unixepoch')
+WHERE 
+    ((createdAt NOT LIKE '%-%' AND length(createdAt) = 13) OR 
+    (updatedAt NOT LIKE '%-%' AND length(updatedAt) = 13))`)
+
+	tx.Exec(`UPDATE user
+SET 
+    createdAt = datetime(createdAt / 1000, 'unixepoch'),
+    updatedAt = datetime(updatedAt / 1000, 'unixepoch')
+WHERE 
+    ((createdAt NOT LIKE '%-%' AND length(createdAt) = 13) OR 
+    (updatedAt NOT LIKE '%-%' AND length(updatedAt) = 13))`)
 }

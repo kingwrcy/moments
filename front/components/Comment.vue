@@ -11,7 +11,7 @@
    </template>
     <span class="mx-0.5">:</span>
     <span class="inline break-all cursor-pointer" @click="toggle">{{ props.comment.content }}</span>
-    <span class="text-xs text-gray-400 ml-4">{{$dayjs(props.comment.createdAt).fromNow()}}</span>
+    <span class="text-xs text-gray-400 ml-4 hidden sm:inline-block">{{$dayjs(props.comment.createdAt).fromNow()}}</span>
     <UIcon v-if="(global.userinfo.id === props.memoUserId || global.userinfo.id === 1)" name="i-carbon-trash-can"
            @click="removeComment" class="cursor-pointer ml-4 text-red-400"/>
 

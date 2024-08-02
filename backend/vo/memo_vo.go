@@ -12,6 +12,7 @@ type ListMemoReq struct {
 	End             *time.Time `json:"end,omitempty"`             //结束时间
 	ContentContains string     `json:"contentContains,omitempty"` //内容包含
 	ShowType        *int       `json:"showType,omitempty"`        //是否是公开的,1:公开,0:私有
+	UserId          *int       `json:"userId,omitempty"`          //用户id
 }
 type RemoveImageReq struct {
 	Img string `json:"img,omitempty"` //图片路径

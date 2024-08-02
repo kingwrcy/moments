@@ -1,5 +1,5 @@
 <template>
-  <UPopover>
+  <UPopover :popper="{ arrow: true }" mode="click">
     <UIcon name="i-carbon-image" class="cursor-pointer"/>
     <template #panel="{close}">
       <div class="p-4 flex flex-col gap-2">

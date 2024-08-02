@@ -1,5 +1,5 @@
 <template>
-  <UPopover :ui="{base:'w-[300px]'}">
+  <UPopover :ui="{base:'w-[300px]'}" :popper="{ arrow: true }" mode="click">
     <svg class="focus:outline-0 cursor-pointer w-[18px] h-[18px]" xmlns="http://www.w3.org/2000/svg"
          viewBox="0 0 24 24" fill="currentColor" data-state="closed">
       <path

@@ -36,7 +36,7 @@
     </div>
     <div class="flex justify-between items-center">
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
-        <UPopover>
+        <UPopover :popper="{ arrow: true }" mode="click">
           <div class="flex items-center gap-1">
             <UIcon name="i-carbon-location"/>
             <span>{{ state.location ? locationLabel : '自定义位置' }}</span>
@@ -61,7 +61,7 @@
         <UButtonGroup>
           <UButton @click="saveMemo">发表</UButton>
           <UButton color="white" @click="reset">清空</UButton>
-          <UButton color="white" @click="navigateTo('/')">返回首页</UButton>
+          <UButton color="gray" variant="solid" @click="navigateTo('/')">返回</UButton>
         </UButtonGroup>
       </div>
     </div>

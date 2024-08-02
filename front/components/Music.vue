@@ -1,5 +1,5 @@
 <template>
-  <UPopover :ui="{base:'w-[350px] min-h-[350px]'}">
+  <UPopover :ui="{base:'w-[350px] min-h-[350px]'}" :popper="{ arrow: true }" mode="click">
     <UIcon name="i-carbon-music" class="cursor-pointer"/>
     <template #panel="{close}">
       <div class="p-4 flex flex-col gap-2 max-h-[400px] overflow-auto">

@@ -3,6 +3,11 @@
     <Header :user="currentUser"/>
 
     <div class="p-4 space-y-4">
+
+      <div class="flex justify-end gap-2 sm:hidden">
+        <UButton @click="navigateTo('/')" icon="i-carbon-arrow-left" size="xs" color="gray" variant="solid">返回</UButton>
+      </div>
+
       <UFormGroup label="日期范围" name="contentContains" :ui="{label:{base:'font-bold'}}">
         <UPopover :popper="{ placement: 'bottom-start' }">
           <UButton icon="i-heroicons-calendar-days-20-solid" color="white" variant="solid" class="w-full">
