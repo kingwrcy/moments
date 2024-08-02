@@ -1,6 +1,7 @@
 <template>
-  <div >
-    <div class="flex gap-4 text-sm dark:bg-neutral-800 p-4" :class="[item.pinned ? 'bg-slate-100 dark:bg-neutral-700' : '']">
+  <div>
+    <div class="flex gap-4 text-sm dark:bg-neutral-800 p-4"
+         :class="[item.pinned ? 'bg-slate-100 dark:bg-neutral-700' : '']">
       <div class="avatar ">
         <NuxtLink :to="`/memo/${item.id}`">
           <UAvatar
@@ -16,9 +17,14 @@
           <UIcon v-if="item.showType === 0" name="i-carbon-locked" class="text-red-500"/>
         </div>
         <div class="mb-2">
-          <div class="markdown-content overflow-hidden" :style="getMemoMaxHeightStyle()"
-               v-html="content"></div>
+          <div :style="getMemoMaxHeightStyle()" class="overflow-hidden">
+            <div class="markdown-content " ref="contentRef"
+                 v-html="content"></div>
+          </div>
+          <div class="text-[#576b95] text-sm my-1 cursor-pointer"
+               @click="doShowMore" v-if="showMore">{{getMemoMaxHeightStyle() === '' ? '收起' : '全文'}}</div>
           <div class="flex gap-2 mt-2" v-if="tags.length > 0">
+
             <span v-for="(tag,index) in tags" :key="`tag-${index}`">
               <NuxtLink :to="`/tags/${item.user.username}/${tag}`">
                 <UBadge size="xs" color="gray" variant="solid">{{ tag }}</UBadge>
@@ -35,9 +41,12 @@
           <music-preview v-if="extJSON.music && extJSON.music.id" v-bind="extJSON.music"/>
           <douban-book-preview v-if="extJSON.doubanBook && extJSON.doubanBook.title" :book="extJSON.doubanBook"/>
           <douban-movie-preview v-if="extJSON.doubanMovie && extJSON.doubanMovie.title" :movie="extJSON.doubanMovie"/>
-          <youtube-preview v-if="extJSON.video && extJSON.video.type === 'youtube' && extJSON.video.value" :url="extJSON.video.value"/>
-          <bilibili-preview v-if="extJSON.video && extJSON.video.type === 'bilibili' && extJSON.video.value" :url="extJSON.video.value"/>
-          <video-preview v-if="extJSON.video && extJSON.video.type === 'online' && extJSON.video.value" :url="extJSON.video.value"/>
+          <youtube-preview v-if="extJSON.video && extJSON.video.type === 'youtube' && extJSON.video.value"
+                           :url="extJSON.video.value"/>
+          <bilibili-preview v-if="extJSON.video && extJSON.video.type === 'bilibili' && extJSON.video.value"
+                            :url="extJSON.video.value"/>
+          <video-preview v-if="extJSON.video && extJSON.video.type === 'online' && extJSON.video.value"
+                         :url="extJSON.video.value"/>
         </div>
 
         <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5"
@@ -130,8 +139,14 @@ import Comment from "~/components/Comment.vue";
 import {useGlobalState} from "~/store";
 import markdownit from 'markdown-it'
 
+const showMore = ref(false)
+const showMoreClicked = ref(false)
+const isDetailPage = computed(() => {
+  return route.path.startsWith("/memo/")
+})
+const contentRef = ref<HTMLDivElement | null>(null)
 const sysConfig = useState<SysConfigVO>('sysConfig')
-
+const route = useRoute()
 const md = markdownit({
   html: true,
   linkify: true,
@@ -139,6 +154,9 @@ const md = markdownit({
   breaks: true,
 })
 const getMemoMaxHeightStyle = () => {
+  if (isDetailPage.value || showMoreClicked.value) {
+    return ""
+  }
   if (sysConfig.value.memoMaxHeight) {
     return `max-height:${sysConfig.value.memoMaxHeight}px`
   }
@@ -146,7 +164,7 @@ const getMemoMaxHeightStyle = () => {
 }
 const currentCommentBox = useState('currentCommentBox')
 const props = defineProps<{
-  memo: MemoVO
+  memo: MemoVO,
 }>()
 const extJSON = computed(() => {
   return JSON.parse(props.memo.ext || "{}") as ExtDTO
@@ -154,11 +172,9 @@ const extJSON = computed(() => {
 const item = computed(() => {
   return props.memo
 })
+
 const global = useGlobalState()
-const route = useRoute()
-const isDetailPage = computed(() => {
-  return route.path.startsWith("/memo/")
-})
+
 const showToolbar = ref(false)
 const toolbarRef = ref(null)
 const liked = ref(false)
@@ -188,6 +204,10 @@ const doComment = () => {
     currentCommentBox.value = value
   }
   showToolbar.value = false
+}
+
+const doShowMore = () => {
+  showMoreClicked.value= !showMoreClicked.value
 }
 
 const go2Edit = async (id: number) => {
@@ -225,10 +245,18 @@ const likeMemo = async (id: number) => {
   liked.value = true
 }
 
+
 onMounted(() => {
   const likes = JSON.parse(localStorage.getItem('likeMemos') || '[]') as Array<number>
   liked.value = likes.findIndex(r => r === item.value.id) >= 0
-
+  if (!isDetailPage.value) {
+    setTimeout(() => {
+      const {height} = useElementSize(contentRef.value);
+      if (height.value > sysConfig.value.memoMaxHeight) {
+        showMore.value = true
+      }
+    }, 20)
+  }
 })
 
 

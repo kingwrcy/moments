@@ -4,7 +4,7 @@
     <Footer/>
   </div>
   <div class="sm:hidden relative">
-    <div class="left-0 bottom-10 w-full fixed  flex items-center justify-end" v-if="$route.path === '/'">
+    <div class="left-0 bottom-10 w-full fixed  flex items-center justify-end" v-if="global.userinfo.token && $route.path === '/'">
       <div class="flex flex-col items-center gap-2">
         <NuxtLink to="/new" class="mr-4 rounded-full bg-slate-50 w-14 h-14 flex items-center justify-center shadow-xl">
           <UIcon name="i-carbon-edit" class="w-8 h-8 text-[#9fc84a]"></UIcon>
@@ -12,19 +12,31 @@
       </div>
     </div>
 
-    <div class="right-2 top-2 w-full fixed  flex items-center justify-end" v-if="$route.path === '/'">
+    <div class="left-0 bottom-10 w-full fixed  flex items-center justify-end" v-if="!global.userinfo.token && $route.path === '/'">
+      <div class="flex flex-col items-center gap-2">
+        <NuxtLink to="/user/login" class="mr-4 rounded-full bg-slate-50 w-14 h-14 flex items-center justify-center shadow-xl">
+          <UIcon name="i-carbon-login" class="w-8 h-8 text-[#9fc84a]"></UIcon>
+        </NuxtLink>
+      </div>
+    </div>
+
+
+    <div class="right-2 top-2 w-full fixed  flex items-center justify-end" v-if="global.userinfo.token && $route.path === '/'">
       <div class="flex flex-col items-center gap-2">
         <div class="flex rounded bg-slate-50 p-1 items-center justify-center shadow-xl" @click="open = true">
           <UIcon name="i-carbon-settings" class="w-4 h-4 text-[#9fc84a]" ></UIcon>
         </div>
       </div>
     </div>
+
     <MobileNav :open="open"/>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type {SysConfigVO, UserVO} from "~/types";
+import {useGlobalState} from "~/store";
+const global = useGlobalState()
 const open = useState<boolean>('sidebarOpen',()=>false)
 const currentUser = useState<UserVO>('userinfo')
 const sysConfig = useState<SysConfigVO>('sysConfig')

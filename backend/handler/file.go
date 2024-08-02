@@ -159,7 +159,7 @@ func (f FileHandler) S3PreSigned(c echo.Context) error {
 		return FailRespWithMsg(c, Fail, fmt.Sprintf("无法获取预签名URL, %s", err))
 	}
 	suffix := sysConfigVo.S3.ThumbnailSuffix
-	if !strings.HasPrefix(suffix, "?") {
+	if suffix != "" && !strings.HasPrefix(suffix, "?") {
 		suffix = "?" + suffix
 	}
 	return SuccessResp(c, s3PresignedResp{

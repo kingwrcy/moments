@@ -37,7 +37,8 @@
 import type {UserVO} from "~/types";
 import {toast} from "vue-sonner";
 import {useUpload} from "~/utils";
-
+import {useGlobalState} from "~/store";
+const global = useGlobalState()
 const currentUser = useState<UserVO>('userinfo')
 const state = reactive({
   password: "",

@@ -38,7 +38,7 @@
       <UTextarea v-model="state.js" :rows="5"/>
     </UFormGroup>
     <UFormGroup label="评论最大字数" name="maxCommentLength" :ui="{label:{base:'font-bold'}}">
-      <UInput v-model="state.maxCommentLength"/>
+      <UInput v-model.number="state.maxCommentLength"/>
     </UFormGroup>
     <UFormGroup label="发言最大高度(单位px,填0时则不限制高度)" name="memoMaxHeight" :ui="{label:{base:'font-bold'}}">
       <UInput v-model.number="state.memoMaxHeight"/>
