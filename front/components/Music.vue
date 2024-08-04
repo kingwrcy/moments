@@ -1,6 +1,6 @@
 <template>
   <UPopover :ui="{base:'w-[350px] min-h-[350px]'}" :popper="{ arrow: true }" mode="click">
-    <UIcon name="i-carbon-music" class="cursor-pointer"/>
+    <UIcon name="i-carbon-music" class="cursor-pointer w-10 h-10 sm:w-6 sm:h-6"/>
     <template #panel="{close}">
       <div class="p-4 flex flex-col gap-2 max-h-[400px] overflow-auto">
         <div class="text-xs text-gray-400">嵌入在线音乐</div>

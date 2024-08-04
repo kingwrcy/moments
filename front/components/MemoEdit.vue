@@ -1,6 +1,6 @@
 <template>
   <div class="px-4 space-y-2">
-    <div class="flex gap-2 text-lg text-gray-600">
+    <div class="flex gap-2 text-lg text-gray-600 pt-4 ">
       <ExternalUrl v-model:favicon="state.externalFavicon" v-model:title="state.externalTitle"
                    v-model:url="state.externalUrl"/>
 

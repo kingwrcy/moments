@@ -47,9 +47,9 @@ watch(images, () => {
 // })
 
 const removeImage = async (img: string) => {
-  // await useMyFetch('/memo/removeImage',{
-  //   img
-  // })
+  await useMyFetch('/memo/removeImage',{
+    img
+  })
   emit('removeImage', img)
 }
 

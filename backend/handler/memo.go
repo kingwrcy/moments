@@ -216,6 +216,17 @@ func (m MemoHandler) RemoveMemo(c echo.Context) error {
 	if m.base.db.Delete(&memo).RowsAffected != 1 {
 		return FailRespWithMsg(c, Fail, "删除失败")
 	}
+
+	if memo.Imgs != "" {
+		imgs := strings.Split(memo.Imgs, ",")
+		for _, img := range imgs {
+			if !strings.HasPrefix(img, "/upload/") {
+				return SuccessResp(c, h{})
+			}
+			img := strings.ReplaceAll(img, "/upload/", "")
+			_ = os.Remove(filepath.Join(m.base.cfg.UploadDir, img))
+		}
+	}
 	return SuccessResp(c, h{})
 }
 
