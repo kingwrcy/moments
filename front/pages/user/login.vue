@@ -2,7 +2,7 @@
   <Header v-if="currentUser" v-bind:user="currentUser"/>
 
  <div class="pb-20">
-   <UCard :ui="{base:'max-w-[400px] mx-auto mt-20'}">
+   <UCard :ui="{base:'w-4/5 mx-auto mt-20'}">
 
      <p class="text-center text-2xl font-sans"> 登录</p>
      <UForm class="space-y-4" size="sm" :state="state">

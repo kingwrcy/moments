@@ -77,7 +77,7 @@ const gridStyle = computed(() => {
       style += 'grid-template-columns: 1fr 1fr; aspect-ratio: 1;';
       break;
     default:
-      style += 'grid-template-columns: 1fr 1fr 1fr; aspect-ratio: 3 / 1;';
+      style += 'grid-template-columns: 1fr 1fr 1fr;';
   }
   return style;
 });
