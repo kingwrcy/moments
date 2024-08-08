@@ -7,7 +7,7 @@
         <UInput type="file" size="sm" icon="i-heroicons-folder" @change="upload" multiple/>
         <UTextarea :rows="5" placeholder="或者输入在线图片地址,逗号分隔,最多9张" v-model="imgs"/>
 
-        <p v-if="filename" class="text-xs text-gray-400">正在上传({{current}}/{{total}})</p>
+        <p v-if="filename" class="text-xs text-gray-400">正在上传({{ current }}/{{ total }})</p>
         <p v-if="filename" class="text-xs text-gray-400">{{ filename }}</p>
         <UProgress :value="progress" v-if="progress > 0" indicator/>
 
@@ -38,7 +38,7 @@ const upload = async (files: FileList) => {
   }) as string[]
   toast.success("上传成功")
   if (result) {
-    imgs.value = (imgs.value ? ',' : '') + result.join(",")
+    imgs.value = (imgs.value ? imgs.value + ',' : '') + result.join(",")
   }
 }
 

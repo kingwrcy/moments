@@ -1,6 +1,8 @@
 import type {ResultVO, SysConfigVO} from "~/types";
 import {toast} from "vue-sonner";
 import {useGlobalState} from "~/store";
+import markdownit from "markdown-it";
+import Shiki from "@shikijs/markdown-it";
 
 const global = useGlobalState()
 
@@ -126,3 +128,18 @@ export const uploadFiles = (url: string, file: File, onProgress: Function) =>
         formData.append("files", file)
         xhr.send(formData);
     });
+
+
+export const md = markdownit({
+    html: true,
+    linkify: true,
+    typographer: true,
+    breaks: true,
+})
+
+md.use(await Shiki({
+    themes: {
+        light: 'aurora-x',
+        dark: 'aurora-x',
+    }
+}))

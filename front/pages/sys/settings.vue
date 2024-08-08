@@ -22,6 +22,9 @@
       <UInput v-model="state.favicon" class="mb-2"/>
       <UAvatar :src="state.favicon"/>
     </UFormGroup>
+    <UFormGroup label="首页是否自动加载下一页" name="enableAutoLoadNextPage" :ui="{label:{base:'font-bold'}}">
+      <UToggle v-model="state.enableAutoLoadNextPage"/>
+    </UFormGroup>
     <UFormGroup label="是否启用评论" name="enableComment" :ui="{label:{base:'font-bold'}}">
       <UToggle v-model="state.enableComment"/>
     </UFormGroup>
@@ -106,6 +109,7 @@ const state = reactive({
   enableGoogleRecaptcha: false,
   googleSiteKey:"",
   googleSecretKey:"",
+  enableAutoLoadNextPage: true,
   enableComment: true,
   enableRegister: true,
   maxCommentLength: 120,

@@ -23,11 +23,47 @@
     padding-left: 1rem;
   }
 
-  code {
-    background-color: rgb(190 242 100);
-    color:white;
+
+
+  pre.shiki{
+      padding:10px;
+      border-radius:4px;
+      font-size:12px;
+      line-height:1.2rem;
+      position:relative;
+
+      &:hover{
+        .copyBtn{
+            display:block;
+          }
+      }
+      .copyBtn{
+          padding:2px 6px;
+          font-size:12px;
+          cursor:pointer;
+          background-color:#fff;
+          position:absolute;
+          top:4px;
+          right:4px;
+          border:1px solid #ccc;
+          border-radius:2px;
+          color: rgb(71 85 105);
+          display:none;
+      }
+      code{
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+      }
+  }
+
+  p > code {
+    background-color: rgb(248 250 252);
+    color: rgb(71 85 105);
     padding: 0 0.4rem;
+    font-size:.8rem;
     border-radius: .4rem;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
   }
 
   h2, h3, h4, h5, h6 {

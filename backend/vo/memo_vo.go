@@ -47,6 +47,7 @@ type SaveMemoReq struct {
 	ExternalUrl     string   `json:"externalUrl,omitempty"`     //外部站点URL
 	Imgs            []string `json:"imgs,omitempty"`            //图片列表,最多9张
 	Location        string   `json:"location,omitempty"`        //地理位置
+	Tags            []string `json:"tags,omitempty"`            //标签数组
 }
 
 type DoubanMovie struct {

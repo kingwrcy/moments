@@ -138,7 +138,7 @@ import {toast} from "vue-sonner";
 import {memoChangedEvent, memoReloadEvent} from "~/event";
 import Comment from "~/components/Comment.vue";
 import {useGlobalState} from "~/store";
-import markdownit from 'markdown-it'
+import {md} from "~/utils"
 
 const showMore = ref(false)
 const showMoreClicked = ref(false)
@@ -148,12 +148,7 @@ const isDetailPage = computed(() => {
 const contentRef = ref<HTMLDivElement | null>(null)
 const sysConfig = useState<SysConfigVO>('sysConfig')
 const route = useRoute()
-const md = markdownit({
-  html: true,
-  linkify: true,
-  typographer: true,
-  breaks: true,
-})
+
 const getMemoMaxHeightStyle = () => {
   if (isDetailPage.value || showMoreClicked.value) {
     return ""

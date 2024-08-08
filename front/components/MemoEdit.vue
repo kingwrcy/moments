@@ -11,12 +11,18 @@
     </div>
 
     <div class="w-full" @contextmenu.prevent="onContextMenu">
+      <USelectMenu v-model="state.tags" :options="existTags" multiple placeholder="选择标签" class="my-2" >
+        <template #label>
+          <span v-if="state.tags.length" class="truncate">{{ state.tags.join(', ') }}</span>
+          <span v-else>选择标签</span>
+        </template>
+      </USelectMenu>
       <UTextarea ref="contentRef" v-model="state.content" :rows="8" autoresize padded autofocus/>
 
       <UContextMenu v-model="isOpen" :virtual-element="virtualElement">
         <div class="px-2 py-1 flex flex-col gap-2 text-xs">
           <div class="mb-2 text-gray-300">点击标签插入</div>
-          <div v-for="(tag,index) in tags" :key="index" class="cursor-pointer">
+          <div v-for="(tag,index) in existTags" :key="index" class="cursor-pointer">
             <UBadge size="xs" color="gray" variant="solid" @click="clickTag(tag)">{{ tag }}</UBadge>
           </div>
         </div>
@@ -80,7 +86,8 @@ import type {
   MetingMusicServer,
   MetingMusicType,
   MusicDTO,
-  Video, VideoType
+  Video,
+  VideoType
 } from "~/types";
 import {toast} from "vue-sonner";
 import UploadImage from "~/components/UploadImage.vue";
@@ -112,12 +119,13 @@ const defaultState = {
   },
   doubanBook: {} as DoubanBook,
   doubanMovie: {} as DoubanMovie,
+  tags: Array<string>(),
 }
 
 const state = reactive({
   ...defaultState
 })
-const tags = ref<string[]>([])
+const existTags = ref<string[]>([])
 const reset = () => {
   Object.assign(state, defaultState)
 }
@@ -129,7 +137,6 @@ const locationLabel = computed(() => {
 const handleDragImage = (imgs: string[]) => {
   state.imgs = imgs.join(",")
 }
-
 
 const updateMusic = (music: MusicDTO) => {
   state.music.id = ""
@@ -157,7 +164,7 @@ const handleRemoveImage = (img: string) => {
 }
 
 function onContextMenu() {
-  if (tags.value.length <= 0) {
+  if (existTags.value.length <= 0) {
     return
   }
   const top = unref(y) - unref(windowY)
@@ -177,12 +184,21 @@ const loadTags = async () => {
   const res = await useMyFetch<{
     tags: string[]
   }>("/tag/list")
-  tags.value = res.tags
+  existTags.value = res.tags
 }
 
+
+
 const clickTag = (tag: string) => {
-  state.content = '#' + tag + ' ' + state.content
   isOpen.value = false;
+  if (!state.tags.includes(tag)){
+    if (state.tags) {
+      state.tags = [...state.tags , tag]
+    } else {
+      state.tags = [tag]
+    }
+  }
+
   //@ts-ignore
   (contentRef.value?.textarea as HTMLTextAreaElement).focus()
 }
@@ -196,21 +212,7 @@ onMounted(async () => {
     Object.assign(state.video, ext.video)
     doubanType.value = ext.doubanBook && ext.doubanBook.title ? 'book' : 'movie'
     doubanData.value = doubanType.value === 'book' ? ext.doubanBook : ext.doubanMovie
-
-    if (res.tags) {
-      const tagsArray = res.tags.split(",")
-      const len = tagsArray.length
-      let tagStr = ""
-      for (let i = 0; i < len; i++) {
-        if (tagsArray[i]) {
-          tagStr += ('#' + tagsArray[i] + ',')
-        }
-      }
-      if (tagStr) {
-        tagStr = tagStr.substring(0, tagStr.length - 1)
-      }
-      state.content = tagStr + '\n' + res.content
-    }
+    state.tags = res.tags ? res.tags.substring(0,res.tags.length-1).split(',') : []
   }
   await loadTags()
 })
@@ -239,6 +241,7 @@ const saveMemo = async () => {
     externalUrl: state.externalUrl,
     imgs: state.imgs.split(','),
     location: state.location,
+    tags: state.tags
   })
   toast.success("保存成功!")
   await navigateTo('/')

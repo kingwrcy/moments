@@ -350,18 +350,18 @@ func (m MemoHandler) SaveMemo(c echo.Context) error {
 		memo.CommentCount = 0
 	}
 
-	content, tags := FindAndReplaceTags(req.Content)
-	m.base.log.Info().Msgf("tags is %+v,content is %s", tags, content)
-	if len(tags) == 0 {
+	//content, tags := FindAndReplaceTags(req.Content)
+	//m.base.log.Info().Msgf("tags is %+v,content is %s", tags, content)
+	if len(req.Tags) == 0 {
 		memo.Tags = nil
 	} else {
-		memoTags := strings.Join(tags, ",")
+		memoTags := strings.Join(req.Tags, ",")
 		if memoTags != "" {
 			memoTags = fmt.Sprintf("%s,", memoTags)
 			memo.Tags = &memoTags
 		}
 	}
-	memo.Content = strings.TrimSpace(content)
+	memo.Content = strings.TrimSpace(req.Content)
 
 	bytes, _ := json.Marshal(req.Ext)
 	extJson = string(bytes)

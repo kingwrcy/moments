@@ -12,7 +12,7 @@
   </div>
 
 
-  <MyFancyBox v-else :style="gridStyle" class="grid gap-2" v-if="images.length>0">
+  <MyFancyBox v-else :style="gridStyle" v-if="images.length>0">
     <img class="cursor-zoom-in rounded"
          :class="images.length === 1 ? 'full-cover-image-single' : 'full-cover-image-mult'"
          :src="img" alt="" :key="z" v-for="(img,z) in images">
@@ -62,7 +62,7 @@ onMounted(() => {
 })
 
 const gridStyle = computed(() => {
-  let style = 'align-items: start;'; // 确保内容顶部对齐
+  let style = 'max-width:100%;display:grid;gap: 0.5rem;align-items: start;'; // 确保内容顶部对齐
   switch (images.value.length) {
     case 1:
       style += 'grid-template-columns: 1fr;max-width:60%;';

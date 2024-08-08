@@ -3,22 +3,23 @@
   <div class="flex flex-col divide-y divide-[#C0BEBF]/20 ">
     <Memo v-bind:memo="m" v-for="m in memos" :key="m.id" :show-full="false"/>
   </div>
-  <div ref="loadMoreEle" class="text-xs text-center text-gray-500 py-2" @click="loadMore" v-if="hasNext">点击加载更多</div>
-  <div class="text-xs text-center text-gray-500 py-2" @click="loadMore" v-else>已经到底啦</div>
+  <div ref="loadMoreEle" class="text-xs text-center text-gray-500 py-2 cursor-pointer" @click="loadMore" v-if="hasNext">点击加载更多</div>
+  <div class="text-xs text-center text-gray-500 py-2" v-else>已经到底啦</div>
 </template>
 
 <script setup lang="ts">
-import type {MemoVO, UserVO} from "~/types";
+import type {MemoVO, SysConfigVO, UserVO} from "~/types";
 import Memo from "~/components/Memo.vue";
 import {memoChangedEvent, memoReloadEvent} from "~/event";
 import {useElementVisibility} from '@vueuse/core'
 
 const currentUser = useState<UserVO>('userinfo')
+const sysConfig = useState<SysConfigVO>('sysConfig')
 
 const loadMoreEle = ref(null)
 const targetIsVisible = useElementVisibility(loadMoreEle)
 watch(targetIsVisible, async (visible) => {
-  if (visible) {
+  if (visible && sysConfig.value.enableAutoLoadNextPage) {
     await loadMore()
   }
 })
