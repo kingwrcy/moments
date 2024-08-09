@@ -19,21 +19,21 @@ export async function useMyFetch<T>(url: string, data?: any) {
             headers: headers
         })
         if (res.code !== 0) {
-            if (res.code === 3||res.code === 4){
+            if (res.code === 3 || res.code === 4) {
                 global.value.userinfo = {}
-                window.location.href='/'
+                window.location.href = '/'
                 throw new Error(res.message)
             }
             toast.error(res.message || "请求失败")
             throw new Error(res.message)
         }
         return res.data
-    } finally{
+    } finally {
 
     }
 }
 
-async function upload2S3(files: FileList, onProgress: Function|undefined) {
+async function upload2S3(files: FileList, onProgress: Function | undefined) {
     const result = []
     for (let i = 0; i < files.length; i++) {
         const {preSignedUrl, imageUrl} = await useMyFetch<{
@@ -55,7 +55,7 @@ const upload2S3WithProgress = async (preSignedUrl: string, file: File, onProgres
         const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener('progress', e => onProgress(file.name, e.loaded / e.total));
         xhr.addEventListener('load', () => {
-            if(xhr.responseType === 'json'){
+            if (xhr.responseType === 'json') {
                 return resolve(JSON.parse(xhr.responseText))
             }
             return resolve(null);
@@ -70,7 +70,7 @@ const upload2S3WithProgress = async (preSignedUrl: string, file: File, onProgres
 }
 
 
-export async function useUpload(files: FileList | null, onProgress: Function|undefined = undefined) {
+export async function useUpload(files: FileList | null, onProgress: Function | undefined = undefined) {
     const sysConfig = useState<SysConfigVO>('sysConfig')
     const result = []
     if (!files || files.length === 0) {
@@ -85,7 +85,7 @@ export async function useUpload(files: FileList | null, onProgress: Function|und
     }
 
     if (sysConfig.value.enableS3) {
-        return await upload2S3(files,onProgress)
+        return await upload2S3(files, onProgress)
     }
     for (let i = 0; i < files.length; i++) {
         try {
@@ -137,9 +137,11 @@ export const md = markdownit({
     breaks: true,
 })
 
-md.use(await Shiki({
+Shiki({
     themes: {
         light: 'aurora-x',
         dark: 'aurora-x',
     }
-}))
+}).then((r) => {
+    md.use(r)
+})

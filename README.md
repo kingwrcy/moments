@@ -11,5 +11,19 @@ v0.2.1使用了golang作为服务端重写,目前已经基本实现了0.2.0版�
 
 [更多说明](https://discussion.mblog.club/post/pto2hqoFzDKzZMpvoPZKYuP)
 
+[交流TG群](https://t.me/simple_moments)
+
+[交流论坛](https://discussion.mblog.club/)
 
 [0.2.0的README](https://github.com/kingwrcy/moments/blob/master/README.md)
+
+#### v0.2.4发布说明
+
+1. 发言输入框不再支持#号开头的内容识别为标签了,标签改为单独一列,右键输入标签继续可以.
+2. 首页默认不自动加载下一页了,后台增加`是否自动加载下一页`的开关,需要的可以手动开启.
+3. 增加代码块的支持,支持语法高亮,使用方式是3个`符号之后跟上代码的语言即可.
+4. 修复传第二张图片会把前一张图片删除的bug.
+5. 尝试修复ios环境下safari浏览图片超宽的bug.
+6. 增加`回到顶部`按钮,pc和手机模式下都有.
+7. 修复登出按钮在pc无法看到的bug.
+8. 代码块增加一键复制按钮.
