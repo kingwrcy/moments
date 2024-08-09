@@ -277,7 +277,11 @@ onMounted(() => {
 
 const content = computed(() => {
   if (item.value.content && item.value.content.length > 0) {
-    return md.render(item.value.content)
+    try{
+      return md.render(item.value.content)
+    }catch (e) {
+      return "内容渲染错误,请重新编辑"
+    }
   }
   return ""
 })
