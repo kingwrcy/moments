@@ -1,8 +1,6 @@
 .markdown-content {
   line-height: 1.5rem;
 
-
-
   a{
     color: rgb(132 204 22);
     margin: 0 2px;
@@ -24,6 +22,10 @@
   }
 
 
+  code{
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
 
   pre.shiki{
       padding:10px;

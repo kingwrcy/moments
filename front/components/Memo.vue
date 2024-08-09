@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex gap-4 text-sm dark:bg-neutral-800 p-4"
+    <div class="relative flex gap-4 text-sm dark:bg-neutral-800 p-4"
          :class="[item.pinned ? 'bg-slate-100 dark:bg-neutral-700' : '']">
       <div class="avatar ">
         <NuxtLink :to="`/memo/${item.id}`">
@@ -10,7 +10,7 @@
           />
         </NuxtLink>
       </div>
-      <div class="flex flex-col gap-1  w-full">
+      <div class="flex flex-col gap-1  flex-1">
         <div class="username text-[#576b95] mb-1 dark:text-white  flex justify-between">
           <NuxtLink class="cursor-pointer" :to="`/user/${item.user.id}`">{{ item.user.nickname }}</NuxtLink>
           <UIcon v-if="item.pinned" name="i-carbon-pin"/>
