@@ -30,7 +30,7 @@ export default defineNuxtConfig({
             script: [
                 {src: `/js/APlayer.min.js`, type: 'text/javascript', async: true, defer: true},
                 {src: `/js/Meting.min.js`, type: 'text/javascript', async: true, defer: true},
-                // {src: `/js/main.js`, type: 'text/javascript', async: true, defer: true},
+                {src: `/js/main.js`, type: 'text/javascript', async: true, defer: true},
             ]
         }
     },
