@@ -72,22 +72,22 @@
           <div ref="toolbarRef" v-if="showToolbar"
                class="absolute top-[-8px] right-[32px] bg-[#4c4c4c] rounded text-white p-2 px-4">
             <div class="flex flex-row gap-2">
-              <template v-if="global.userinfo.id === 1">
-                <div class="flex flex-row gap-1 cursor-pointer items-center" @click="setPinned(item.id)">
-                  <UIcon name="i-carbon-pin"/>
-                  <div class="hidden sm:block">{{ item.pinned ? '取消' : '' }}置顶</div>
-                </div>
-                <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
-              </template>
               <div class="flex flex-row gap-1 cursor-pointer items-center" @click="likeMemo(item.id)">
                 <UIcon name="i-carbon-favorite" :class="[liked ? 'text-red-400' : '']"/>
-                <div class="hidden sm:block">赞</div>
+                <div>赞</div>
               </div>
               <template v-if="sysConfig.enableComment">
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
                 <div class="flex flex-row gap-1 cursor-pointer items-center" @click="doComment">
                   <UIcon name="i-carbon-chat"/>
-                  <div class="hidden sm:block">评论</div>
+                  <div>评论</div>
+                </div>
+              </template>
+              <template v-if="global.userinfo.id === 1">
+                <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
+                <div class="flex flex-row gap-1 cursor-pointer items-center" @click="setPinned(item.id)">
+                  <UIcon name="i-carbon-pin"/>
+                  <div class="hidden sm:block">{{ item.pinned ? '取消' : '' }}置顶</div>
                 </div>
               </template>
               <template v-if="global&&global.userinfo.id === item.userId">

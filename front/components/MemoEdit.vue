@@ -8,6 +8,7 @@
       <music v-bind="state.music" @confirm="updateMusic"/>
       <upload-video @confirm="handleVideo" v-bind="state.video"/>
       <douban-edit v-model:type="doubanType" v-model:data="doubanData"/>
+      <UIcon name="i-carbon-text-clear-format" @click="reset" class="w-6 h-6 cursor-pointer" title="清空"></UIcon>
     </div>
 
     <div class="w-full" @contextmenu.prevent="onContextMenu">
@@ -30,17 +31,6 @@
       </UContextMenu>
     </div>
 
-    <div class="flex flex-col gap-2">
-      <external-url-preview :favicon="state.externalFavicon" :title="state.externalTitle" :url="state.externalUrl"/>
-      <upload-image-preview :imgs="state.imgs" @remove-image="handleRemoveImage" @drag-image="handleDragImage"/>
-      <music-preview v-if="state.music && state.music.id && state.music.type && state.music.server"
-                     v-bind="state.music"/>
-      <douban-book-preview :book="doubanData" v-if="doubanType === 'book' && doubanData&& doubanData.title"/>
-      <douban-movie-preview :movie="doubanData" v-if="doubanType === 'movie' && doubanData&& doubanData.title"/>
-      <youtube-preview v-if="state.video.type === 'youtube' && state.video.value" :url="state.video.value"/>
-      <bilibili-preview v-if="state.video.type === 'bilibili' && state.video.value" :url="state.video.value"/>
-      <video-preview v-if="state.video.type === 'online' && state.video.value" :url="state.video.value"/>
-    </div>
     <div class="flex justify-between items-center">
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
         <UPopover :popper="{ arrow: true }" mode="click">
@@ -66,11 +56,22 @@
         </div>
 
         <UButtonGroup>
-          <UButton @click="saveMemo">发表</UButton>
-          <UButton color="white" @click="reset">清空</UButton>
           <UButton color="gray" variant="solid" @click="navigateTo('/')">返回</UButton>
+          <UButton @click="saveMemo">发表</UButton>
         </UButtonGroup>
       </div>
+    </div>
+    
+    <div class="flex flex-col gap-2">
+      <external-url-preview :favicon="state.externalFavicon" :title="state.externalTitle" :url="state.externalUrl"/>
+      <upload-image-preview :imgs="state.imgs" @remove-image="handleRemoveImage" @drag-image="handleDragImage"/>
+      <music-preview v-if="state.music && state.music.id && state.music.type && state.music.server"
+                     v-bind="state.music"/>
+      <douban-book-preview :book="doubanData" v-if="doubanType === 'book' && doubanData&& doubanData.title"/>
+      <douban-movie-preview :movie="doubanData" v-if="doubanType === 'movie' && doubanData&& doubanData.title"/>
+      <youtube-preview v-if="state.video.type === 'youtube' && state.video.value" :url="state.video.value"/>
+      <bilibili-preview v-if="state.video.type === 'bilibili' && state.video.value" :url="state.video.value"/>
+      <video-preview v-if="state.video.type === 'online' && state.video.value" :url="state.video.value"/>
     </div>
   </div>
 
