@@ -1,10 +1,7 @@
 <template>
   <Header :user="currentUser"/>
+
   <div class="space-y-4  flex flex-col p-4 my-4 dark:bg-neutral-800">
-    <div class="flex justify-end gap-2 my-2">
-      <UButton @click="navigateTo('/')" icon="i-carbon-arrow-left" size="xs" color="gray" variant="solid">返回</UButton>
-      <UButton @click="logout" icon="i-carbon-logout" size="xs" color="white" variant="solid">登出</UButton>
-    </div>
     <UFormGroup label="头像" name="avatarUrl" :ui="{label:{base:'font-bold'}}">
       <UInput type="file" size="sm" icon="i-heroicons-folder" @change="uploadAvatarUrl"/>
       <div class="text-gray-500 text-sm my-2">或者输入在线地址</div>
@@ -61,7 +58,7 @@ const reload = async () => {
     currentUser.value = res
   }
 }
-
+const {y} = useWindowScroll()
 const save = async () => {
   await useMyFetch('/user/saveProfile', state)
   toast.success("保存成功")

@@ -1,4 +1,13 @@
 <template>
+  <div class="header relative mb-14" v-if="$route.path === `/memo/${item.id}`">
+    <div :class="{ 'bg-[#4c4c4c]/80 z-10': y > 100 }" class="flex fixed justify-between items-center p-4 w-full md:w-[567px] text-white top-0">
+      <NuxtLink class="flex items-center" title="返回主页">
+        <UIcon @click="navigateTo('/')" name="i-carbon-chevron-left" class="w-5 h-5 cursor-pointer mr-4"/>
+        <span>详情</span>
+      </NuxtLink>
+      <UIcon v-if="global.userinfo.id === 1 || global.userinfo.id === item.userId" name="i-solar-menu-dots-bold" class="w-5 h-5 cursor-pointer" @click="moreToolbar = true" />
+    </div>
+  </div>
   <div>
     <div class="relative flex gap-4 text-sm dark:bg-neutral-800 p-4"
          :class="[item.pinned ? 'bg-slate-100 dark:bg-neutral-700' : '']">
@@ -16,7 +25,6 @@
           <div>
             <UIcon v-if="item.pinned" name="i-carbon-pin"/>
             <UIcon v-if="item.showType === 0" name="i-carbon-locked" class="text-red-500 ml-2 dark:text-white"/>
-            <UIcon v-if="($route.path === `/memo/${item.id}` && (global.userinfo.id === 1 || global.userinfo.id === item.userId))" name="i-iconamoon-menu-kebab-vertical-bold" class="text-red-500 ml-2 dark:text-white cursor-pointer" @click="moreToolbar = true" />
           </div>
         </div>
         <div class="mb-2">
@@ -154,6 +162,7 @@ const isDetailPage = computed(() => {
 const contentRef = ref<HTMLDivElement | null>(null)
 const sysConfig = useState<SysConfigVO>('sysConfig')
 const route = useRoute()
+const {y} = useWindowScroll()
 
 const getMemoMaxHeightStyle = () => {
   if (isDetailPage.value || showMoreClicked.value) {

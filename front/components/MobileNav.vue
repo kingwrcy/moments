@@ -36,15 +36,15 @@
         </svg>
         <span @click="toggleMode">{{mode==='light' ? '暗色' : '亮色'}}</span>
       </div>
-      <div @click="navigate('/user/calendar')" v-if="global.userinfo.token" title="日历检索" class="flex flex-col items-center">
+      <div @click="navigate('/user/calendar')" v-if="$route.path !== '/user/calendar' && global.userinfo.token" title="日历检索" class="flex flex-col items-center">
         <UIcon name="i-jam-search-folder" class="text-[#9fc84a] w-6 h-6 cursor-pointer"/>
         <span>检索</span>
       </div>
-      <div @click="navigate('/sys/settings')" v-if="global.userinfo.id === 1" title="系统设置" class="flex flex-col items-center">
+      <div @click="navigate('/sys/settings')" v-if="$route.path !== '/sys/settings' && global.userinfo.id === 1" title="系统设置" class="flex flex-col items-center">
         <UIcon name="i-carbon-settings" class="text-[#9fc84a] w-6 h-6 cursor-pointer"/>
         <span>系统</span>
       </div>
-      <div @click="navigate('/user/settings')" v-if="global.userinfo.token" title="用户中心" class="flex flex-col items-center">
+      <div @click="navigate('/user/settings')" v-if="$route.path !== '/user/settings' && global.userinfo.token" title="用户中心" class="flex flex-col items-center">
         <UIcon name="i-carbon-user-avatar" class="text-[#9fc84a] w-6 h-6 cursor-pointer"/>
         <span>用户</span>
       </div>
