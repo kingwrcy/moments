@@ -6,6 +6,7 @@
         <span v-if="$route.path==='/user/calendar'">日历检索</span>
         <span v-else-if="$route.path==='/sys/settings'">系统设置</span>
         <span v-else-if="$route.path==='/user/settings'">用户中心</span>
+        <span v-else-if="$route.path.indexOf('/tags/') >= 0">话题专栏</span>
         <span v-else>
           <span v-if="!global.userinfo.token && $route.path==='/user/login'">登录</span>
           <span v-else-if="!global.userinfo.token && $route.path==='/user/reg'">注册</span>

@@ -79,8 +79,7 @@ const total = ref(0)
 const current = ref(0)
 const items = [{
   slot: 'uploadVideo',
-  label: '本地',
-  description: 'Make changes to your account here. Click save when you\'re done.'
+  label: '本地'
 }, {
   slot: 'onlineUrl',
   label: '在线'

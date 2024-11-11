@@ -67,7 +67,7 @@ import {add, format, isSameDay, sub} from "date-fns";
 import Memo from "~/components/Memo.vue";
 import {memoChangedEvent, memoReloadEvent} from "~/event";
 import {useElementVisibility} from '@vueuse/core'
-const {y} = useWindowScroll()
+
 const ranges = [
   {label: '一周内', duration: {days: 7}},
   {label: '一月内', duration: {days: 31}},

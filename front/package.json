@@ -16,6 +16,8 @@
     "date-fns": "^3.6.0",
     "markdown-it": "^14.1.0",
     "nuxt": "^3.12.4",
+    "pnpm": "^9.12.3",
+    "sortablejs": "^1.15.3",
     "v-calendar": "^3.1.2",
     "vue": "latest",
     "vue-sonner": "^1.1.4"

@@ -58,7 +58,7 @@ const reload = async () => {
     currentUser.value = res
   }
 }
-const {y} = useWindowScroll()
+
 const save = async () => {
   await useMyFetch('/user/saveProfile', state)
   toast.success("保存成功")
