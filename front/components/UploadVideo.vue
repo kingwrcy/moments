@@ -1,6 +1,6 @@
 <template>
   <UPopover :ui="{base:'w-[300px]'}" :popper="{ arrow: true }" mode="click">
-    <UIcon name="i-carbon-video-player" class="cursor-pointer w-6 h-6"/>
+    <svg class="cursor-pointer w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M13 11v10l8-5z"/><path fill="currentColor" d="M28 6H4c-1.103 0-2 .898-2 2v16c0 1.103.897 2 2 2h24c1.103 0 2-.897 2-2V8c0-1.102-.897-2-2-2m0 18H4V8h24z"/></svg>
     <template #panel="{close}">
       <div class="p-4 flex flex-col gap-2">
         <UTabs :items="items" class="w-full">
@@ -38,7 +38,7 @@
             <div class="text-xs text-gray-400">视频地址</div>
             <UInput type="text" size="sm" v-model="onlineUrl">
               <template #leading>
-                <UIcon name="i-carbon-video-player" class="w-6 h-6"/>
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M13 11v10l8-5z"/><path fill="currentColor" d="M28 6H4c-1.103 0-2 .898-2 2v16c0 1.103.897 2 2 2h24c1.103 0 2-.897 2-2V8c0-1.102-.897-2-2-2m0 18H4V8h24z"/></svg>
               </template>
             </UInput>
 

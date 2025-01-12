@@ -2,7 +2,7 @@
   <div class="px-4 space-y-2">
     <div class="flex justify-between items-center pt-4 text-gray-600">
       <NuxtLink class="flex items-center" title="返回主页">
-        <UIcon @click="navigateTo('/')" name="i-carbon-chevron-left" class="w-5 h-5 cursor-pointer mr-4"/>
+        <svg @click="navigateTo('/')" class="w-5 h-5 cursor-pointer mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M10 16L20 6l1.4 1.4l-8.6 8.6l8.6 8.6L20 26z"/></svg>
         <span v-if="$route.path==='/new'">新增内容</span>
         <span v-else>修改内容</span>
       </NuxtLink>
@@ -16,7 +16,7 @@
       <music v-bind="state.music" @confirm="updateMusic"/>
       <upload-video @confirm="handleVideo" v-bind="state.video"/>
       <douban-edit v-model:type="doubanType" v-model:data="doubanData"/>
-      <UIcon name="i-carbon-text-clear-format" @click="reset" class="w-6 h-6 cursor-pointer" title="清空"></UIcon>
+      <svg @click="reset" class="w-6 h-6 cursor-pointer" title="清空" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="m29.438 16.572l-7.985-7.986a2 2 0 0 0-2.829 0l-5.358 5.358L9 2H7L2 16h2l.999-3h6l.803 2.408l-7.216 7.216a2 2 0 0 0 0 2.829L9.132 30h9.59l10.716-10.717a1.917 1.917 0 0 0 0-2.712M5.665 11l2.331-7l2.336 7Zm12.23 17H9.96L6 24.038l6.312-6.311l7.928 7.927Zm3.76-3.76l-7.928-7.927L20.039 10l7.927 7.927Z"/></svg>
     </div>
 
     <div class="w-full" @contextmenu.prevent="onContextMenu">
@@ -52,7 +52,7 @@
       <div class="flex flex-row gap-1 items-center text-[#576b95] text-sm cursor-pointer">
         <UPopover :popper="{ arrow: true }" mode="click">
           <div class="flex items-center gap-1">
-            <UIcon name="i-carbon-location"/>
+            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M16 18a5 5 0 1 1 5-5a5.006 5.006 0 0 1-5 5m0-8a3 3 0 1 0 3 3a3.003 3.003 0 0 0-3-3"/><path fill="currentColor" d="m16 30l-8.436-9.949a35 35 0 0 1-.348-.451A10.9 10.9 0 0 1 5 13a11 11 0 0 1 22 0a10.9 10.9 0 0 1-2.215 6.597l-.001.003s-.3.394-.345.447ZM8.813 18.395s.233.308.286.374L16 26.908l6.91-8.15c.044-.055.278-.365.279-.366A8.9 8.9 0 0 0 25 13a9 9 0 1 0-18 0a8.9 8.9 0 0 0 1.813 5.395"/></svg>
             <span>{{ state.location ? locationLabel : '自定义位置' }}</span>
           </div>
           <template #panel="{close}">

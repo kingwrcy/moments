@@ -1,6 +1,6 @@
 <template>
   <UPopover :ui="{base:'w-[350px] min-h-[350px]'}" :popper="{ arrow: true }" mode="click">
-    <UIcon name="i-carbon-music" class="cursor-pointer w-6 h-6"/>
+    <svg class="cursor-pointer w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M25 4H10a2 2 0 0 0-2 2v14.556A3.96 3.96 0 0 0 6 20a4 4 0 1 0 4 4V12h15v8.556A3.96 3.96 0 0 0 23 20a4 4 0 1 0 4 4V6a2 2 0 0 0-2-2M6 26a2 2 0 1 1 2-2a2 2 0 0 1-2 2m17 0a2 2 0 1 1 2-2a2.003 2.003 0 0 1-2 2M10 6h15v4H10Z"/></svg>
     <template #panel="{close}">
       <div class="p-4 flex flex-col gap-2 max-h-[400px] overflow-auto">
         <UTabs :items="items" class="w-full">
