@@ -129,6 +129,12 @@ echo $RANDOM | sha256sum
 
 打开 [https://tool.lu/uuid](https://tool.lu/uuid) 生成不带 `-` 的 `UUID` 作为 `JWT_KEY`。
 
+## 配置前端地址
+
+项目启动后，请在系统设置中设置前端地址并保存，如：`https://www.example.com`。如果没有配置域名，也可以使用`<protocol>://<ip>:<port>`的形式。
+
+如果不配置前端地址，RSS和邮件通知等功能将无法正确生成原文链接。
+
 # 开发
 
 ## 环境

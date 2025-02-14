@@ -58,6 +58,7 @@ type FullSysConfigVO struct {
 	SmtpPort               string `json:"smtpPort,omitempty"`         //smtp port
 	SmtpUsername           string `json:"smtpUsername,omitempty"`     //smtp username
 	SmtpPassword           string `json:"smtpPassword,omitempty"`     //smtp password
+	FrontendHost           string `json:"frontendHost,omitempty"`     //前端地址
 	Version                string `json:"version,omitempty"`
 	CommitId               string `json:"commitId,omitempty"`
 }

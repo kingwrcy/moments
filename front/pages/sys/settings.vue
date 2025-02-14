@@ -107,6 +107,9 @@
       <UFormGroup label="smtp密码/授权码" name="smtpPassword" :ui="{label:{base:'font-bold'}}">
         <UInput v-model="state.smtpPassword" type="password"/>
       </UFormGroup>
+      <UFormGroup label="前端地址" name="frontendHost" :ui="{label:{base:'font-bold'}}">
+        <UInput v-model="state.frontendHost"  placeholder="https://www.example.com"/>
+      </UFormGroup>
 
     <UButton class="justify-center" @click="save">保存</UButton>
   </div>
@@ -153,6 +156,7 @@ const state = reactive({
   smtpPort: "",
   smtpUsername: "",
   smtpPassword: "",
+  frontendHost: "",
 })
 
 const reload = async () => {

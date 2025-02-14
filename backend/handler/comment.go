@@ -203,9 +203,9 @@ func (c CommentHandler) AddComment(ctx echo.Context) error {
 
 	if err = c.base.db.Save(&comment).Error; err == nil {
 		go func() {
-			frontendHost := ctx.QueryParam("frontend_host")
+			frontendHost := sysConfigVO.FrontendHost
 			if frontendHost == "" {
-				frontendHost = ctx.Request().Host // 如果未传递，则使用后端默认的 Host
+				frontendHost = ctx.Request().Host // 如果未设置，则使用后端默认的 Host
 			}
 			if err = c.commentEmailNotification(comment, frontendHost); err != nil {
 				c.base.log.Error().Msgf("邮件通知失败,原因:%s", err)

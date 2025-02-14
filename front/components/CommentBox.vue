@@ -78,7 +78,7 @@ const doComment = async (token?: string) => {
     toast.error("评论字数超过限制长度:" + sysConfig.value.maxCommentLength)
     return
   }
-  await useMyFetch(`/comment/add?frontend_host=${encodeURIComponent(window.location.origin)}`, {...state, token:token})
+  await useMyFetch(`/comment/add`, {...state, token:token})
   toast.success("评论成功!")
   currentCommentBox.value = ''
   state.username = ''

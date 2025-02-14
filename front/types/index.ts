@@ -78,6 +78,7 @@ export type SysConfigVO = {
     smtpPort: string
     smtpUsername: string
     smtpPassword: string
+    frontendHost: string
 }
 
 

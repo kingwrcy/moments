@@ -76,7 +76,7 @@ useHead({
       rel: 'alternate',
       type: 'application/rss+xml',
       title: '我的 RSS 订阅',
-      href: sysConfigVO.rss || `/rss?frontend_host=${encodeURIComponent(window.location.origin)}`,
+      href: sysConfigVO.rss || `/rss`,
     },
   ],
   style: [

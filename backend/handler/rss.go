@@ -32,9 +32,17 @@ func NewRssHandler(injector do.Injector) *RssHandler {
 }
 
 func (r RssHandler) GetRss(c echo.Context) error {
-	frontendHost := c.QueryParam("frontend_host")
+	var (
+		sysConfig   db.SysConfig
+		sysConfigVO vo.FullSysConfigVO
+	)
+	r.base.db.First(&sysConfig)
+	_ = json.Unmarshal([]byte(sysConfig.Content), &sysConfigVO)
+	fmt.Println(sysConfigVO)
+
+	frontendHost := sysConfigVO.FrontendHost
 	if frontendHost == "" {
-		frontendHost = c.Request().Host // 如果未传递，则使用后端默认的 Host
+		frontendHost = c.Request().Host // 如果未设置，则使用后端默认的 Host
 	}
 	rss, err := r.generateRss(frontendHost)
 	if err != nil {
