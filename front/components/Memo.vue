@@ -52,8 +52,8 @@
             <external-url-preview :favicon="item.externalFavicon" :title="item.externalTitle" :url="item.externalUrl"
                                   v-if="item.externalFavicon&&item.externalTitle&&item.externalUrl"/>
           </div>
-          <div :class="{'cursor-pointer': !isDetailPage}" @click="!isDetailPage && navigateTo(`/memo/${item.id}`)">
-            <upload-image-preview :imgs="item.imgs" :imgConfigs="item.imgConfigs" :memo-id="item.id"/>
+          <div>
+            <upload-image-preview :imgs="item.imgs" :imgConfigs="item.imgConfigs"/>
           </div>
           <div :class="{'cursor-pointer': !isDetailPage}" @click="!isDetailPage && navigateTo(`/memo/${item.id}`)">
             <music-preview v-if="extJSON.music && extJSON.music.id" v-bind="extJSON.music"/>
