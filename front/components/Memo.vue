@@ -29,8 +29,10 @@
         </div>
         <div class="mb-2">
           <div :style="getMemoMaxHeightStyle()" class="overflow-hidden">
-            <div class="markdown-content " ref="contentRef"
-                 v-html="content"></div>
+            <div class="markdown-content" ref="contentRef"
+                 v-html="content" 
+                 :class="{'cursor-pointer': !isDetailPage}"
+                 @click="!isDetailPage && navigateTo(`/memo/${item.id}`)"></div>
           </div>
           <div class="text-[#576b95] text-sm my-1 cursor-pointer"
                @click="doShowMore" v-if="showMore">{{ getMemoMaxHeightStyle() === '' ? '收起' : '全文' }}
@@ -46,15 +48,20 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <external-url-preview :favicon="item.externalFavicon" :title="item.externalTitle" :url="item.externalUrl"
-                                v-if="item.externalFavicon&&item.externalTitle&&item.externalUrl"/>
-          <upload-image-preview :imgs="item.imgs" :imgConfigs="item.imgConfigs" :memo-id="item.id"/>
-
-          <music-preview v-if="extJSON.music && extJSON.music.id" v-bind="extJSON.music"/>
-          <douban-book-preview v-if="extJSON.doubanBook && extJSON.doubanBook.title" :book="extJSON.doubanBook"/>
-          <douban-movie-preview v-if="extJSON.doubanMovie && extJSON.doubanMovie.title" :movie="extJSON.doubanMovie"/>
-          <video-preview-iframe v-if="extJSON.video && ['bilibili', 'youtube'].includes(extJSON.video.type) && extJSON.video.value" :url="extJSON.video.value"/>
-          <video-preview v-if="extJSON.video && extJSON.video.type === 'online' && extJSON.video.value" :url="extJSON.video.value"/>
+          <div :class="{'cursor-pointer': !isDetailPage}" @click="!isDetailPage && navigateTo(`/memo/${item.id}`)">
+            <external-url-preview :favicon="item.externalFavicon" :title="item.externalTitle" :url="item.externalUrl"
+                                  v-if="item.externalFavicon&&item.externalTitle&&item.externalUrl"/>
+          </div>
+          <div :class="{'cursor-pointer': !isDetailPage}" @click="!isDetailPage && navigateTo(`/memo/${item.id}`)">
+            <upload-image-preview :imgs="item.imgs" :imgConfigs="item.imgConfigs" :memo-id="item.id"/>
+          </div>
+          <div :class="{'cursor-pointer': !isDetailPage}" @click="!isDetailPage && navigateTo(`/memo/${item.id}`)">
+            <music-preview v-if="extJSON.music && extJSON.music.id" v-bind="extJSON.music"/>
+            <douban-book-preview v-if="extJSON.doubanBook && extJSON.doubanBook.title" :book="extJSON.doubanBook"/>
+            <douban-movie-preview v-if="extJSON.doubanMovie && extJSON.doubanMovie.title" :movie="extJSON.doubanMovie"/>
+            <video-preview-iframe v-if="extJSON.video && ['bilibili', 'youtube'].includes(extJSON.video.type) && extJSON.video.value" :url="extJSON.video.value"/>
+            <video-preview v-if="extJSON.video && extJSON.video.type === 'online' && extJSON.video.value" :url="extJSON.video.value"/>
+          </div>
         </div>
 
         <div class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5"
