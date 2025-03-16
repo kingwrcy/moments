@@ -13,6 +13,7 @@ type S3VO struct {
 type SysConfigVO struct {
 	EnableS3               bool   `json:"enableS3"`                   //是否启用S3
 	EnableAutoLoadNextPage bool   `json:"enableAutoLoadNextPage"`     //是否启用自动加载下一页
+	EnableDetailEntry      bool   `json:"enableDetailEntry"`          //是否启用首页详情按钮
 	Favicon                string `json:"favicon,omitempty"`          //favicon
 	Title                  string `json:"title,omitempty"`            //标题
 	BeiAnNo                string `json:"beiAnNo,omitempty"`          //备案号码
@@ -37,6 +38,7 @@ type FullSysConfigVO struct {
 	AdminUserName          string `json:"adminUserName,omitempty"`    //管理员名称
 	EnableS3               bool   `json:"enableS3"`                   //是否启用S3
 	EnableAutoLoadNextPage bool   `json:"enableAutoLoadNextPage"`     //是否启用自动加载下一页
+	EnableDetailEntry      bool   `json:"enableDetailEntry"`          //是否启用首页详情按钮
 	Favicon                string `json:"favicon,omitempty"`          //favicon
 	Title                  string `json:"title,omitempty"`            //标题
 	BeiAnNo                string `json:"beiAnNo,omitempty"`          //备案号码

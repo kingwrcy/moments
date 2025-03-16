@@ -169,7 +169,7 @@
                   <div>评论</div>
                 </div>
               </template>
-              <template v-if="$route.path !== `/memo/${item.id}`">
+              <template v-if="$route.path !== `/memo/${item.id}` && sysConfig.enableDetailEntry">
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
                 <div
                   class="flex flex-row gap-1 cursor-pointer items-center px-4"
