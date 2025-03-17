@@ -139,6 +139,13 @@
     </div>
 
     <img class="header-img w-full" :src="props.user.coverUrl" alt="" />
+    <UIcon
+        v-if="$route.path == '/' && sysConfig.friendLinks"
+        name="i-carbon-friendship"
+        title="友情链接"
+        class="sm:hidden absolute right-3 top-3 text-[#9fc84a] dark:text-white w-5 h-5 cursor-pointer sm:w-[567px]"
+        @click="showfriendLinks = true"
+      />
     <div class="absolute right-2 bottom-[-40px]">
       <div class="userinfo flex flex-col">
         <div class="flex flex-row items-center gap-4 justify-end">
@@ -157,7 +164,7 @@
     </div>
 
     <template>
-      <UModal v-model="showfriendLinks" :ui="{ container: 'sm:items-start' }">
+      <UModal v-model="showfriendLinks" :ui="{ container: 'sm:items-start fixed top-5 left-0 right-3 flex justify-center items-start' }">
         <div
           class="absolute top-2 right-2 cursor-pointer"
           @click="showfriendLinks = false"
@@ -165,8 +172,8 @@
           <UIcon name="i-carbon-close" class="text-[#9fc84a] w-5 h-5" />
         </div>
         <div class="flex flex-col gap-2 p-4 text-gray-500 dark:text-white">
-          <h3 class="flex items-center text font-bold mb-2">友情链接</h3>
-          <div class="grid grid-cols-3 gap-4 text-sm">
+          <h3 class="flex items-center text font-bold mb-2">联系人</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div
               v-for="link in friendLinkList"
               :key="link.url"
@@ -186,6 +193,7 @@
               </a>
             </div>
           </div>
+          <div class="flex justify-center item-center mt-2 text-sm text-gray-400">共 {{ friendLinkList.length }} 个朋友</div>
         </div>
       </UModal>
     </template>
