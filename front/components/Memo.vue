@@ -182,17 +182,33 @@
             </div>
           </div>
           <template>
-            <UModal v-model="moreToolbar" :ui="{ container: 'sm:items-end' }">
+            <UModal
+              v-model="moreToolbar"
+              :ui="{
+                container:
+                  'fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center',
+              }"
+            >
               <div
-                class="flex items-center justify-center gap-8 p-4 text-gray-500 dark:text-white"
+                class="flex items-center justify-center pt-4 text-gray-500 dark:text-white"
+              >
+                基本操作
+              </div>
+              <div
+                class="flex items-center justify-center gap-8 p-4 text-gray-500 dark:text-white h-[200px]"
               >
                 <template v-if="global.userinfo.id === 1">
                   <div
                     class="flex flex-col gap-1 cursor-pointer items-center"
                     @click="setPinned(item.id)"
                   >
-                    <UIcon class="text-[#9fc84a] w-5 h-5" name="i-carbon-pin" />
-                    <div>{{ item.pinned ? "取消" : "" }}置顶</div>
+                    <span
+                      class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"
+                      ><UIcon class="w-5 h-5" name="i-carbon-pin"
+                    /></span>
+                    <div class="text-sm mt-1">
+                      {{ item.pinned ? "取消" : "" }}置顶
+                  </div>
                   </div>
                 </template>
                 <template v-if="global && global.userinfo.id === item.userId">
@@ -200,11 +216,11 @@
                     class="flex flex-col gap-1 cursor-pointer items-center"
                     @click="go2Edit(item.id)"
                   >
-                    <UIcon
-                      class="text-[#9fc84a] w-5 h-5"
-                      name="i-carbon-edit"
-                    />
-                    <div>编辑</div>
+                    <span
+                      class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"
+                      ><UIcon class="w-5 h-5" name="i-carbon-edit"
+                    /></span>
+                    <div class="text-sm mt-1">编辑</div>
                   </div>
                 </template>
                 <template
@@ -220,11 +236,11 @@
                     <div
                       class="flex flex-col gap-1 cursor-pointer items-center"
                     >
-                      <UIcon
-                        class="text-[#9fc84a] w-5 h-5"
-                        name="i-carbon-trash-can"
-                      />
-                      <div>删除</div>
+                      <span
+                        class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"
+                        ><UIcon class="w-5 h-5" name="i-carbon-trash-can"
+                      /></span>
+                      <div class="text-sm mt-1">删除</div>
                     </div>
                   </Confirm>
                 </template>
