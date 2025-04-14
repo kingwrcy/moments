@@ -1,64 +1,38 @@
 <template>
   <div v-if="$route.path === `/memo/${item.id}`" class="header relative mb-14">
-    <div
-      :class="{ 'bg-[#4c4c4c]/80 z-10': y > 100 }"
-      class="flex fixed justify-between items-center p-4 w-full md:w-[567px] text-white top-0"
-    >
+    <div :class="{ 'bg-[#4c4c4c]/80 z-10': y > 100 }"
+      class="flex fixed justify-between items-center p-4 w-full md:w-[567px] text-white top-0">
       <NuxtLink class="flex items-center" title="返回主页">
-        <UIcon
-          @click="navigateTo('/')"
-          name="i-carbon-chevron-left"
-          class="w-5 h-5 cursor-pointer mr-4"
-        />
+        <UIcon @click="navigateTo('/')" name="i-carbon-chevron-left" class="w-5 h-5 cursor-pointer mr-4" />
         <span>详情</span>
       </NuxtLink>
-      <UIcon
-        v-if="global.userinfo.id === 1 || global.userinfo.id === item.userId"
-        name="i-solar-menu-dots-bold"
-        class="w-5 h-5 cursor-pointer"
-        @click="moreToolbar = true"
-      />
+      <UIcon v-if="global.userinfo.id === 1 || global.userinfo.id === item.userId" name="i-solar-menu-dots-bold"
+        class="w-5 h-5 cursor-pointer" @click="moreToolbar = true" />
     </div>
   </div>
   <div>
-    <div
-      class="relative flex gap-4 text-sm dark:bg-neutral-800 p-4"
-      :class="[item.pinned ? 'bg-slate-100 dark:bg-neutral-700' : '']"
-    >
+    <div class="relative flex gap-4 text-sm dark:bg-neutral-800 p-4"
+      :class="[item.pinned ? 'bg-slate-100 dark:bg-neutral-700' : '']">
       <div class="avatar">
         <NuxtLink :to="`/memo/${item.id}`">
           <UAvatar :src="item.user.avatarUrl" alt="Avatar" />
         </NuxtLink>
       </div>
       <div class="flex flex-col gap-1 flex-1">
-        <div
-          class="username text-[#576b95] mb-1 dark:text-white flex justify-between"
-        >
+        <div class="username text-[#576b95] mb-1 dark:text-white flex justify-between">
           <NuxtLink class="cursor-pointer" :to="`/user/${item.user.id}`">
             {{ item.user.nickname }}
           </NuxtLink>
           <div>
             <UIcon v-if="item.pinned" name="i-carbon-pin" />
-            <UIcon
-              v-if="item.showType === 0"
-              name="i-carbon-locked"
-              class="text-red-500 ml-2 dark:text-white"
-            />
+            <UIcon v-if="item.showType === 0" name="i-carbon-locked" class="text-red-500 ml-2 dark:text-white" />
           </div>
         </div>
         <div class="mb-2">
           <div :style="getMemoMaxHeightStyle()" class="overflow-hidden">
-            <div
-              class="markdown-content"
-              ref="contentRef"
-              v-html="content"
-            ></div>
+            <div class="markdown-content" ref="contentRef" v-html="content"></div>
           </div>
-          <div
-            v-if="showMore"
-            class="text-[#576b95] text-sm my-1 cursor-pointer"
-            @click="doShowMore"
-          >
+          <div v-if="showMore" class="text-[#576b95] text-sm my-1 cursor-pointer" @click="doShowMore">
             {{ getMemoMaxHeightStyle() === "" ? "收起" : "全文" }}
           </div>
           <div v-if="tags.length > 0" class="flex gap-2 mt-2">
@@ -73,54 +47,28 @@
         </div>
 
         <div class="flex flex-col gap-2">
-          <external-url-preview
-            v-if="
-              item.externalFavicon && item.externalTitle && item.externalUrl
-            "
-            :favicon="item.externalFavicon"
-            :title="item.externalTitle"
-            :url="item.externalUrl"
-          />
-          <upload-image-preview
-            :imgs="item.imgs"
-            :imgConfigs="item.imgConfigs"
-            :memo-id="item.id"
-          />
+          <external-url-preview v-if="
+            item.externalFavicon && item.externalTitle && item.externalUrl
+          " :favicon="item.externalFavicon" :title="item.externalTitle" :url="item.externalUrl" />
+          <upload-image-preview :imgs="item.imgs" :imgConfigs="item.imgConfigs" :memo-id="item.id" />
 
-          <music-preview
-            v-if="extJSON.music && extJSON.music.id"
-            v-bind="extJSON.music"
-          />
-          <douban-book-preview
-            v-if="extJSON.doubanBook && extJSON.doubanBook.title"
-            :book="extJSON.doubanBook"
-          />
-          <douban-movie-preview
-            v-if="extJSON.doubanMovie && extJSON.doubanMovie.title"
-            :movie="extJSON.doubanMovie"
-          />
-          <video-preview-iframe
-            v-if="
-              extJSON.video &&
-              ['bilibili', 'youtube'].includes(extJSON.video.type) &&
-              extJSON.video.value
-            "
-            :url="extJSON.video.value"
-          />
-          <video-preview
-            v-if="
-              extJSON.video &&
-              extJSON.video.type === 'online' &&
-              extJSON.video.value
-            "
-            :url="extJSON.video.value"
-          />
+          <music-preview v-if="extJSON.music && extJSON.music.id" v-bind="extJSON.music" />
+          <douban-book-preview v-if="extJSON.doubanBook && extJSON.doubanBook.title" :book="extJSON.doubanBook" />
+          <douban-movie-preview v-if="extJSON.doubanMovie && extJSON.doubanMovie.title" :movie="extJSON.doubanMovie" />
+          <video-preview-iframe v-if="
+            extJSON.video &&
+            ['bilibili', 'youtube'].includes(extJSON.video.type) &&
+            extJSON.video.value
+          " :url="extJSON.video.value" />
+          <video-preview v-if="
+            extJSON.video &&
+            extJSON.video.type === 'online' &&
+            extJSON.video.value
+          " :url="extJSON.video.value" />
         </div>
 
-        <div
-          v-if="location"
-          class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5"
-        >
+        <div v-if="location"
+          class="text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none flex items-center gap-0.5">
           <UIcon name="i-carbon-location" />
           <span>{{ location }}</span>
         </div>
@@ -133,48 +81,33 @@
                 : $dayjs(item.createdAt).format("YYYY-MM-DD HH:mm:ss")
             }}
           </div>
-          <div
-            @click="showToolbar = true"
-            class="toolbar-icon px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center"
-          >
-            <img
-              class="w-3 h-3"
-              src="data:image/svg+xml,%3csvg%20t='1709204592505'%20class='icon'%20viewBox='0%200%201024%201024'%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20p-id='16237'%20width='16'%20height='16'%3e%3cpath%20d='M229.2%20512m-140%200a140%20140%200%201%200%20280%200%20140%20140%200%201%200-280%200Z'%20p-id='16238'%20fill='%238a8a8a'%3e%3c/path%3e%3cpath%20d='M794.8%20512m-140%200a140%20140%200%201%200%20280%200%20140%20140%200%201%200-280%200Z'%20p-id='16239'%20fill='%238a8a8a'%3e%3c/path%3e%3c/svg%3e"
-            />
+          <div @click="showToolbar = true"
+            class="toolbar-icon px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center">
+            <img class="w-3 h-3"
+              src="data:image/svg+xml,%3csvg%20t='1709204592505'%20class='icon'%20viewBox='0%200%201024%201024'%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20p-id='16237'%20width='16'%20height='16'%3e%3cpath%20d='M229.2%20512m-140%200a140%20140%200%201%200%20280%200%20140%20140%200%201%200-280%200Z'%20p-id='16238'%20fill='%238a8a8a'%3e%3c/path%3e%3cpath%20d='M794.8%20512m-140%200a140%20140%200%201%200%20280%200%20140%20140%200%201%200-280%200Z'%20p-id='16239'%20fill='%238a8a8a'%3e%3c/path%3e%3c/svg%3e" />
           </div>
 
-          <div
-            v-if="showToolbar"
-            ref="toolbarRef"
-            class="absolute top-[-8px] right-[32px] bg-[#4c4c4c] rounded text-white p-2"
-          >
+          <div v-if="showToolbar" ref="toolbarRef"
+            class="absolute top-[-8px] right-[32px] bg-[#4c4c4c] rounded text-white p-2">
             <div class="flex flex-row gap-2">
-              <div
-                class="flex flex-row gap-1 cursor-pointer items-center px-4"
-                @click="likeMemo(item.id)"
-              >
-                <UIcon
-                  name="i-carbon-favorite"
-                  :class="[liked ? 'text-red-400' : '']"
-                />
+              <div class="flex flex-row gap-1 cursor-pointer items-center px-4" @click="likeMemo(item.id)">
+                <UIcon name="i-carbon-favorite" :class="[liked ? 'text-red-400' : '']" />
                 <div>赞</div>
               </div>
               <template v-if="sysConfig.enableComment">
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
-                <div
-                  class="flex flex-row gap-1 cursor-pointer items-center px-4"
-                  @click="doComment"
-                >
+                <div class="flex flex-row gap-1 cursor-pointer items-center px-4" @click="doComment">
                   <UIcon name="i-octicon-comment" />
                   <div>评论</div>
                 </div>
               </template>
-              <template v-if="$route.path !== `/memo/${item.id}`">
+              <template v-if="
+                $route.path !== `/memo/${item.id}` &&
+                sysConfig.enableDetailEntry
+              ">
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
-                <div
-                  class="flex flex-row gap-1 cursor-pointer items-center px-4"
-                  @click="navigateTo(`/memo/${item.id}`)"
-                >
+                <div class="flex flex-row gap-1 cursor-pointer items-center px-4"
+                  @click="navigateTo(`/memo/${item.id}`)">
                   <UIcon name="i-carbon-view" />
                   <div>详情</div>
                 </div>
@@ -182,64 +115,28 @@
             </div>
           </div>
           <template>
-            <UModal
-              v-model="moreToolbar"
-              :ui="{
-                container:
-                  'fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center',
-              }"
-            >
-              <div
-                class="flex items-center justify-center pt-4 text-gray-500 dark:text-white"
-              >
-                基本操作
-              </div>
-              <div
-                class="flex items-center justify-center gap-8 p-4 text-gray-500 dark:text-white h-[200px]"
-              >
+            <UModal v-model="moreToolbar" :ui="{ container: 'fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center' }">
+              <div class="flex items-center justify-center pt-4 text-gray-500 dark:text-white">基本操作</div>
+              <div class="flex items-center justify-center gap-8 p-4 text-gray-500 dark:text-white h-[200px]">
                 <template v-if="global.userinfo.id === 1">
-                  <div
-                    class="flex flex-col gap-1 cursor-pointer items-center"
-                    @click="setPinned(item.id)"
-                  >
-                    <span
-                      class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"
-                      ><UIcon class="w-5 h-5" name="i-carbon-pin"
-                    /></span>
-                    <div class="text-sm mt-1">
-                      {{ item.pinned ? "取消" : "" }}置顶
-                  </div>
+                  <div class="flex flex-col gap-1 cursor-pointer items-center" @click="setPinned(item.id)">
+                    <span class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"><UIcon class="w-5 h-5" name="i-carbon-pin" /></span>
+                    <div class="text-sm mt-1">{{ item.pinned ? "取消" : "" }}置顶</div>
                   </div>
                 </template>
                 <template v-if="global && global.userinfo.id === item.userId">
-                  <div
-                    class="flex flex-col gap-1 cursor-pointer items-center"
-                    @click="go2Edit(item.id)"
-                  >
-                    <span
-                      class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"
-                      ><UIcon class="w-5 h-5" name="i-carbon-edit"
-                    /></span>
+                  <div class="flex flex-col gap-1 cursor-pointer items-center" @click="go2Edit(item.id)">
+                    <span class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"><UIcon class="w-5 h-5" name="i-carbon-edit" /></span>
                     <div class="text-sm mt-1">编辑</div>
                   </div>
                 </template>
-                <template
-                  v-if="
-                    global.userinfo.id === 1 ||
-                    global.userinfo.id === item.userId
-                  "
-                >
-                  <Confirm
-                    @ok="removeMemo(item.id)"
-                    @cancel="moreToolbar = false"
-                  >
-                    <div
-                      class="flex flex-col gap-1 cursor-pointer items-center"
-                    >
-                      <span
-                        class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"
-                        ><UIcon class="w-5 h-5" name="i-carbon-trash-can"
-                      /></span>
+                <template v-if="
+                  global.userinfo.id === 1 ||
+                  global.userinfo.id === item.userId
+                ">
+                  <Confirm @ok="removeMemo(item.id)" @cancel="moreToolbar = false">
+                    <div class="flex flex-col gap-1 cursor-pointer items-center">
+                      <span class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"><UIcon class="w-5 h-5" name="i-carbon-trash-can" /></span>
                       <div class="text-sm mt-1">删除</div>
                     </div>
                   </Confirm>
@@ -249,13 +146,8 @@
           </template>
         </div>
 
-        <div
-          class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-[#202020] flex flex-col gap-1"
-        >
-          <div
-            v-if="item.favCount > 0"
-            class="flex flex-row py-2 px-4 gap-2 items-center text-sm"
-          >
+        <div class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-[#202020] flex flex-col gap-1">
+          <div v-if="item.favCount > 0" class="flex flex-row py-2 px-4 gap-2 items-center text-sm">
             <UIcon name="i-carbon-favorite" class="text-red-500" />
             <div class="text-[#576b95]">
               <span class="mx-1">{{ item.favCount }}位访客</span>
@@ -263,21 +155,10 @@
           </div>
           <div class="flex flex-col gap-1" v-if="sysConfig.enableComment">
             <CommentBox :comment-id="0" :memo-id="item.id" />
-            <div
-              class="space-y-1"
-              :class="[item.comments && item.comments.length > 0 ? 'py-2' : '']"
-            >
-              <div
-                v-if="item.comments && item.comments.length > 0"
-                v-for="c in item.comments"
-                :key="c.id"
-                class="px-4 relative flex-col text-sm"
-              >
-                <Comment
-                  :comment="c"
-                  :memo-id="item.id"
-                  :memo-user-id="item.user.id"
-                />
+            <div class="space-y-1" :class="[item.comments && item.comments.length > 0 ? 'py-2' : '']">
+              <div v-if="item.comments && item.comments.length > 0" v-for="c in item.comments" :key="c.id"
+                class="px-4 relative flex-col text-sm">
+                <Comment :comment="c" :memo-id="item.id" :memo-user-id="item.user.id" />
               </div>
             </div>
           </div>

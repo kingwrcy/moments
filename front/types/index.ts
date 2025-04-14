@@ -64,6 +64,7 @@ export type SysConfigVO = {
     rss: string,
     friendLinks: string,
     enableAutoLoadNextPage: boolean
+    enableDetailEntry: boolean
     enableS3: boolean
     enableRegister: boolean
     enableGoogleRecaptcha: boolean,
@@ -141,3 +142,13 @@ export type Video = {
 }
 
 export type VideoType = Video["type"]
+
+export type Links = {
+    id: number;
+    linksName: string;
+    linksIcon: string;
+    linksUrl: string;
+    linksDesc: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+} 

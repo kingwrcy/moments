@@ -20,7 +20,7 @@
       <span class="text-sm mt-1">发表</span>
     </div>
     <div
-      class="flex items-center justify-center gap-8 p-8 pt-2 text-gray-500 dark:text-white"
+      class="flex items-center justify-center gap-3 p-4 text-gray-500 dark:text-white"
     >
       <div class="flex flex-col items-center gap-1">
         <span
@@ -94,6 +94,19 @@
         <span class="text-sm mt-1">检索</span>
       </div>
       <div
+        v-if="$route.path == '/'"
+        class="flex flex-col items-center"
+        @click="navigate('/links')"
+        title="友情链接"
+      >
+        <span
+          class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"
+        >
+          <UIcon name="i-carbon-friendship" class="w-6 h-6 cursor-pointer" />
+        </span>
+        <span class="text-sm mt-1">友链</span>
+      </div>
+      <div
         v-if="$route.path !== '/sys/settings' && global.userinfo.id === 1"
         class="flex flex-col items-center"
         @click="navigate('/sys/settings')"
@@ -139,7 +152,9 @@
 <script setup lang="ts">
 import { toast } from "vue-sonner";
 import { useGlobalState } from "~/store";
+import type { SysConfigVO } from "~/types";
 
+const sysConfig = useState<SysConfigVO>("sysConfig");
 const global = useGlobalState();
 const mode = useColorMode();
 const open = useState<boolean>("sidebarOpen", () => false);
