@@ -99,7 +99,7 @@
         >共 {{ linksList.length }} 个朋友</span
       >
       <span v-else class="text-gray-600 dark:text-gray-300">
-        暂无朋友
+        <span class="text font-semibold">空空如也</span>
         <UButton
           v-if="global.userinfo.id === 1"
           class="ml-2"
@@ -186,7 +186,7 @@ const getLinksList = async () => {
       showDelete.value[links.id] = false;
     });
   } catch (error) {
-    toast.error("获取友情链接列表失败，请稍后重试");
+    linksList.value = [];
   }
 };
 
