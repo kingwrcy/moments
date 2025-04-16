@@ -20,7 +20,7 @@
       <span class="text-sm mt-1">发表</span>
     </div>
     <div
-      class="flex items-center justify-center gap-3 p-4 text-gray-500 dark:text-white"
+      class="flex items-center justify-center gap-3 p-4 text-gray-500 dark:text-white min-h-[120px]"
     >
       <div class="flex flex-col items-center gap-1">
         <span
