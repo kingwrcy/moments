@@ -12,44 +12,36 @@
       <UForm class="space-y-4" size="sm" :state="state">
         <UFormGroup
           label="名称"
-          name="linksName"
+          name="name"
           :ui="{ label: { base: 'font-bold' } }"
         >
-          <UInput
-            v-model="state.linksName"
-            class="mb-2"
-            placeholder="(*此项必填)"
-          />
+          <UInput v-model="state.name" class="mb-2" placeholder="(*此项必填)" />
         </UFormGroup>
         <UFormGroup
           label="图标"
-          name="linksIcon"
+          name="icon"
           :ui="{ label: { base: 'font-bold' } }"
         >
-          <UInput
-            v-model="state.linksIcon"
-            class="mb-2"
-            placeholder="(*此项必填)"
-          />
+          <UInput v-model="state.icon" class="mb-2" placeholder="(*此项必填)" />
         </UFormGroup>
         <UFormGroup
           label="网址"
-          name="linksUrl"
+          name="url"
           :ui="{ label: { base: 'font-bold' } }"
         >
           <UInput
-            v-model="state.linksUrl"
+            v-model="state.url"
             class="mb-2"
             placeholder="(*此项必填，须以 http(s):// 开头)"
           />
         </UFormGroup>
         <UFormGroup
           label="描述"
-          name="linksDesc"
+          name="desc"
           :ui="{ label: { base: 'font-bold' } }"
         >
           <UInput
-            v-model="state.linksDesc"
+            v-model="state.desc"
             class="mb-2"
             placeholder="(此项非必填)"
           />
@@ -64,29 +56,29 @@
   <div class="bg-white dark:bg-neutral-800">
     <div class="grid sm:grid-cols-2 grid-cols gap-4 p-4">
       <div
-        v-for="links in linksList"
-        :key="links.id"
+        v-for="link in linksList"
+        :key="link.id"
         class="bg-neutral-100 dark:bg-neutral-700 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 duration-300 relative"
-        @mouseenter="showDeleteIcon(links.id)"
-        @mouseleave="hideDeleteIcon(links.id)"
+        @mouseenter="showDeleteIcon(link.id)"
+        @mouseleave="hideDeleteIcon(link.id)"
       >
-        <a :href="links.linksUrl" target="_blank" class="block p-4">
+        <a :href="link.url" target="_blank" class="block p-4">
           <div class="flex items-center gap-2 mb-2">
             <img
-              :src="links.linksIcon"
+              :src="link.icon"
               alt="Friend Avatar"
               class="w-8 h-8 rounded-full"
             />
-            <span class="text font-semibold">{{ links.linksName }}</span>
+            <span class="text font-semibold">{{ link.name }}</span>
           </div>
           <p class="text-gray-600 dark:text-gray-300 text-sm">
-            {{ links.linksDesc || "暂无描述" }}
+            {{ link.desc || "暂无描述" }}
           </p>
         </a>
         <div
-          v-if="showDelete[links.id] && global.userinfo.id === 1"
+          v-if="showDelete[link.id] && global.userinfo.id === 1"
           class="absolute top-0 right-0 px-1 bg-white dark:bg-gray-900 m-2 rounded hover:text-red-500 cursor-pointer"
-          @click="showConfirmModal(links.id)"
+          @click="showConfirmModal(link.id)"
         >
           <UIcon name="i-carbon-trash-can" />
         </div>
@@ -128,44 +120,44 @@
 </template>
 
 <script setup lang="ts">
-import type { Links, UserVO } from "~/types";
+import type { Link, UserVO } from "~/types";
 import { toast } from "vue-sonner";
 import { useGlobalState } from "~/store";
 
 const global = useGlobalState();
 const state = reactive({
-  linksName: "",
-  linksIcon: "",
-  linksUrl: "",
-  linksDesc: "",
+  name: "",
+  icon: "",
+  url: "",
+  desc: "",
 });
 
 const currentUser = useState<UserVO>("userinfo");
-const linksList = ref<Links[]>([]);
+const linksList = ref<Link[]>([]);
 const showAddModal = ref(false);
 const showDelete = ref<{ [key: number]: boolean }>({});
 const showConfirm = ref(false);
 const selectedLinkId = ref<number>(0);
 
 const addLinks = async () => {
-  if (state.linksName.length === 0) {
+  if (state.name.length === 0) {
     toast.warning("名称不能为空");
     return;
   }
-  if (state.linksIcon.length === 0) {
+  if (state.icon.length === 0) {
     toast.warning("图标地址不能为空");
     return;
   }
-  if (state.linksUrl.length === 0) {
+  if (state.url.length === 0) {
     toast.warning("网址不能为空");
     return;
   }
-  if (!/^https?:\/\//.test(state.linksUrl)) {
+  if (!/^https?:\/\//.test(state.url)) {
     toast.warning("必须以 http 或 https 开头");
     return;
   }
-  if (state.linksDesc.length === 0) {
-    state.linksDesc = "暂无描述";
+  if (state.desc.length === 0) {
+    state.desc = "暂无描述";
   }
 
   try {
@@ -181,9 +173,9 @@ const addLinks = async () => {
 const getLinksList = async () => {
   try {
     const response = await useMyFetch("/links/list");
-    linksList.value = response as Links[];
-    linksList.value.forEach((links) => {
-      showDelete.value[links.id] = false;
+    linksList.value = response as Link[];
+    linksList.value.forEach((link) => {
+      showDelete.value[link.id] = false;
     });
   } catch (error) {
     linksList.value = [];
