@@ -21,9 +21,6 @@
     <UFormGroup label="首页是否自动加载下一页" name="enableAutoLoadNextPage" :ui="{label:{base:'font-bold'}}">
       <UToggle v-model="state.enableAutoLoadNextPage"/>
     </UFormGroup>
-    <UFormGroup label="首页是否显示详情页按钮" name="enableDetailEntry" :ui="{label:{base:'font-bold'}}">
-      <UToggle v-model="state.enableDetailEntry"/>
-    </UFormGroup>
     <UFormGroup label="是否启用评论" name="enableComment" :ui="{label:{base:'font-bold'}}">
       <UToggle v-model="state.enableComment"/>
     </UFormGroup>
@@ -130,7 +127,6 @@ const state = reactive({
   googleSiteKey:"",
   googleSecretKey:"",
   enableAutoLoadNextPage: true,
-  enableDetailEntry: true,
   enableComment: true,
   enableRegister: true,
   maxCommentLength: 120,
