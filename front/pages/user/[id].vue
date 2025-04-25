@@ -1,10 +1,25 @@
 <template>
-  <Header v-if="memos.length>0" v-bind:user="memos[0].user"/>
+  <Header v-if="memos.length > 0" v-bind:user="memos[0].user" />
 
-  <div class="flex flex-col divide-y divide-[#C0BEBF]/20 ">
-    <Memo v-bind:memo="m" v-for="m in memos" :key="m.id"/>
+  <div class="flex flex-col">
+    <div v-for="(memo, index) in pinnedMemos" :key="index">
+      <userMemo v-bind:memo="memo" />
+    </div>
+    <div v-for="(memo, index) in nonPinnedMemoList" :key="index">
+      <div v-if="memo.displayYear">
+        <div class="pl-5 py-4">
+          <span class="text-2xl">{{ memo.displayYear }}年</span>
+        </div>
+      </div>
+      <userMemo v-bind:memo="memo" />
+    </div>
   </div>
-  <div ref="loadMoreEle" class="text-xs text-center text-gray-500 py-2" @click="loadMore" v-if="hasNext">
+  <div
+    ref="loadMoreEle"
+    class="text-xs text-center text-gray-500 py-2 cursor-pointer"
+    @click="loadMore"
+    v-if="hasNext"
+  >
     点击加载更多
   </div>
   <div class="text-xs text-center text-gray-500 py-2" @click="loadMore" v-else>
@@ -13,66 +28,94 @@
 </template>
 
 <script setup lang="ts">
-import type {MemoVO} from "~/types";
-import Memo from "~/components/Memo.vue";
-import {memoChangedEvent, memoReloadEvent} from "~/event";
-import {useElementVisibility} from "@vueuse/core";
-const loadMoreEle = ref(null)
-const targetIsVisible = useElementVisibility(loadMoreEle)
+import type { MemoVO, SysConfigVO } from "~/types";
+import userMemo from "~/components/userMemo.vue";
+import { memoChangedEvent, memoReloadEvent } from "~/event";
+import { useElementVisibility } from "@vueuse/core";
+import { computed, onMounted, reactive, ref, watch } from "vue";
+import dayjs from "dayjs";
+
+const loadMoreEle = ref(null);
+const targetIsVisible = useElementVisibility(loadMoreEle);
+const sysConfig = useState<SysConfigVO>("sysConfig");
+
 watch(targetIsVisible, async (visible) => {
-  if (visible) {
-    await loadMore()
+  if (visible && sysConfig.value?.enableAutoLoadNextPage) {
+    await loadMore();
   }
-})
-const hasNext = ref(false)
-const route = useRoute()
-const userId = route.params.id as any as string
+});
+
+const hasNext = ref(false);
+const route = useRoute();
+const userId = route.params.id as any as string;
 const state = reactive({
   page: 1,
   size: 10,
-})
+});
 
-const memos = ref<Array<MemoVO>>([])
+const memos = ref<Array<MemoVO>>([]);
+
 onMounted(async () => {
-  await reload()
-})
+  await reload();
+});
 
 const reload = async () => {
   const res = await useMyFetch<{
-    list: Array<MemoVO>,
-    total: number,
-    hasNext: boolean
-  }>('/memo/list', {
-    ...state, userId:parseInt(userId),
-  })
-  memos.value = res.list
-  hasNext.value = res.hasNext
-}
+    list: Array<MemoVO>;
+    total: number;
+    hasNext: boolean;
+  }>("/memo/list", {
+    ...state,
+    userId: parseInt(userId),
+  });
+  memos.value = res.list;
+  hasNext.value = res.hasNext;
+};
 
 const loadMore = async () => {
-  state.page = state.page + 1
+  state.page = state.page + 1;
   const res = await useMyFetch<{
-    list: Array<MemoVO>,
-    total: number,
-    hasNext: boolean
-  }>('/memo/list', state)
-  memos.value = [...memos.value, ...res.list]
-  hasNext.value = res.hasNext
-}
+    list: Array<MemoVO>;
+    total: number;
+    hasNext: boolean;
+  }>("/memo/list", state);
+  memos.value = [...memos.value, ...res.list];
+  hasNext.value = res.hasNext;
+};
 
 memoReloadEvent.on(async () => {
-  await reload()
-})
+  await reload();
+});
 
 memoChangedEvent.on(async (id: number) => {
-  const res = await useMyFetch<MemoVO>('/memo/get?latest=1&id=' + id)
-  const index = memos.value.findIndex(r => r.id === id)
+  const res = await useMyFetch<MemoVO>("/memo/get?latest=1&id=" + id);
+  const index = memos.value.findIndex((r) => r.id === id);
   if (index >= 0) {
-    memos.value[index] = res
+    memos.value[index] = res;
   }
-})
+});
+
+// 分离置顶和非置顶memo
+const pinnedMemos = computed(() => memos.value.filter((memo) => memo.pinned));
+const nonPinnedMemos = computed(() =>
+  memos.value.filter((memo) => !memo.pinned)
+);
+
+const nonPinnedMemoList = computed(() => {
+  if (!nonPinnedMemos.value.length) return [];
+  let lastYear = null;
+  return nonPinnedMemos.value.map((memo) => {
+    const currentYear = dayjs(memo.createdAt).locale("zh-cn").format("YYYY");
+    let returns = memo;
+    if (currentYear !== lastYear) {
+      lastYear = currentYear;
+      returns = { ...returns, displayYear: currentYear };
+    } else {
+      returns = { ...returns, displayYear: null };
+    }
+    return returns;
+  });
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
