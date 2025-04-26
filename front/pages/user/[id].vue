@@ -8,7 +8,8 @@
     <div v-for="(memo, index) in nonPinnedMemoList" :key="index">
       <div v-if="memo.displayYear">
         <div class="pl-5 py-4">
-          <span class="text-2xl">{{ memo.displayYear }}年</span>
+          <span class="text-xl">{{ memo.displayYear }}</span>
+          <span class="text-sm">年</span>
         </div>
       </div>
       <userMemo v-bind:memo="memo" />

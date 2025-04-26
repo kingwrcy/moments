@@ -1,9 +1,9 @@
 <template>
   <div
-    class="flex flex-row sm:gap-2 text-sm sm:py-2 sm:px-2 w-full"
+    class="flex flex-row text-sm w-full"
     :class="{ 'bg-slate-100 dark:bg-neutral-800': props.memo.pinned }"
   >
-    <div class="flex flex-col w-2/6 sm:w-1/6">
+    <div class="flex flex-col w-2/6 sm:w-1/6 pt-2">
       <template v-if="!isPinned">
         <div class="flex justify-center">
           <span class="text-xl font-bold">{{ formattedDate.day }}</span>
@@ -12,7 +12,7 @@
           >
         </div>
         <div
-          class="flex justify-center text-[#576b95] font-medium dark:text-white text-xs mt-2 mb-1 select-none"
+          class="flex justify-center text-[#576b95] font-medium dark:text-white text-xs mt-2 select-none"
         >
           {{ location }}
         </div>
@@ -21,9 +21,9 @@
         <span class="text-lg">置顶</span>
       </div>
     </div>
-    <div class="flex w-full flex-col px-2">
+    <div class="flex w-full flex-col pr-4 py-2">
       <NuxtLink class="flex" :to="`/memo/${item.id}`">
-        <div class="w-24 h-24" v-if="imageCount > 0">
+        <div class="sm:w-24 sm:h-24 w-20 h-20" v-if="imageCount > 0">
           <div
             v-if="imageCount === 1"
             class="h-full w-full border border-white dark:border-neutral-800"
@@ -136,43 +136,44 @@
         </div>
         <div class="flex-1 flex flex-col justify-between">
           <div
-            class="markdown-content bg-neutral-100 dark:bg-neutral-800 p-2 pb-1"
-            ref="contentRef"
+            class="markdown-content bg-neutral-100 dark:bg-neutral-800 p-2 pb-1.5 line-clamp-3"
             v-if="imageCount === 0"
             v-html="content"
           ></div>
           <div
-            class="markdown-content ml-2"
-            ref="contentRef"
+            class="markdown-content ml-1 line-clamp-3 !leading-5"
             v-if="imageCount > 0"
             v-html="content"
           ></div>
           <div
             v-if="imageCount > 0"
-            class="image-count text-sm text-gray-500 mt-1 ml-2"
+            class="text-sm text-gray-500 ml-1"
           >
             有{{ imageCount }}图
           </div>
         </div>
       </NuxtLink>
-      <div class="flex flex-col gap-2 mt-2">
+      <div class="flex flex-col gap-2">
         <external-url-preview
           v-if="hasExternalUrl"
           :favicon="item.externalFavicon"
           :title="item.externalTitle"
           :url="item.externalUrl"
+          class="pt-2"
         />
-        <music-preview v-if="hasMusic" v-bind="extJSON.music" />
-        <douban-book-preview v-if="hasDoubanBook" :book="extJSON.doubanBook" />
+        <music-preview v-if="hasMusic" v-bind="extJSON.music" class="pt-2"/>
+        <douban-book-preview v-if="hasDoubanBook" :book="extJSON.doubanBook" class="pt-2"/>
         <douban-movie-preview
           v-if="hasDoubanMovie"
           :movie="extJSON.doubanMovie"
+          class="pt-2"
         />
         <video-preview-iframe
           v-if="hasVideoIframe"
           :url="extJSON.video.value"
+          class="pt-2"
         />
-        <video-preview v-if="hasVideo" :url="extJSON.video.value" />
+        <video-preview v-if="hasVideo" :url="extJSON.video.value" class="pt-2"/>
       </div>
     </div>
   </div>
@@ -262,8 +263,6 @@ const hasVideo = computed(
     extJSON.value.video.value
 );
 
-const contentRef = ref<HTMLElement | null>(null);
-
 const getGridClass = (index: number, count: number) => {
   switch (count) {
     case 5:
@@ -283,27 +282,11 @@ const getGridClass = (index: number, count: number) => {
       return "";
   }
 };
-onMounted(() => {
-  if (contentRef.value) {
-    contentRef.value.classList.add("line-clamp-3");
-  }
-});
 </script>
 
 <style scoped>
 .upload-image-preview img {
   width: 100%;
   height: auto;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.image-count {
-  margin-top: 4px;
 }
 </style>
