@@ -104,7 +104,7 @@ const nonPinnedMemos = computed(() =>
 
 const nonPinnedMemoList = computed(() => {
   if (!nonPinnedMemos.value.length) return [];
-  let lastYear = null;
+  let lastYear: string | null = null;
   return nonPinnedMemos.value.map((memo) => {
     const currentYear = dayjs(memo.createdAt).locale("zh-cn").format("YYYY");
     let returns = memo;
