@@ -3,7 +3,7 @@
     class="flex flex-row text-sm w-full"
     :class="{ 'bg-slate-100 dark:bg-neutral-800': props.memo.pinned }"
   >
-    <div class="flex flex-col w-2/6 sm:w-1/6 pt-2">
+    <div class="flex flex-col w-24 pt-2">
       <template v-if="!isPinned">
         <div class="flex justify-center">
           <span class="text-xl font-bold">{{ formattedDate.day }}</span>
@@ -136,19 +136,18 @@
         </div>
         <div class="flex-1 flex flex-col justify-between">
           <div
-            class="markdown-content bg-neutral-100 dark:bg-neutral-800 p-2 pb-1.5 line-clamp-3"
+            ref="contentRef"
+            class="markdown-content bg-neutral-100 dark:bg-neutral-800 p-2"
             v-if="imageCount === 0"
             v-html="content"
           ></div>
           <div
-            class="markdown-content ml-1 line-clamp-3 !leading-5"
+            ref="contentRef"
+            class="markdown-content ml-1 !leading-5"
             v-if="imageCount > 0"
             v-html="content"
           ></div>
-          <div
-            v-if="imageCount > 0"
-            class="text-sm text-gray-500 ml-1"
-          >
+          <div v-if="imageCount > 0" class="text-sm text-gray-500 ml-1">
             有{{ imageCount }}图
           </div>
         </div>
@@ -161,8 +160,12 @@
           :url="item.externalUrl"
           class="pt-2"
         />
-        <music-preview v-if="hasMusic" v-bind="extJSON.music" class="pt-2"/>
-        <douban-book-preview v-if="hasDoubanBook" :book="extJSON.doubanBook" class="pt-2"/>
+        <music-preview v-if="hasMusic" v-bind="extJSON.music" class="pt-2" />
+        <douban-book-preview
+          v-if="hasDoubanBook"
+          :book="extJSON.doubanBook"
+          class="pt-2"
+        />
         <douban-movie-preview
           v-if="hasDoubanMovie"
           :movie="extJSON.doubanMovie"
@@ -173,7 +176,11 @@
           :url="extJSON.video.value"
           class="pt-2"
         />
-        <video-preview v-if="hasVideo" :url="extJSON.video.value" class="pt-2"/>
+        <video-preview
+          v-if="hasVideo"
+          :url="extJSON.video.value"
+          class="pt-2"
+        />
       </div>
     </div>
   </div>
@@ -282,6 +289,22 @@ const getGridClass = (index: number, count: number) => {
       return "";
   }
 };
+const contentRef = ref<HTMLElement | null>(null);
+onMounted(() => {
+  if (contentRef.value) {
+    const lineHeight = parseFloat(
+      getComputedStyle(contentRef.value).lineHeight
+    );
+    const maxHeight = lineHeight * 3;
+    if (contentRef.value.offsetHeight > maxHeight) {
+      let text = props.memo.content;
+      while (contentRef.value.offsetHeight > maxHeight && text.length > 0) {
+        text = text.slice(0, -1);
+        contentRef.value.textContent = text + "...";
+      }
+    }
+  }
+});
 </script>
 
 <style scoped>

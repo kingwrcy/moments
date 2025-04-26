@@ -6,11 +6,9 @@
       <userMemo v-bind:memo="memo" />
     </div>
     <div v-for="(memo, index) in nonPinnedMemoList" :key="index">
-      <div v-if="memo.displayYear">
-        <div class="pl-5 py-4">
-          <span class="text-xl">{{ memo.displayYear }}</span>
-          <span class="text-sm">年</span>
-        </div>
+      <div v-if="memo.displayYear" class="pl-4 py-4">
+        <span class="text-xl">{{ memo.displayYear }}</span>
+        <span class="text-sm">年</span>
       </div>
       <userMemo v-bind:memo="memo" />
     </div>
