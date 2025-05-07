@@ -10,7 +10,6 @@ type Memo struct {
 	Id              int32            `gorm:"column:id;primary_key;NOT NULL" json:"id,omitempty"`
 	Content         string           `gorm:"column:content" json:"content,omitempty"`
 	Imgs            string           `gorm:"column:imgs" json:"imgs,omitempty"`
-	FavCount        int32            `gorm:"column:favCount;default:0;NOT NULL" json:"favCount,omitempty"`
 	CommentCount    int32            `gorm:"column:commentCount;default:0;NOT NULL" json:"commentCount,omitempty"`
 	UserId          int32            `gorm:"column:userId;NOT NULL" json:"userId,omitempty"`
 	CreatedAt       *time.Time       `gorm:"column:createdAt;default:CURRENT_TIMESTAMP;NOT NULL" json:"createdAt,omitempty"`

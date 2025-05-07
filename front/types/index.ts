@@ -28,7 +28,6 @@ export type  MemoVO = {
     content: string
     location: string
     imgs: string
-    favCount: number
     userId: number
     createdAt: string
     updatedAt: string
