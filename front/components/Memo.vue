@@ -258,6 +258,7 @@
           <div
             v-if="likeInfo && likeInfo.length > 0"
             class="flex flex-row py-2 px-4 gap-2 items-center text-sm"
+            :class="[item.comments && item.comments.length > 0 ? 'border-b-[1px] border-neutral-[100] dark:border-neutral-800' : '']"
           >
             <div class="text-[#576b95]">
               <UIcon name="i-carbon-favorite" class="text-red-500" />
@@ -405,6 +406,7 @@ const getGuestId = () => {
 };
 
 const doLike = async (params: string) => {
+  showToolbar.value = false;
   try {
     await useMyFetch(`/memo/like?${params}`);
   toast.success("点赞成功!");
@@ -434,6 +436,7 @@ const likeMemo = async (id: number) => {
 };
 
 const doUnlike = async (params: string) => {
+  showToolbar.value = false;
   if (!global.value.userinfo.token) {
     toast.warning("访客不支持取消点赞！");
     return;
