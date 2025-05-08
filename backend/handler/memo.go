@@ -30,6 +30,7 @@ import (
 	"github.com/samber/do/v2"
 	"golang.org/x/net/html"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type MemoHandler struct {
@@ -298,6 +299,12 @@ func (m MemoHandler) LikeMemo(c echo.Context) error {
 		sysConfigVO vo.FullSysConfigVO
 		token       string
 	)
+
+	var currentMemo db.Memo
+	if err := m.base.db.Clauses(clause.Locking{Strength: "UPDATE"}).First(&currentMemo, c.QueryParam("id")).Error; err != nil {
+		m.base.log.Error().Err(err).Msg("获取memo记录失败")
+		return FailRespWithMsg(c, Fail, "系统繁忙，请稍后再试")
+	}
 	id, err := strconv.Atoi(c.QueryParam("id"))
 	if err != nil {
 		return FailResp(c, ParamError)
@@ -350,7 +357,8 @@ func (m MemoHandler) LikeMemo(c echo.Context) error {
 	// 开启事务
 	tx := m.base.db.Begin()
 	if tx.Error != nil {
-		return FailRespWithMsg(c, Fail, "开启事务失败")
+		m.base.log.Error().Err(tx.Error).Msg("开启事务失败")
+		return FailRespWithMsg(c, Fail, "系统繁忙，请稍后再试")
 	}
 
 	if err = tx.Create(&like).Error; err != nil {
@@ -414,10 +422,12 @@ func (m MemoHandler) GetLike(c echo.Context) error {
 		likeInfo = append(likeInfo, info)
 	}
 
-	return SuccessResp(c, h{
+	result := h{
 		"likes": likeInfo,
 		"total": len(likes),
-	})
+	}
+
+	return SuccessResp(c, result)
 }
 
 // @Router /api/memo/unlike [post]
@@ -428,6 +438,12 @@ func (m MemoHandler) UnlikeMemo(c echo.Context) error {
 		sysConfigVO vo.FullSysConfigVO
 		token       string
 	)
+
+	var currentMemo db.Memo
+	if err := m.base.db.Clauses(clause.Locking{Strength: "UPDATE"}).First(&currentMemo, c.QueryParam("id")).Error; err != nil {
+		m.base.log.Error().Err(err).Msg("获取memo记录失败")
+		return FailRespWithMsg(c, Fail, "系统繁忙，请稍后再试")
+	}
 	id, err := strconv.Atoi(c.QueryParam("id"))
 	if err != nil {
 		return FailResp(c, ParamError)
