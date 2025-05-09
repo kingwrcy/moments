@@ -275,16 +275,16 @@
                   showFullGuestLikes
                     ? guestLikes.map((info) => info.name).join(", ")
                     : guestLikes
-                        .slice(0, 5)
+                        .slice(0, 3)
                         .map((info) => info.name)
                         .join(", ")
                 }}
                 <span
-                  v-if="guestLikes.length > 5 && !showFullGuestLikes"
+                  v-if="guestLikes.length > 3 && !showFullGuestLikes"
                   class="cursor-pointer hover:text-blue-500"
                   @click="showFullGuestLikes = true"
                 >
-                  ...等{{ guestLikes.length - 5 }}位访客
+                  ...其余{{ guestLikes.length - 3 }}位访客
                 </span>
                 <span
                   v-if="showFullGuestLikes"
