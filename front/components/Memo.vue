@@ -256,14 +256,44 @@
           class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-[#202020] flex flex-col gap-1"
         >
           <div
-            v-if="likeInfo && likeInfo.length > 0"
+            v-if="loggedLikes.length > 0 || guestLikes.length > 0"
             class="flex flex-row py-2 px-4 gap-2 items-center text-sm"
-            :class="[item.comments && item.comments.length > 0 ? 'border-b-[1px] border-neutral-[100] dark:border-neutral-800' : '']"
+            :class="[
+              item.comments && item.comments.length > 0
+                ? 'border-b-[1px] border-neutral-[100] dark:border-neutral-800'
+                : '',
+            ]"
           >
             <div class="text-[#576b95]">
-              <UIcon name="i-carbon-favorite" class="text-red-500" />
-              {{ likeInfo.map((info) => info.name).join(", ") }}
-              <span v-if="likeNum > 5">等{{ likeNum }}位访客</span>
+              <UIcon name="i-carbon-favorite" class="text-red-500 mr-1" />
+              <span v-if="loggedLikes.length > 0">
+                {{ loggedLikes.map((info) => info.name).join(", ") }}
+                <span v-if="guestLikes.length > 0">, </span>
+              </span>
+              <template v-if="guestLikes.length > 0">
+                {{
+                  showFullGuestLikes
+                    ? guestLikes.map((info) => info.name).join(", ")
+                    : guestLikes
+                        .slice(0, 5)
+                        .map((info) => info.name)
+                        .join(", ")
+                }}
+                <span
+                  v-if="guestLikes.length > 5 && !showFullGuestLikes"
+                  class="cursor-pointer hover:text-blue-500"
+                  @click="showFullGuestLikes = true"
+                >
+                  ...等{{ guestLikes.length - 5 }}位访客
+                </span>
+                <span
+                  v-if="showFullGuestLikes"
+                  class="cursor-pointer hover:text-blue-500"
+                  @click="showFullGuestLikes = false"
+                >
+                  <UIcon name="i-carbon-deploy-rules" class="w-5 h-5" />
+                </span>
+              </template>
             </div>
           </div>
           <div class="flex flex-col gap-1" v-if="sysConfig.enableComment">
@@ -501,6 +531,15 @@ const unlikeMemo = async (id: number) => {
     isLoading.value = false;
   }
 };
+
+const showFullGuestLikes = ref(false);
+const loggedLikes = computed(() => {
+  return likeInfo.value?.filter((info) => info.id && info.id !== 0) || [];
+});
+
+const guestLikes = computed(() => {
+  return likeInfo.value?.filter((info) => info.name?.startsWith("访客_")) || [];
+});
 
 const getLike = async (id: number) => {
   const guestId = getGuestId();
