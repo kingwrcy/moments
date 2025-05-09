@@ -1,13 +1,25 @@
 <template>
   <Header v-if="memos.length > 0" v-bind:user="memos[0].user" />
 
-  <div class="flex flex-col divide-y divide-[#C0BEBF]/20">
+  <div v-if="sysConfig.enableNewMemo" class="flex flex-col">
+    <div v-for="(memo, index) in pinnedMemos" :key="index">
+      <MemoUser v-bind:memo="memo" />
+    </div>
+    <div v-for="(memo, index) in nonPinnedMemoList" :key="index">
+      <div v-if="memo.displayYear" class="pl-4 py-4">
+        <span class="text-xl">{{ memo.displayYear }}</span>
+        <span class="text-sm">年</span>
+      </div>
+      <MemoUser v-bind:memo="memo" />
+    </div>
+  </div>
+  <div v-else class="flex flex-col divide-y divide-[#C0BEBF]/20">
     <Memo v-bind:memo="memo" v-for="memo in memos" :key="memo.id" />
   </div>
   <div
     v-if="hasNext"
     ref="loadMoreEle"
-    class="text-xs text-center text-gray-500 py-2"
+    class="text-xs text-center text-gray-500 py-2 cursor-pointer"
     @click="loadMore"
   >
     点击加载更多
@@ -18,17 +30,23 @@
 </template>
 
 <script setup lang="ts">
-import type { MemoVO } from "~/types";
+import type { MemoVO, SysConfigVO } from "~/types";
 import Memo from "~/components/Memo.vue";
+import MemoUser from "~/components/MemoUser.vue";
 import { memoChangedEvent, memoReloadEvent } from "~/event";
 import { useElementVisibility } from "@vueuse/core";
+import dayjs from "dayjs";
+
 const loadMoreEle = ref(null);
 const targetIsVisible = useElementVisibility(loadMoreEle);
+const sysConfig = useState<SysConfigVO>("sysConfig");
+
 watch(targetIsVisible, async (visible) => {
-  if (visible) {
+  if (visible && sysConfig.value?.enableAutoLoadNextPage) {
     await loadMore();
   }
 });
+
 const hasNext = ref(false);
 const route = useRoute();
 const userId = route.params.id as any as string;
@@ -38,6 +56,7 @@ const state = reactive({
 });
 
 const memos = ref<Array<MemoVO>>([]);
+
 onMounted(async () => {
   await reload();
 });
@@ -76,6 +95,27 @@ memoChangedEvent.on(async (id: number) => {
   if (index >= 0) {
     memos.value[index] = res;
   }
+});
+
+const pinnedMemos = computed(() => memos.value.filter((memo) => memo.pinned));
+const nonPinnedMemos = computed(() =>
+  memos.value.filter((memo) => !memo.pinned)
+);
+
+const nonPinnedMemoList = computed(() => {
+  if (!nonPinnedMemos.value.length) return [];
+  let lastYear: string | null = null;
+  return nonPinnedMemos.value.map((memo) => {
+    const currentYear = dayjs(memo.createdAt).locale("zh-cn").format("YYYY");
+    let returns = memo;
+    if (currentYear !== lastYear) {
+      lastYear = currentYear;
+      returns = Object.assign({}, returns, { displayYear: currentYear });
+    } else {
+      returns = Object.assign({}, returns, { displayYear: null });
+    }
+    return returns;
+  });
 });
 </script>
 
