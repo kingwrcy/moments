@@ -223,3 +223,12 @@ createHighlighterCore({
     }),
   )
 })
+
+export const getGuestId = () => {
+  let guestId = localStorage.getItem("guest_id")
+  if (!guestId) {
+    guestId = `访客_${Math.random().toString(36).substr(2, 4)}`
+    localStorage.setItem("guest_id", guestId)
+  }
+  return guestId
+}

@@ -328,7 +328,7 @@ import { toast } from "vue-sonner";
 import { memoChangedEvent, memoReloadEvent } from "~/event";
 import Comment from "~/components/Comment.vue";
 import { useGlobalState } from "~/store";
-import { md } from "~/utils";
+import { md, getGuestId } from "~/utils";
 
 const showMore = ref(false);
 const showMoreClicked = ref(false);
@@ -426,15 +426,6 @@ const liked = ref(false);
 const likeInfo = ref<{ id: number; name: string }[] | null>(null);
 const likeNum = ref(0);
 const isLoading = ref(false);
-
-const getGuestId = () => {
-  let guestId = localStorage.getItem("guest_id");
-  if (!guestId) {
-    guestId = `访客_${Math.random().toString(36).substr(2, 4)}`;
-    localStorage.setItem("guest_id", guestId);
-  }
-  return guestId;
-};
 
 const doLike = async (params: string) => {
   showToolbar.value = false;

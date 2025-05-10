@@ -26,6 +26,7 @@ import Emoji from "~/components/Emoji.vue";
 import {useGlobalState} from "~/store";
 import {useStorage} from '@vueuse/core'
 import type {SysConfigVO} from "~/types";
+import { getGuestId } from "~/utils";
 
 const props = defineProps<{
   commentId: number
@@ -56,7 +57,6 @@ const state = reactive({
   email: localCommentUserinfo.value.email,
 })
 
-
 const comment = async () => {
   if (sysConfig.value.enableGoogleRecaptcha) {
     grecaptcha.ready(() => {
@@ -77,17 +77,17 @@ const doComment = async (token?: string) => {
       email: state.email,
     }
   }
+  
   if (state.content.length > sysConfig.value.maxCommentLength) {
     toast.error("评论字数超过限制长度:" + sysConfig.value.maxCommentLength)
     return
   }
-  await useMyFetch(`/comment/add`, {...state, token:token})
+  
+  const guestId = getGuestId()
+  await useMyFetch(`/comment/add`, {...state, token, guest_id: guestId})
   toast.success("评论成功!")
   currentCommentBox.value = ''
-  state.username = ''
   state.content = ''
-  state.website = ''
-  state.email = ''
   memoChangedEvent.emit(props.memoId)
 }
 
