@@ -134,7 +134,7 @@
             }}
           </div>
           <div
-            @click="showToolbar = true"
+            @click="showToolbar = !showToolbar"
             class="toolbar-icon px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center"
           >
             <img
@@ -154,8 +154,14 @@
                 @click="liked ? unlikeMemo(item.id) : likeMemo(item.id)"
               >
                 <UIcon
+                  v-if="liked"
+                  name="i-carbon-favorite-filled"
+                  class="w-4 h-4 text-red-400"
+                />
+                <UIcon
+                  v-else
                   name="i-carbon-favorite"
-                  :class="[liked ? 'text-red-400' : '']"
+                  class="w-4 h-4"
                 />
                 <div>{{ liked ? "取消" : "赞" }}</div>
               </div>
@@ -165,7 +171,7 @@
                   class="flex flex-row gap-1 cursor-pointer items-center px-4"
                   @click="doComment"
                 >
-                  <UIcon name="i-octicon-comment" />
+                  <UIcon name="i-octicon-comment" class="w-4 h-4 relative top-[2px]"/>
                   <div>评论</div>
                 </div>
               </template>
@@ -265,7 +271,7 @@
             ]"
           >
             <div class="text-[#576b95]">
-              <UIcon name="i-carbon-favorite" class="text-red-500 mr-1" />
+              <UIcon name="i-carbon-favorite" class="mr-1 relative top-[1px]" />
               <span v-if="loggedLikes.length > 0">
                 {{ loggedLikes.map((info) => info.name).join(", ") }}
                 <span v-if="guestLikes.length > 0">, </span>
@@ -291,7 +297,7 @@
                   class="cursor-pointer hover:text-blue-500"
                   @click="showFullGuestLikes = false"
                 >
-                  <UIcon name="i-carbon-deploy-rules" class="w-5 h-5" />
+                  <UIcon name="ep:upload" class="w-5 h-5 relative top-[4px]" />
                 </span>
               </template>
             </div>
@@ -365,7 +371,11 @@ const moreToolbar = ref(false);
 const showToolbar = ref(false);
 const toolbarRef = ref(null);
 
-onClickOutside(toolbarRef, () => (showToolbar.value = false));
+onClickOutside(toolbarRef, () =>
+  setTimeout(() => {
+    showToolbar.value = false;
+  }, 10)
+);
 
 const location = computed(() => {
   return (item.value.location || "").replaceAll(" ", " · ");
