@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row text-sm w-full"
+    class="flex flex-row text-sm w-full hover:bg-slate-200 hover:dark:bg-neutral-700"
     :class="{ 'bg-slate-100 dark:bg-neutral-800': props.memo.pinned }"
   >
     <div class="flex flex-col w-24 pt-2">
