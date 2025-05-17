@@ -500,6 +500,53 @@ func (m MemoHandler) UnlikeMemo(c echo.Context) error {
 	return SuccessResp(c, h{})
 }
 
+// @Router /api/memo/setGuestId [post]
+func (m MemoHandler) SetGuestId(c echo.Context) error {
+	// 从 cookie 中获取访客信息
+	cookie, err := c.Cookie("guest_info")
+	if err == nil {
+		decodedValue, err := url.QueryUnescape(cookie.Value)
+		if err == nil {
+			var data vo.GuestInfo
+			if err := json.Unmarshal([]byte(decodedValue), &data); err == nil {
+				if time.Now().Unix()-data.TimeStamp < 7*24*60*60 {
+					return SuccessResp(c, data.GuestId)
+				}
+			}
+		}
+	}
+
+	// 生成新的访客 ID
+	newGuestId := fmt.Sprintf("访客_%s", uuid.New().String()[:6])
+	data := vo.GuestInfo{
+		GuestId:   newGuestId,
+		TimeStamp: time.Now().Unix(),
+	}
+
+	// 构建并设置新的 cookie
+	cookieData, err := json.Marshal(data)
+	if err != nil {
+		m.base.log.Error().Msgf("Failed to marshal guest data: %v", err)
+	}
+
+	encodedValue := url.QueryEscape(string(cookieData))
+
+	// 根据请求协议动态设置 Secure 属性
+	secure := c.Scheme() == "https"
+
+	c.SetCookie(&http.Cookie{
+		Name:     "guest_info",
+		Value:    encodedValue,
+		Path:     "/",
+		Expires:  time.Now().Add(7 * 24 * time.Hour),
+		Secure:   secure,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	return SuccessResp(c, newGuestId)
+}
+
 // FindAndReplaceTags 处理 markdown 文本
 func FindAndReplaceTags(content string) (string, []string) {
 	// 定义正则表达式来匹配标签

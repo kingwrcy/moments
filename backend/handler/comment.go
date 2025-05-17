@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/kingwrcy/moments/db"
 
 	"github.com/kingwrcy/moments/pkg/mail"
@@ -150,14 +151,22 @@ func (c CommentHandler) AddComment(ctx echo.Context) error {
 				return FailRespWithMsg(ctx, ParamError, "未登录用户必须提供guest_id")
 			}
 			comment.GuestID = req.GuestID
-			
+
 			// 优先使用用户自定义输入的信息
 			if req.Username != "" {
+				// 验证访客输入的姓名是否与注册用户的用户名或昵称重复
+				var userCount int64
+				c.base.db.Model(&db.User{}).Where("username = ? OR nickname = ?", req.Username, req.Username).Count(&userCount)
+				if userCount > 0 {
+					// 生成 6 位 UUID 后缀
+					suffix := uuid.New().String()[:6]
+					req.Username = fmt.Sprintf("%s_%s", req.Username, suffix)
+				}
 				comment.Username = req.Username
 			} else {
 				comment.Username = req.GuestID
 			}
-			
+
 			comment.Email = req.Email
 			comment.Website = req.Website
 		} else {

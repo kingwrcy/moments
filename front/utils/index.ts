@@ -223,57 +223,18 @@ createHighlighterCore({
     }),
   )
 })
-
-export const getGuestId = () => {
-  // 优先从 localStorage 获取
-  let storedData = localStorage.getItem("guest_info");
-
-  // 尝试从 cookie 获取（如果 localStorage 没有）
-  if (!storedData) {
-    const cookieValue = document.cookie.split('; ')
-      .find(row => row.startsWith('guest_info='))
-      ?.split('=')[1];
-      
-    if (cookieValue) {
-      try {
-        storedData = decodeURIComponent(cookieValue);
-        localStorage.setItem("guest_info", storedData);
-      } catch (e) {
-        console.error('解析 cookie 失败', e);
-      }
-    }
+export const getGuestId = async () => {
+  const cachedGuestId = localStorage.getItem('guestId');
+  if (cachedGuestId) {
+    return cachedGuestId;
   }
 
-  if (storedData) {
-    try {
-      const { guestId, timestamp } = JSON.parse(storedData);
-      // 有效期为 15 天
-      if (guestId && Date.now() - timestamp < 15 * 24 * 60 * 60 * 1000) {
-        return guestId;
-      }
-    } catch (e) {
-      console.error('解析访客信息失败', e);
-    }
-  }
-
-  // 生成短随机 ID（6位字符）
-  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let shortId = '';
-  for (let i = 0; i < 6; i++) {
-    shortId += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
-  }
-  
-  const newGuestId = `访客_${shortId}`;
-  const data = JSON.stringify({ guestId: newGuestId, timestamp: Date.now() });
-  
-  // 同时写入 localStorage 和 cookie
   try {
-    localStorage.setItem("guest_info", data);
-  } catch (e) {
-    console.warn("无法写入 localStorage（可能处于无痕模式）", e);
+    const response = await useMyFetch<string>("/memo/setGuestId");
+    localStorage.setItem('guestId', response);
+    return response;
+  } catch (error) {
+    toast.error("获取访客 ID 失败，请稍后重试！");
+    return null;
   }
-  
-  document.cookie = `guest_info=${encodeURIComponent(data)}; path=/; max-age=1296000; secure; samesite=lax`;
-  
-  return newGuestId;
 };

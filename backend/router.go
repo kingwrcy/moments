@@ -36,6 +36,7 @@ func setupRouter(injector do.Injector) {
 	memoGroup.POST("/like", memoHandler.LikeMemo)
 	memoGroup.POST("/unlike", memoHandler.UnlikeMemo)
 	memoGroup.POST("/getLike", memoHandler.GetLike)
+	memoGroup.POST("/setGuestId", memoHandler.SetGuestId)
 	memoGroup.POST("/get", memoHandler.GetMemo)
 	memoGroup.POST("/setPinned", memoHandler.SetPinned)
 	memoGroup.POST("/getFaviconAndTitle", memoHandler.GetFaviconAndTitle)

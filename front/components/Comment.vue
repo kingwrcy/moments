@@ -2,7 +2,6 @@
   <div>
     <span v-if="props.comment.author == props.memoUserId" class="text-[#576b95] text-nowrap">
       {{ props.comment.username }}
-      <UBadge color="gray" variant="solid" size="xs">作者</UBadge>
     </span>
     <span v-else class="text-[#576b95] text-nowrap">
       <a v-if="props.comment.website" :href="formatWebsite(props.comment.website)" target="_blank">
@@ -22,7 +21,7 @@
         <UIcon name="i-carbon-trash-can" class="cursor-pointer text-red-400"/>
       </Confirm>
     </span>
-    
+
   </div>
   <CommentBox :memo-id="props.memoId" :reply-to="props.comment.username" :comment-id="props.comment.id" :reply-email="props.comment.email"/>
 </template>

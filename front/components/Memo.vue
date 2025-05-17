@@ -453,7 +453,8 @@ const likeMemo = async (id: number) => {
   isLoading.value = true;
 
   try {
-  const guestId = getGuestId();
+    const guestId = await getGuestId();
+    if (!guestId) return;
   let params = `id=${id}&guest_id=${guestId}`;
 
   if (sysConfig.value.enableGoogleRecaptcha) {
@@ -502,7 +503,8 @@ const unlikeMemo = async (id: number) => {
   isLoading.value = true;
 
   try {
-  const guestId = getGuestId();
+    const guestId = await getGuestId();
+    if (!guestId) return;
   let params = `id=${id}&guest_id=${guestId}`;
 
   if (sysConfig.value.enableGoogleRecaptcha) {
@@ -543,7 +545,8 @@ const guestLikes = computed(() => {
 });
 
 const getLike = async (id: number) => {
-  const guestId = getGuestId();
+  const guestId = await getGuestId();
+  if (!guestId) return;
   let params = `id=${id}&guest_id=${guestId}`;
   try {
     const response = await useMyFetch<{
