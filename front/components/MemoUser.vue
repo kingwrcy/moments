@@ -5,17 +5,11 @@
   >
     <div class="flex flex-col w-24 pt-2">
       <template v-if="!isPinned">
-        <div class="flex justify-center">
-          <span class="text-xl font-bold">{{
-            $dayjs(item.createdAt).format("DD")
-          }}</span>
-          <span class="flex items-end text-xs"
-            >{{ $dayjs(item.createdAt).format("MM") }}月</span
-          >
+        <div v-if="props.memo.displayDate" class="flex justify-center">
+          <span class="text-xl font-bold">{{ $dayjs(props.memo.createdAt).format("DD") }}</span>
+          <span class="flex items-end text-xs">{{ $dayjs(props.memo.createdAt).format("MM") }}月</span>
         </div>
-        <div
-          class="flex justify-center text-[#576b95] font-medium dark:text-white text-xs mt-2 select-none"
-        >
+        <div class="flex justify-center text-[#576b95] font-medium dark:text-white text-xs mt-2 select-none">
           {{ location }}
         </div>
       </template>

@@ -105,15 +105,27 @@ const nonPinnedMemos = computed(() =>
 const nonPinnedMemoList = computed(() => {
   if (!nonPinnedMemos.value.length) return [];
   let lastYear: string | null = null;
+  let lastDate: string | null = null;
   return nonPinnedMemos.value.map((memo) => {
     const currentYear = dayjs(memo.createdAt).locale("zh-cn").format("YYYY");
+    const currentDate = dayjs(memo.createdAt).locale("zh-cn").format("YYYY-MM-DD"); // 新增：当前日期
     let returns = memo;
+
     if (currentYear !== lastYear) {
       lastYear = currentYear;
       returns = Object.assign({}, returns, { displayYear: currentYear });
     } else {
       returns = Object.assign({}, returns, { displayYear: null });
     }
+
+    // 处理日期显示（仅当日期变化时标记显示）
+    if (currentDate !== lastDate) {
+      lastDate = currentDate;
+      returns = Object.assign({}, returns, { displayDate: currentDate });
+    } else {
+      returns = Object.assign({}, returns, { displayDate: null });
+    }
+
     return returns;
   });
 });

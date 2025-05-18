@@ -41,6 +41,8 @@ export type  MemoVO = {
     user: UserVO,
     comments: Array<CommentVO>
     tags: string
+    displayYear?: string | null
+    displayDate?: string | null
 }
 
 export type UserVO = {
