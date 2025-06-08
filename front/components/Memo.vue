@@ -262,7 +262,7 @@
           class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-[#202020] flex flex-col gap-1"
         >
           <div
-            v-if="loggedLikes.length > 0 || guestLikes.length > 0"
+            v-if="likeInfo && likeInfo.length > 0"
             class="flex flex-row py-2 px-4 gap-2 items-center text-sm"
             :class="[
               item.comments && item.comments.length > 0
@@ -270,36 +270,18 @@
                 : '',
             ]"
           >
-            <div class="text-[#576b95]">
+            <div class="text-[#576b95] gap-1">
               <UIcon name="i-carbon-favorite" class="mr-1 relative top-[1px]" />
-              <span v-if="loggedLikes.length > 0">
-                {{ loggedLikes.map((info) => info.name).join(", ") }}
-                <span v-if="guestLikes.length > 0">, </span>
-              </span>
-              <template v-if="guestLikes.length > 0">
-                {{
-                  (isDetailPage || showFullGuestLikes)
-                    ? guestLikes.map((info) => info.name).join(", ")
-                    : guestLikes
-                        .slice(0, 3)
-                        .map((info) => info.name)
-                        .join(", ")
-                }}
+              <!-- 显示点赞用户列表区域 -->
+              {{ (likeShowAll || isDetailPage ? likeInfo : likeInfo.slice(0, 3)).map(info => info.name || info.id).join(', ') }}
                 <span
-                  v-if="guestLikes.length > 3 && !showFullGuestLikes && !isDetailPage"
-                  class="cursor-pointer hover:text-blue-500"
-                  @click="showFullGuestLikes = true"
+                v-if="!isDetailPage"
+                @click="likeShowAll = !likeShowAll" 
+                class="cursor-pointer"
                 >
-                  ...其余{{ guestLikes.length - 3 }}位访客
+                <span v-if="!likeShowAll && likeNum > 3">等{{ likeNum }}个赞</span>
+                <span v-if="likeShowAll && likeNum > 3" class="text-gray-400">[收起]</span>
                 </span>
-                <span
-                  v-if="showFullGuestLikes && !isDetailPage"
-                  class="cursor-pointer hover:text-blue-500"
-                  @click="showFullGuestLikes = false"
-                >
-                  <UIcon name="ep:upload" class="w-5 h-5 relative top-[4px]" />
-                </span>
-              </template>
             </div>
           </div>
           <div class="flex flex-col gap-1" v-if="sysConfig.enableComment">
@@ -335,6 +317,7 @@ import { memoChangedEvent, memoReloadEvent } from "~/event";
 import Comment from "~/components/Comment.vue";
 import { useGlobalState } from "~/store";
 import { md, getGuestId } from "~/utils";
+import {useStorage} from '@vueuse/core'
 
 const showMore = ref(false);
 const showMoreClicked = ref(false);
@@ -433,14 +416,19 @@ const setPinned = async (id: number) => {
 };
 
 const liked = ref(false);
-const likeInfo = ref<{ id: number; name: string }[] | null>(null);
+const likeInfo = ref<{ id: number | string; name: string }[] | null>(null);
 const likeNum = ref(0);
+const likeShowAll = ref(false);
 const isLoading = ref(false);
-
+const localCommentUserinfo = useStorage('localCommentUserinfo', {
+  username: "",
+  website: "",
+  email: "",
+})
 const doLike = async (params: string) => {
   showToolbar.value = false;
   try {
-    await useMyFetch(`/memo/like?${params}`);
+    await useMyFetch(`/like/add?${params}`);
   toast.success("点赞成功!");
   liked.value = true;
   } catch (error) {
@@ -456,6 +444,10 @@ const likeMemo = async (id: number) => {
     const guestId = await getGuestId();
     if (!guestId) return;
   let params = `id=${id}&guest_id=${guestId}`;
+    const guestName = localCommentUserinfo.value.username;
+    if (guestName) {
+      params += `&guest_name=${guestName}`;
+    }
 
   if (sysConfig.value.enableGoogleRecaptcha) {
       await new Promise<void>((resolve) => {
@@ -488,7 +480,7 @@ const doUnlike = async (params: string) => {
     return false;
   }
   try {
-    await useMyFetch(`/memo/unlike?${params}`);
+    await useMyFetch(`/like/remove?${params}`);
     toast.success("取消点赞成功!");
     liked.value = false;
     return true;
@@ -506,6 +498,10 @@ const unlikeMemo = async (id: number) => {
     const guestId = await getGuestId();
     if (!guestId) return;
   let params = `id=${id}&guest_id=${guestId}`;
+    const guestName = localCommentUserinfo.value.username;
+    if (guestName) {
+      params += `&guest_name=${guestName}`;
+    }
 
   if (sysConfig.value.enableGoogleRecaptcha) {
       await new Promise<void>((resolve) => {
@@ -535,32 +531,27 @@ const unlikeMemo = async (id: number) => {
   }
 };
 
-const showFullGuestLikes = ref(false);
-const loggedLikes = computed(() => {
-  return likeInfo.value?.filter((info) => info.id && info.id !== 0) || [];
-});
-
-const guestLikes = computed(() => {
-  return likeInfo.value?.filter((info) => info.name?.startsWith("访客_")) || [];
-});
-
 const getLike = async (id: number) => {
   const guestId = await getGuestId();
   if (!guestId) return;
   let params = `id=${id}&guest_id=${guestId}`;
   try {
     const response = await useMyFetch<{
-      likes: { id: number; name: string }[];
+      likes: { id: number | string; name: string }[];
       total: number;
-    }>(`/memo/getLike?${params}`);
+    }>(`/like/get?${params}`);
     likeInfo.value = response.likes;
     likeNum.value = response.total;
     if (global.value.userinfo.token) {
       const userId = global.value.userinfo.id;
       liked.value = likeInfo.value?.some((info) => info.id === userId) || false;
     } else {
-      liked.value =
-        likeInfo.value?.some((info) => info.name === guestId) || false;
+      const guestName = localCommentUserinfo.value.username;
+      if (guestName) {
+        liked.value = likeInfo.value?.some((info) => info.name === guestName) || false;
+      } else {
+        liked.value = likeInfo.value?.some((info) => info.id === guestId) || false; 
+      }
     }
     return true;
   } catch (error) {

@@ -9,6 +9,7 @@ type Like struct {
 	MemoID    int       `gorm:"not null" json:"memo_id"`
 	UserID    *int      `gorm:"" json:"user_id"`
 	GuestID   string    `gorm:"" json:"guest_id"`
+	GuestName string    `gorm:"" json:"guest_name"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 }
 

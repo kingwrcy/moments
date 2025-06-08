@@ -4,7 +4,10 @@
       {{ props.comment.username }}
     </span>
     <span v-else class="text-[#576b95] text-nowrap">
-      <a v-if="props.comment.website" :href="formatWebsite(props.comment.website)" target="_blank">
+      <a v-if="props.comment.author" :href="`/user/${props.comment.author}`" target="_blank">
+        {{ props.comment.username }}
+      </a>
+      <a v-else-if="props.comment.website" :href="formatWebsite(props.comment.website)" target="_blank">
         {{ props.comment.username }}
       </a>
       <span v-else>{{ props.comment.username }}</span>

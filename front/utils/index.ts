@@ -230,7 +230,7 @@ export const getGuestId = async () => {
   }
 
   try {
-    const response = await useMyFetch<string>("/memo/setGuestId");
+    const response = await useMyFetch<string>("/like/setGuestId");
     localStorage.setItem('guestId', response);
     return response;
   } catch (error) {

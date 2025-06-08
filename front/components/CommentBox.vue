@@ -58,6 +58,11 @@ const state = reactive({
 })
 
 const comment = async () => {
+  if (!state.content.trim()) {
+    toast.warning("发送失败，内容不能为空")
+    return
+  }
+
   if (sysConfig.value.enableGoogleRecaptcha) {
     grecaptcha.ready(() => {
       grecaptcha.execute(sysConfig.value.googleSiteKey, {action: 'newComment'}).then(async (token) => {
