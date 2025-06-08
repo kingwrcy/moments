@@ -279,9 +279,11 @@
                 @click="likeShowAll = !likeShowAll" 
                 class="cursor-pointer"
                 >
-                <span v-if="!likeShowAll && likeNum > 3">等{{ likeNum }}个赞</span>
-                <span v-if="likeShowAll && likeNum > 3" class="text-gray-400">[收起]</span>
+                <span v-if="likeNum > 3">
+                  <span v-if="likeShowAll" class="text-gray-400">[收起]</span>
+                  <span v-else>等{{ likeNum }}位称赞</span>
                 </span>
+              </span>
             </div>
           </div>
           <div class="flex flex-col gap-1" v-if="sysConfig.enableComment">
@@ -432,6 +434,7 @@ const doLike = async (params: string) => {
   toast.success("点赞成功!");
   liked.value = true;
   } catch (error) {
+    console.error("点赞失败:", error);
     toast.warning("点赞失败，请稍后重试！");
   }
 };
@@ -485,6 +488,7 @@ const doUnlike = async (params: string) => {
     liked.value = false;
     return true;
   } catch (error) {
+    console.error("取消点赞失败:", error);
     toast.warning("取消点赞失败，请稍后重试！");
     return false;
   }
@@ -535,12 +539,15 @@ const getLike = async (id: number) => {
   const guestId = await getGuestId();
   if (!guestId) return;
   let params = `id=${id}&guest_id=${guestId}`;
+
   try {
     const response = await useMyFetch<{
       likes: { id: number | string; name: string }[];
       total: number;
     }>(`/like/get?${params}`);
-    likeInfo.value = response.likes;
+    likeInfo.value = (response.likes || []).sort((a, b) => {
+      return Number(typeof b.id === 'number') - Number(typeof a.id === 'number');
+    });
     likeNum.value = response.total;
     if (global.value.userinfo.token) {
       const userId = global.value.userinfo.id;
@@ -555,6 +562,7 @@ const getLike = async (id: number) => {
     }
     return true;
   } catch (error) {
+    console.error("获取点赞信息失败:", error);
     toast.error("获取点赞信息失败，请稍后重试！");
     return false;
   }
