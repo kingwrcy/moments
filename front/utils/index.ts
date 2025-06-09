@@ -223,3 +223,18 @@ createHighlighterCore({
     }),
   )
 })
+export const getGuestId = async () => {
+  const cachedGuestId = localStorage.getItem('guestId');
+  if (cachedGuestId) {
+    return cachedGuestId;
+  }
+
+  try {
+    const response = await useMyFetch<string>("/like/setGuestId");
+    localStorage.setItem('guestId', response);
+    return response;
+  } catch (error) {
+    toast.error("获取访客 ID 失败，请稍后重试！");
+    return null;
+  }
+};

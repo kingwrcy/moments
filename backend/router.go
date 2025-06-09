@@ -13,6 +13,7 @@ func setupRouter(injector do.Injector) {
 	userHandler := handler.NewUserHandler(injector)
 	memoHandler := handler.NewMemoHandler(injector)
 	commentHandler := handler.NewCommentHandler(injector)
+	likeHandler := handler.NewLikeHandler(injector)
 	sycConfigHandler := handler.NewSysConfigHandler(injector)
 	fileHandler := handler.NewFileHandler(injector)
 	tagHandler := handler.NewTagHandler(injector)
@@ -33,7 +34,6 @@ func setupRouter(injector do.Injector) {
 	memoGroup.POST("/list", memoHandler.ListMemos)
 	memoGroup.POST("/save", memoHandler.SaveMemo)
 	memoGroup.POST("/remove", memoHandler.RemoveMemo)
-	memoGroup.POST("/like", memoHandler.LikeMemo)
 	memoGroup.POST("/get", memoHandler.GetMemo)
 	memoGroup.POST("/setPinned", memoHandler.SetPinned)
 	memoGroup.POST("/getFaviconAndTitle", memoHandler.GetFaviconAndTitle)
@@ -44,6 +44,12 @@ func setupRouter(injector do.Injector) {
 	commentGroup := apiGroup.Group("/comment")
 	commentGroup.POST("/add", commentHandler.AddComment)
 	commentGroup.POST("/remove", commentHandler.RemoveComment)
+
+	likeGroup := apiGroup.Group("/like")
+	likeGroup.POST("/add", likeHandler.AddLike)
+	likeGroup.POST("/remove", likeHandler.RemoveLike)
+	likeGroup.POST("/get", likeHandler.GetLike)
+	likeGroup.POST("/setGuestId", likeHandler.SetGuestId)
 
 	sycConfigGroup := apiGroup.Group("/sysConfig")
 	sycConfigGroup.POST("/save", sycConfigHandler.SaveConfig)

@@ -80,3 +80,8 @@ type ImgConfig struct {
 	Url      *string `json:"url,omitempty"`
 	ThumbUrl *string `json:"thumbUrl,omitempty"`
 }
+
+type GuestInfo struct {
+    GuestId   string `json:"guestId,omitempty"`
+    TimeStamp int64  `json:"timestamp,omitempty"`
+}

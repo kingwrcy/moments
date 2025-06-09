@@ -8,6 +8,7 @@ type AddCommentReq struct {
 	Email      string `json:"email,omitempty"`      //作者邮箱
 	Website    string `json:"website,omitempty"`    //作者网站
 
-	MemoID int32  `json:"memoId,omitempty"` //回复的memoID
-	Token  string `json:"token,omitempty"`  //google recaptcha的token,开启的话必填
+	MemoID  int32  `json:"memoId,omitempty"`  //回复的memoID
+	GuestID string `json:"guestId,omitempty"` // 访客ID,未登录时才有效
+	Token   string `json:"token,omitempty"`   //google recaptcha的token,开启的话必填
 }

@@ -22,10 +22,12 @@ func Auth(injector do.Injector) echo.MiddlewareFunc {
 		"/api/memo/list",
 		"/api/user/profile",
 		"/api/sysConfig/get",
-		"/api/memo/like",
 		"/api/comment/add",
 		"/api/memo/get",
 		"/api/friend/list",
+		"/api/like/add",
+		"/api/like/get",
+		"/api/like/setGuestId",
 	}
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {

@@ -16,6 +16,7 @@ type Comment struct {
 	CreatedAt *time.Time `gorm:"column:createdAt;default:CURRENT_TIMESTAMP;NOT NULL" json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `gorm:"column:updatedAt;NOT NULL" json:"updatedAt,omitempty"`
 	MemoId    int32      `gorm:"column:memoId;NOT NULL" json:"memoId,omitempty"`
+	GuestID   string     `gorm:"column:guestId" json:"guestId,omitempty"`
 	Author    string     `gorm:"column:author" json:"author,omitempty"`
 	Memo      *Memo      `json:"memo,omitempty"`
 }

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$route.path === `/memo/${item.id}`" class="header relative mb-14">
+  <div v-if="isDetailPage" class="header relative mb-14">
     <div
       :class="{ 'bg-[#4c4c4c]/80 z-10': y > 100 }"
       class="flex fixed justify-between items-center p-4 w-full md:w-[567px] text-white top-0"
@@ -134,7 +134,7 @@
             }}
           </div>
           <div
-            @click="showToolbar = true"
+            @click="showToolbar = !showToolbar"
             class="toolbar-icon px-2 py-1 bg-[#f7f7f7] dark:bg-slate-700 hover:bg-[#dedede] cursor-pointer rounded flex items-center justify-center"
           >
             <img
@@ -151,13 +151,19 @@
             <div class="flex flex-row gap-2">
               <div
                 class="flex flex-row gap-1 cursor-pointer items-center px-4"
-                @click="likeMemo(item.id)"
+                @click="liked ? unlikeMemo(item.id) : likeMemo(item.id)"
               >
                 <UIcon
-                  name="i-carbon-favorite"
-                  :class="[liked ? 'text-red-400' : '']"
+                  v-if="liked"
+                  name="i-carbon-favorite-filled"
+                  class="w-4 h-4 text-red-400"
                 />
-                <div>赞</div>
+                <UIcon
+                  v-else
+                  name="i-carbon-favorite"
+                  class="w-4 h-4"
+                />
+                <div>{{ liked ? "取消" : "赞" }}</div>
               </div>
               <template v-if="sysConfig.enableComment">
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
@@ -165,11 +171,11 @@
                   class="flex flex-row gap-1 cursor-pointer items-center px-4"
                   @click="doComment"
                 >
-                  <UIcon name="i-octicon-comment" />
+                  <UIcon name="i-octicon-comment" class="w-4 h-4 relative top-[2px]"/>
                   <div>评论</div>
                 </div>
               </template>
-              <template v-if="$route.path !== `/memo/${item.id}`">
+              <template v-if="!isDetailPage">
                 <span class="bg-[#6b7280] h-[20px] w-[1px]"></span>
                 <div
                   class="flex flex-row gap-1 cursor-pointer items-center px-4"
@@ -256,12 +262,28 @@
           class="rounded bottom-shadow bg-[#f7f7f7] dark:bg-[#202020] flex flex-col gap-1"
         >
           <div
-            v-if="item.favCount > 0"
+            v-if="likeInfo && likeInfo.length > 0"
             class="flex flex-row py-2 px-4 gap-2 items-center text-sm"
+            :class="[
+              item.comments && item.comments.length > 0
+                ? 'border-b-[1px] border-neutral-[100] dark:border-neutral-800'
+                : '',
+            ]"
           >
-            <UIcon name="i-carbon-favorite" class="text-red-500" />
-            <div class="text-[#576b95]">
-              <span class="mx-1">{{ item.favCount }}位访客</span>
+            <div class="text-[#576b95] gap-1">
+              <UIcon name="i-carbon-favorite" class="mr-1 relative top-[1px]" />
+              <!-- 显示点赞用户列表区域 -->
+              {{ (likeShowAll || isDetailPage ? likeInfo : likeInfo.slice(0, 3)).map(info => info.name || info.id).join(', ') }}
+                <span
+                v-if="!isDetailPage"
+                @click="likeShowAll = !likeShowAll" 
+                class="cursor-pointer"
+                >
+                <span v-if="likeNum > 3">
+                  <span v-if="likeShowAll" class="text-gray-400">[收起]</span>
+                  <span v-else>等{{ likeNum }}位称赞</span>
+                </span>
+              </span>
             </div>
           </div>
           <div class="flex flex-col gap-1" v-if="sysConfig.enableComment">
@@ -296,7 +318,8 @@ import { toast } from "vue-sonner";
 import { memoChangedEvent, memoReloadEvent } from "~/event";
 import Comment from "~/components/Comment.vue";
 import { useGlobalState } from "~/store";
-import { md } from "~/utils";
+import { md, getGuestId } from "~/utils";
+import {useStorage} from '@vueuse/core'
 
 const showMore = ref(false);
 const showMoreClicked = ref(false);
@@ -329,13 +352,15 @@ const item = computed(() => {
 });
 
 const global = useGlobalState();
-
 const moreToolbar = ref(false);
-
 const showToolbar = ref(false);
 const toolbarRef = ref(null);
-const liked = ref(false);
-onClickOutside(toolbarRef, () => (showToolbar.value = false));
+
+onClickOutside(toolbarRef, () =>
+  setTimeout(() => {
+    showToolbar.value = false;
+  }, 10)
+);
 
 const location = computed(() => {
   return (item.value.location || "").replaceAll(" ", " · ");
@@ -392,46 +417,160 @@ const setPinned = async (id: number) => {
   moreToolbar.value = false;
 };
 
-const doLike = async (id: number, token: string = "") => {
-  const likes = JSON.parse(
-    localStorage.getItem("likeMemos") || "[]"
-  ) as Array<number>;
-  await useMyFetch(`/memo/like?id=${id}&token=${token}`);
+const liked = ref(false);
+const likeInfo = ref<{ id: number | string; name: string }[] | null>(null);
+const likeNum = ref(0);
+const likeShowAll = ref(false);
+const isLoading = ref(false);
+const localCommentUserinfo = useStorage('localCommentUserinfo', {
+  username: "",
+  website: "",
+  email: "",
+})
+const doLike = async (params: string) => {
+  showToolbar.value = false;
+  try {
+    await useMyFetch(`/like/add?${params}`);
   toast.success("点赞成功!");
-  likes.push(id);
-  localStorage.setItem("likeMemos", JSON.stringify(likes));
-  memoChangedEvent.emit(id);
   liked.value = true;
+  } catch (error) {
+    console.error("点赞失败:", error);
+    toast.warning("点赞失败，请稍后重试！");
+  }
 };
 
 const likeMemo = async (id: number) => {
-  showToolbar.value = false;
-  const likes = JSON.parse(
-    localStorage.getItem("likeMemos") || "[]"
-  ) as Array<number>;
-  if (likes.includes(id)) {
-    toast.warning("您已经点赞过了!");
-    return;
-  }
+  if (isLoading.value) return;
+  isLoading.value = true;
+
+  try {
+    const guestId = await getGuestId();
+    if (!guestId) return;
+  let params = `id=${id}&guestId=${guestId}`;
+    const guestName = localCommentUserinfo.value.username;
+    if (guestName) {
+      params += `&guestName=${guestName}`;
+    }
 
   if (sysConfig.value.enableGoogleRecaptcha) {
+      await new Promise<void>((resolve) => {
     grecaptcha.ready(() => {
       grecaptcha
         .execute(sysConfig.value.googleSiteKey, { action: "newComment" })
         .then(async (token) => {
-          await doLike(id, token);
+          params += `&token=${token}`;
+          await doLike(params);
+              await getLike(id);
+              memoChangedEvent.emit(id);
+              resolve();
         });
     });
+      });
   } else {
-    await doLike(id);
+    await doLike(params);
+  await getLike(id);
+  memoChangedEvent.emit(id);
+    }
+  } finally {
+    isLoading.value = false;
   }
 };
 
-onMounted(() => {
-  const likes = JSON.parse(
-    localStorage.getItem("likeMemos") || "[]"
-  ) as Array<number>;
-  liked.value = likes.findIndex((r) => r === item.value.id) >= 0;
+const doUnlike = async (params: string) => {
+  showToolbar.value = false;
+  if (!global.value.userinfo.token) {
+    toast.warning("访客不允许取消点赞！");
+    return false;
+  }
+  try {
+    await useMyFetch(`/like/remove?${params}`);
+    toast.success("取消点赞成功!");
+    liked.value = false;
+    return true;
+  } catch (error) {
+    console.error("取消点赞失败:", error);
+    toast.warning("取消点赞失败，请稍后重试！");
+    return false;
+  }
+};
+
+const unlikeMemo = async (id: number) => {
+  if (isLoading.value) return;
+  isLoading.value = true;
+
+  try {
+    const guestId = await getGuestId();
+    if (!guestId) return;
+  let params = `id=${id}&guestId=${guestId}`;
+    const guestName = localCommentUserinfo.value.username;
+    if (guestName) {
+      params += `&guestName=${guestName}`;
+    }
+
+  if (sysConfig.value.enableGoogleRecaptcha) {
+      await new Promise<void>((resolve) => {
+    grecaptcha.ready(() => {
+      grecaptcha
+        .execute(sysConfig.value.googleSiteKey, { action: "newComment" })
+        .then(async (token) => {
+          params += `&token=${token}`;
+              const success = await doUnlike(params);
+              if (success) {
+                await getLike(id);
+                memoChangedEvent.emit(id);
+              }
+              resolve();
+        });
+    });
+      });
+  } else {
+      const success = await doUnlike(params);
+      if (success) {
+  await getLike(id);
+  memoChangedEvent.emit(id);
+      }
+    }
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const getLike = async (id: number) => {
+  const guestId = await getGuestId();
+  if (!guestId) return;
+  let params = `id=${id}&guestId=${guestId}`;
+
+  try {
+    const response = await useMyFetch<{
+      likes: { id: number | string; name: string }[];
+      total: number;
+    }>(`/like/get?${params}`);
+    likeInfo.value = (response.likes || []).sort((a, b) => {
+      return Number(typeof b.id === 'number') - Number(typeof a.id === 'number');
+    });
+    likeNum.value = response.total;
+    if (global.value.userinfo.token) {
+      const userId = global.value.userinfo.id;
+      liked.value = likeInfo.value?.some((info) => info.id === userId) || false;
+    } else {
+      const guestName = localCommentUserinfo.value.username;
+      if (guestName) {
+        liked.value = likeInfo.value?.some((info) => info.name === guestName) || false;
+      } else {
+        liked.value = likeInfo.value?.some((info) => info.id === guestId) || false; 
+      }
+    }
+    return true;
+  } catch (error) {
+    console.error("获取点赞信息失败:", error);
+    toast.error("获取点赞信息失败，请稍后重试！");
+    return false;
+  }
+};
+
+onMounted(async () => {
+  await getLike(item.value.id);
+
   if (!isDetailPage.value) {
     setTimeout(() => {
       const { height } = useElementSize(contentRef.value);

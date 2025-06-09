@@ -118,7 +118,8 @@ func checkGoogleRecaptcha(logger zerolog.Logger, sysConfigVO vo.FullSysConfigVO,
 //	@Produce	json
 //	@Param		object	body	vo.AddCommentReq	true	"添加评论"
 //	@Success	200
-//	@Router		/api/comment/add [post]
+//
+// @Router		/api/comment/add [post]
 func (c CommentHandler) AddComment(ctx echo.Context) error {
 	var (
 		req         vo.AddCommentReq
@@ -145,8 +146,26 @@ func (c CommentHandler) AddComment(ctx echo.Context) error {
 	if context, ok := ctx.(CustomContext); ok {
 		currentUser := context.CurrentUser()
 		if currentUser == nil {
-			comment.Username = req.Username
+			if req.GuestID == "" {
+				return FailRespWithMsg(ctx, ParamError, "访客ID必填,请先登录或注册")
+			}
+			comment.GuestID = req.GuestID
+
+			if req.Username != "" {
+				// 检查访客是否输入了注册时相同的用户名，如果相同则在用户名后添加随机后缀
+				var userCount int64
+				c.base.db.Model(&db.User{}).Where("username = ? OR nickname = ?", req.Username, req.Username).Count(&userCount)
+				if userCount > 0 {
+					suffix := uuid.New().String()[:6]
+					req.Username = fmt.Sprintf("%s%s", req.Username, suffix)
+				}
+				comment.Username = req.Username
+			} else {
+				comment.Username = req.GuestID
+			}
+
 			comment.Email = req.Email
+			comment.Website = req.Website
 		} else {
 			comment.Username = currentUser.Nickname
 			comment.Email = currentUser.Email
@@ -154,51 +173,11 @@ func (c CommentHandler) AddComment(ctx echo.Context) error {
 		}
 	}
 
-	if comment.Username == "" {
-		// 尝试从 Cookie 中获取用户名
-		cookie, err := ctx.Cookie("anonymous_username")
-		var username string
-
-		if err != nil || cookie.Value == "" {
-			// 如果 Cookie 不存在，生成一个新的随机用户名
-			username = fmt.Sprintf("匿名用户_%s", uuid.New().String()[:4])
-			// 对用户名进行 URL 编码
-			encodedUsername := url.QueryEscape(username)
-			// 设置 Cookie，有效期 7 天
-			ctx.SetCookie(&http.Cookie{
-				Name:    "anonymous_username",
-				Value:   encodedUsername,
-				Path:    "/",
-				Expires: time.Now().Add(7 * 24 * time.Hour),
-			})
-		} else {
-			// 如果 Cookie 存在，使用之前的用户名
-			decodedUsername, err := url.QueryUnescape(cookie.Value)
-			if err != nil {
-				// 生成一个新的随机用户名
-				username = fmt.Sprintf("匿名用户_%s", uuid.New().String()[:4])
-				// 对用户名进行 URL 编码
-				encodedUsername := url.QueryEscape(username)
-				// 设置 Cookie，有效期 7 天
-				ctx.SetCookie(&http.Cookie{
-					Name:    "anonymous_username",
-					Value:   encodedUsername,
-					Path:    "/",
-					Expires: time.Now().Add(7 * 24 * time.Hour),
-				})
-			} else {
-				username = decodedUsername
-			}
-		}
-		comment.Username = username
-	}
-
 	comment.Content = req.Content
 	comment.CreatedAt = &now
 	comment.UpdatedAt = &now
 	comment.ReplyTo = req.ReplyTo
 	comment.ReplyEmail = req.ReplyEmail
-	comment.Website = req.Website
 	comment.MemoId = req.MemoID
 
 	if err = c.base.db.Save(&comment).Error; err == nil {
