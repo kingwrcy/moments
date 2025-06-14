@@ -166,6 +166,29 @@ func (c CommentHandler) AddComment(ctx echo.Context) error {
 
 			comment.Email = req.Email
 			comment.Website = req.Website
+
+			if req.Username != "" {
+			    // 获取该访客最新的评论姓名
+			    var latestComment db.Comment
+			    err := c.base.db.Where("guestId = ?", req.GuestID).
+			        Order("createdAt DESC").
+			        First(&latestComment).Error
+
+			    // 如果存在最新姓名，则使用该姓名更新所有记录
+			    if err == nil && latestComment.Username != "" {
+			        req.Username = latestComment.Username
+			    }
+
+			    // 更新同访客ID的所有评论
+			    c.base.db.Model(&db.Comment{}).
+			        Where("guestId = ?", req.GuestID).
+			        Update("username", req.Username)
+
+			    // 更新同访客ID的所有点赞
+			    c.base.db.Model(&db.Like{}).
+			        Where("guestId = ?", req.GuestID).
+			        Update("guestName", req.Username)
+			}
 		} else {
 			comment.Username = currentUser.Nickname
 			comment.Email = currentUser.Email

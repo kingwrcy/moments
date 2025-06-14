@@ -203,6 +203,18 @@ func (u UserHandler) SaveProfile(c echo.Context) error {
 	user.CoverUrl = req.CoverUrl
 	user.Email = req.Email
 
+	// 同步更新用户的所有评论和点赞记录
+	if req.Nickname != "" {
+	    // 更新用户的所有评论
+	    u.base.db.Model(&db.Comment{}).
+	        Where("author = ?", currentUser.Id).
+	        Update("username", req.Nickname)
+
+	    // 更新用户的所有点赞
+	    u.base.db.Model(&db.Like{}).
+	        Where("userId = ?", currentUser.Id).
+	        Update("guestName", req.Nickname)
+	}
 	if err := u.base.db.Save(&user).Error; err != nil {
 		return FailResp(c, Fail)
 	}

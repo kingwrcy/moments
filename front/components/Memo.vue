@@ -553,13 +553,8 @@ const getLike = async (id: number) => {
       const userId = global.value.userinfo.id;
       liked.value = likeInfo.value?.some((info) => info.id === userId) || false;
     } else {
-      const guestName = localCommentUserinfo.value.username;
-      if (guestName) {
-        liked.value = likeInfo.value?.some((info) => info.name === guestName) || false;
-      } else {
         liked.value = likeInfo.value?.some((info) => info.id === guestId) || false; 
       }
-    }
     return true;
   } catch (error) {
     console.error("获取点赞信息失败:", error);
