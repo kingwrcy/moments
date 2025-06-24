@@ -3,14 +3,13 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/kingwrcy/moments/db"
+	"github.com/kingwrcy/moments/pkg/util"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
 	"github.com/samber/do/v2"
@@ -95,6 +94,9 @@ func (l LikeHandler) AddLike(c echo.Context) error {
 		}
 	} else {
 		guestID = c.QueryParam("guestId")
+		if !util.IsGuestID(guestID) {
+			return FailRespWithMsg(c, ParamError, "无效的访客ID")
+		}
 		// 检查是否存在关联评论，如果存在则使用评论的用户名，否则使用guestID作为默认名称
 		var comment db.Comment
 		err := l.base.db.Where("guestId = ?", guestID).Order("createdAt DESC").First(&comment).Error
@@ -274,7 +276,7 @@ func (l LikeHandler) SetGuestId(c echo.Context) error {
 		}
 	}
 
-	newGuestId := fmt.Sprintf("访客%s", uuid.New().String()[:6])
+	newGuestId := util.GenerateGuestID()
 	data := vo.GuestInfo{
 		GuestId:   newGuestId,
 		TimeStamp: time.Now().Unix(),

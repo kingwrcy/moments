@@ -11,10 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/kingwrcy/moments/db"
-
 	"github.com/kingwrcy/moments/pkg/mail"
+	"github.com/kingwrcy/moments/pkg/util"
 	"github.com/kingwrcy/moments/vo"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
@@ -146,21 +145,19 @@ func (c CommentHandler) AddComment(ctx echo.Context) error {
 	if context, ok := ctx.(CustomContext); ok {
 		currentUser := context.CurrentUser()
 		if currentUser == nil {
-			if req.GuestID == "" {
-				return FailRespWithMsg(ctx, ParamError, "访客ID必填,请先登录或注册")
+			if req.GuestID == "" || !util.IsGuestID(req.GuestID) {
+				return FailRespWithMsg(ctx, ParamError, "无效的访客ID")
 			}
 			comment.GuestID = req.GuestID
 
-			if req.Username != "" {
-				// 检查访客是否输入了注册时相同的用户名，如果相同则在用户名后添加随机后缀
-				var userCount int64
-				c.base.db.Model(&db.User{}).Where("username = ? OR nickname = ?", req.Username, req.Username).Count(&userCount)
-				if userCount > 0 {
-					suffix := uuid.New().String()[:6]
-					req.Username = fmt.Sprintf("%s%s", req.Username, suffix)
-				}
-				comment.Username = req.Username
-			} else {
+			// 使用统一的用户名处理逻辑
+			isConflict := func(name string) bool {
+				var count int64
+				c.base.db.Model(&db.User{}).Where("username = ? OR nickname = ?", name, name).Count(&count)
+				return count > 0
+			}
+			comment.Username = util.NormalizeUsername(req.Username, isConflict)
+			if comment.Username == "" {
 				comment.Username = req.GuestID
 			}
 
@@ -168,26 +165,26 @@ func (c CommentHandler) AddComment(ctx echo.Context) error {
 			comment.Website = req.Website
 
 			if req.Username != "" {
-			    // 获取该访客最新的评论姓名
-			    var latestComment db.Comment
-			    err := c.base.db.Where("guestId = ?", req.GuestID).
-			        Order("createdAt DESC").
-			        First(&latestComment).Error
+				// 获取该访客最新的评论姓名
+				var latestComment db.Comment
+				err := c.base.db.Where("guestId = ?", req.GuestID).
+					Order("createdAt DESC").
+					First(&latestComment).Error
 
-			    // 如果存在最新姓名，则使用该姓名更新所有记录
-			    if err == nil && latestComment.Username != "" {
-			        req.Username = latestComment.Username
-			    }
+				// 如果存在最新姓名，则使用该姓名更新所有记录
+				if err == nil && latestComment.Username != "" {
+					req.Username = latestComment.Username
+				}
 
-			    // 更新同访客ID的所有评论
-			    c.base.db.Model(&db.Comment{}).
-			        Where("guestId = ?", req.GuestID).
-			        Update("username", req.Username)
+				// 更新同访客ID的所有评论
+				c.base.db.Model(&db.Comment{}).
+					Where("guestId = ?", req.GuestID).
+					Update("username", req.Username)
 
-			    // 更新同访客ID的所有点赞
-			    c.base.db.Model(&db.Like{}).
-			        Where("guestId = ?", req.GuestID).
-			        Update("guestName", req.Username)
+				// 更新同访客ID的所有点赞
+				c.base.db.Model(&db.Like{}).
+					Where("guestId = ?", req.GuestID).
+					Update("guestName", req.Username)
 			}
 		} else {
 			comment.Username = currentUser.Nickname
