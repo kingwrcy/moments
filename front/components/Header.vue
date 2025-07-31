@@ -16,6 +16,7 @@
         />
         <span v-if="$route.path === '/user/calendar'">日历检索</span>
         <span v-else-if="$route.path === '/sys/settings'">系统设置</span>
+        <span v-else-if="$route.path === '/user/manage'">用户管理</span>
         <span v-else-if="$route.path === '/user/settings'">用户中心</span>
         <span v-else-if="$route.path.indexOf('/tags/') >= 0">
           {{ route.params.tag || "话题专栏" }}
@@ -119,6 +120,16 @@
       <NuxtLink v-if="$route.path === '/'" to="/friend" title="友情链接">
         <UIcon
           name="i-carbon-friendship"
+          class="text-[#9fc84a] w-5 h-5 cursor-pointer"
+        />
+      </NuxtLink>
+      <NuxtLink
+        v-if="$route.path === '/user/settings' && global.userinfo.id === 1"
+        to="/user/manage"
+        title="用户管理"
+      >
+        <UIcon
+          name="i-carbon-user-multiple"
           class="text-[#9fc84a] w-5 h-5 cursor-pointer"
         />
       </NuxtLink>

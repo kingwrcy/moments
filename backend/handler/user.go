@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -21,6 +22,24 @@ type loginSuccessDTO struct {
 	Username string `json:"username,omitempty"` //用户名
 	Id       int32  `json:"id,omitempty"`       //用户ID
 }
+
+type userListResp struct {
+	List   []db.User `json:"list"`
+	HasNext bool      `json:"hasNext"`
+}
+
+type updateUserReq struct {
+	Id        int32  `json:"id"`
+	Username  string `json:"username"`
+	Nickname  string `json:"nickname"`
+	Email     string `json:"email"`
+	Slogan    string `json:"slogan"`
+	AvatarUrl string `json:"avatarUrl"`
+	CoverUrl  string `json:"coverUrl"`
+	Password  string `json:"password,omitempty"`
+}
+
+
 
 func NewUserHandler(injector do.Injector) *UserHandler {
 	return &UserHandler{do.MustInvoke[BaseHandler](injector)}
@@ -206,5 +225,243 @@ func (u UserHandler) SaveProfile(c echo.Context) error {
 	if err := u.base.db.Save(&user).Error; err != nil {
 		return FailResp(c, Fail)
 	}
+	return SuccessResp(c, h{})
+}
+
+// isAdmin 检查当前用户是否为管理员
+func (u UserHandler) isAdmin(c echo.Context) bool {
+	context := c.(CustomContext)
+	currentUser := context.CurrentUser()
+	if currentUser == nil {
+		return false
+	}
+
+	var sysConfig db.SysConfig
+	u.base.db.First(&sysConfig)
+	var sysConfigVO vo.FullSysConfigVO
+	_ = json.Unmarshal([]byte(sysConfig.Content), &sysConfigVO)
+
+	return currentUser.Username == sysConfigVO.AdminUserName
+}
+
+// UserList godoc
+//
+//	@Tags		User
+//	@Summary	管理员获取用户列表
+//	@Description	管理员获取所有注册用户列表，支持分页和排序
+//	@Accept		json
+//	@Produce	json
+//	@Param		object		body		object	false	"分页、排序和搜索参数"
+//	@Param		object.page		body		int		false	"页码，默认为1"
+//	@Param		object.size		body		int		false	"每页数量，默认为20"
+//	@Param		object.sort		body		string	false	"排序方式，asc: 升序，desc: 降序，默认为desc"
+//	@Param		object.keyword	body		string	false	"搜索关键词"
+//	@Param		x-api-token	header		string	true	"登录TOKEN"
+//	@Success	200		{object}	userListResp
+//	@Router		/api/user/list [post]
+func (u UserHandler) UserList(c echo.Context) error {
+	if !u.isAdmin(c) {
+		return FailRespWithMsg(c, Fail, "无权限访问")
+	}
+
+	type listReq struct {
+		Page    int    `json:"page"`
+		Size    int    `json:"size"`
+		Sort    string `json:"sort"`
+		Keyword string `json:"keyword"`
+	}
+
+	var req listReq
+	if err := c.Bind(&req); err != nil {
+		return FailResp(c, ParamError)
+	}
+
+	page := req.Page
+	if page <= 0 {
+		page = 1
+	}
+	size := req.Size
+	if size <= 0 {
+		size = 20
+	}
+	sort := req.Sort
+	if sort != "asc" && sort != "desc" {
+		sort = "desc"
+	}
+
+	var users []db.User
+	var total int64
+
+	offset := (page - 1) * size
+
+	// 构建查询条件
+	query := u.base.db.Model(&db.User{})
+	if req.Keyword != "" {
+		query = query.Where("username LIKE ? OR nickname LIKE ?", "%"+req.Keyword+"%", "%"+req.Keyword+"%")
+	}
+
+	query.Count(&total)
+	query.Order("id " + sort).Limit(size).Offset(offset).Find(&users)
+
+	hasNext := offset+len(users) < int(total)
+
+	return SuccessResp(c, userListResp{
+		List:   users,
+		HasNext: hasNext,
+	})
+}
+
+// GetUser godoc
+//
+//	@Tags		User
+//	@Summary	管理员获取用户详情
+//	@Description	管理员获取指定用户的详细信息
+//	@Accept		json
+//	@Produce	json
+//	@Param		id			path		int		true	"用户ID"
+//	@Param		x-api-token	header		string	true	"登录TOKEN"
+//	@Success	200			{object}	db.User
+//	@Router		/api/user/{id} [post]
+func (u UserHandler) GetUser(c echo.Context) error {
+	if !u.isAdmin(c) {
+		return FailRespWithMsg(c, Fail, "无权限访问")
+	}
+
+	id, err := strconv.ParseInt(c.Param("id"), 10, 32)
+	if err != nil {
+		return FailResp(c, ParamError)
+	}
+
+	var user db.User
+	if err := u.base.db.First(&user, int32(id)).Error; err != nil {
+		return FailRespWithMsg(c, Fail, "用户不存在")
+	}
+
+	return SuccessResp(c, user)
+}
+
+// UpdateUser godoc
+//
+//	@Tags		User
+//	@Summary	管理员更新用户信息
+//	@Description	管理员更新指定用户的基本信息
+//	@Accept		json
+//	@Produce	json
+//	@Param		object		body		updateUserReq	true	"用户信息"
+//	@Param		x-api-token	header		string				true	"登录TOKEN"
+//	@Success	200
+//	@Router		/api/user/update [post]
+func (u UserHandler) UpdateUser(c echo.Context) error {
+	if !u.isAdmin(c) {
+		return FailRespWithMsg(c, Fail, "无权限访问")
+	}
+
+	var req updateUserReq
+	if err := c.Bind(&req); err != nil {
+		return FailResp(c, ParamError)
+	}
+
+	var user db.User
+	if err := u.base.db.First(&user, req.Id).Error; err != nil {
+		return FailRespWithMsg(c, Fail, "用户不存在")
+	}
+
+	// 检查用户名是否已存在
+	if req.Username != user.Username {
+		var count int64
+		u.base.db.Model(&db.User{}).Where("username = ? AND id != ?", req.Username, req.Id).Count(&count)
+		if count > 0 {
+			return FailRespWithMsg(c, Fail, "用户名已存在")
+		}
+	}
+
+	user.Username = req.Username
+	user.Nickname = req.Nickname
+	user.Email = req.Email
+	user.Slogan = req.Slogan
+	user.AvatarUrl = req.AvatarUrl
+	user.CoverUrl = req.CoverUrl
+	user.UpdatedAt = new(time.Time)
+	*user.UpdatedAt = time.Now()
+
+	// 如果有密码更新，处理密码加密
+	if req.Password != "" {
+		if len(req.Password) < 6 {
+			return FailRespWithMsg(c, Fail, "密码长度不能少于6位")
+		}
+		password, err := bcrypt.GenerateFromPassword([]byte(req.Password), 10)
+		if err != nil {
+			return FailRespWithMsg(c, Fail, "密码加密失败")
+		}
+		user.Password = string(password)
+	}
+
+	if err := u.base.db.Save(&user).Error; err != nil {
+		return FailRespWithMsg(c, Fail, "更新用户失败")
+	}
+
+	return SuccessResp(c, h{})
+}
+
+// DeleteUser godoc
+//
+//	@Tags		User
+//	@Summary	管理员删除用户
+//	@Description	管理员删除指定用户（软删除）
+//	@Accept		json
+//	@Produce	json
+//	@Param		id			path		int		true	"用户ID"
+//	@Param		x-api-token	header		string	true	"登录TOKEN"
+//	@Success		200
+//	@Router		/api/user/{id} [post]
+func (u UserHandler) DeleteUser(c echo.Context) error {
+	if !u.isAdmin(c) {
+		return FailRespWithMsg(c, Fail, "无权限访问")
+	}
+
+	id, err := strconv.ParseInt(c.Param("id"), 10, 32)
+	if err != nil {
+		return FailResp(c, ParamError)
+	}
+
+	// 获取当前登录用户ID
+	context, ok := c.(CustomContext)
+	if !ok {
+		return FailRespWithMsg(c, Fail, "无法获取当前用户信息")
+	}
+	currentUser := context.CurrentUser()
+	if currentUser == nil {
+		return FailRespWithMsg(c, Fail, "无法获取当前用户信息")
+	}
+	currentUserId := currentUser.Id
+
+	// 检查是否尝试删除自己
+	if int32(id) == currentUserId {
+		return FailRespWithMsg(c, Fail, "不能删除自己的账户")
+	}
+
+	var user db.User
+	if err := u.base.db.First(&user, int32(id)).Error; err != nil {
+		return FailRespWithMsg(c, Fail, "用户不存在")
+	}
+
+	// 检查是否为管理员账户
+	var sysConfig db.SysConfig
+	u.base.db.First(&sysConfig)
+	var sysConfigVO vo.FullSysConfigVO
+	_ = json.Unmarshal([]byte(sysConfig.Content), &sysConfigVO)
+	if user.Username == sysConfigVO.AdminUserName {
+		return FailRespWithMsg(c, Fail, "不能删除管理员账户")
+	}
+
+	// 删除用户相关的数据
+	u.base.db.Where("userId = ?", user.Id).Delete(&db.Memo{})
+	u.base.db.Where("author = ?", user.Id).Delete(&db.Comment{})
+
+	// 删除用户
+	if err := u.base.db.Delete(&user).Error; err != nil {
+		return FailRespWithMsg(c, Fail, "删除用户失败")
+	}
+
 	return SuccessResp(c, h{})
 }

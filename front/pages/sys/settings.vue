@@ -11,12 +11,24 @@
     <UFormGroup label="网站标题" name="title" :ui="{label:{base:'font-bold'}}">
       <UInput v-model="state.title"/>
     </UFormGroup>
-    <UFormGroup label="Favicon" name="favicon"
-                :ui="{label:{base:'font-bold'}}">
-      <UInput type="file" size="sm" icon="i-heroicons-folder" @change="uploadFavicon"/>
-      <div class="text-gray-500 text-sm my-2">或者输入在线地址</div>
-      <UInput v-model="state.favicon" class="mb-2"/>
-      <UAvatar :src="state.favicon"/>
+    <UFormGroup class="dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-neutral-700 overflow-hidden">
+      <div class="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors cursor-pointer" @click="showFavicon = !showFavicon">
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Favicon</span>
+        <div class="flex items-center space-x-2">
+          <UAvatar :src="state.favicon" size="sm"/>
+          <UIcon 
+            :name="showFavicon ? 'i-carbon-chevron-down' : 'i-carbon-chevron-right'"
+            class="w-5 h-5 text-gray-400 transition-transform duration-200"
+            :class="{'rotate-180': showFavicon}"
+          />
+        </div>
+      </div>
+      <div v-show="showFavicon" class="px-4 pb-4 space-y-3 border-t border-gray-100 dark:border-neutral-700">
+        <div class="space-y-3 pt-3">
+          <UInput type="file" size="sm" icon="i-heroicons-photo" @change="uploadFavicon" accept="image/*"/>
+          <UInput v-model="state.favicon" placeholder="或输入favicon地址" size="sm"/>
+        </div>
+      </div>
     </UFormGroup>
     <UFormGroup label="首页是否自动加载下一页" name="enableAutoLoadNextPage" :ui="{label:{base:'font-bold'}}">
       <UToggle v-model="state.enableAutoLoadNextPage"/>
@@ -109,7 +121,7 @@
         <UInput v-model="state.smtpPassword" type="password"/>
       </UFormGroup>
       </template>
-    
+
     <UButton class="justify-center" @click="save">保存</UButton>
   </div>
 </template>
@@ -122,6 +134,7 @@ import {useUpload} from "~/utils";
 const currentUser = useState<UserVO>('userinfo')
 const version = ref('')
 const commitId = ref('')
+const showFavicon = ref(false)
 const state = reactive({
   enableGoogleRecaptcha: false,
   googleSiteKey:"",

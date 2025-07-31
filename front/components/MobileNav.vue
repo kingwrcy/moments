@@ -107,6 +107,19 @@
         <span class="text-sm mt-1">友链</span>
       </div>
       <div
+        v-if="$route.path === '/user/settings' && global.userinfo.id === 1"
+        class="flex flex-col items-center"
+        @click="navigate('/user/manage')"
+        title="用户管理"
+      >
+        <span
+          class="flex items-center bg-gray-200/75 dark:bg-gray-800/75 p-3 rounded-full"
+        >
+          <UIcon name="i-carbon-user-multiple" class="w-6 h-6 cursor-pointer" />
+        </span>
+        <span class="text-sm mt-1">管理</span>
+      </div>
+      <div
         v-if="$route.path !== '/sys/settings' && global.userinfo.id === 1"
         class="flex flex-col items-center"
         @click="navigate('/sys/settings')"
