@@ -236,12 +236,7 @@ func (u UserHandler) isAdmin(c echo.Context) bool {
 		return false
 	}
 
-	var sysConfig db.SysConfig
-	u.base.db.First(&sysConfig)
-	var sysConfigVO vo.FullSysConfigVO
-	_ = json.Unmarshal([]byte(sysConfig.Content), &sysConfigVO)
-
-	return currentUser.Username == sysConfigVO.AdminUserName
+	return currentUser.Id == 1
 }
 
 // UserList godoc
@@ -446,11 +441,7 @@ func (u UserHandler) DeleteUser(c echo.Context) error {
 	}
 
 	// 检查是否为管理员账户
-	var sysConfig db.SysConfig
-	u.base.db.First(&sysConfig)
-	var sysConfigVO vo.FullSysConfigVO
-	_ = json.Unmarshal([]byte(sysConfig.Content), &sysConfigVO)
-	if user.Username == sysConfigVO.AdminUserName {
+	if user.Id == 1 {
 		return FailRespWithMsg(c, Fail, "不能删除管理员账户")
 	}
 
