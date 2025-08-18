@@ -25,8 +25,33 @@
       </div>
       <div v-show="showAvatar" class="px-4 pb-4 space-y-3 border-t border-gray-100 dark:border-neutral-700">
         <div class="space-y-3 pt-3">
-          <UInput type="file" size="sm" icon="i-heroicons-photo" @change="uploadAvatarUrl" accept="image/*"/>
-          <UInput v-model="state.avatarUrl" placeholder="或输入头像地址" size="sm"/>
+          <UInput v-model="state.avatarUrl" placeholder="输入地址或上传" size="sm"/>
+          <label class="cursor-pointer group space-y-3">
+            <UInput
+              type="file"
+              @change="uploadAvatarUrl"
+              accept="image/*"
+              class="hidden"
+            />
+            <div
+              class="flex-col w-24 h-24 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-400 dark:text-gray-500 group-hover:border-gray-400 dark:group-hover:border-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400 transition-colors"
+            >
+              <svg
+                class="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                ></path>
+              </svg>
+              <span class="text-xs">上传头像</span>
+            </div>
+          </label>
         </div>
       </div>
     </UFormGroup>
@@ -44,8 +69,33 @@
       </div>
       <div v-show="showCover" class="px-4 pb-4 space-y-3 border-t border-gray-100 dark:border-neutral-700">
         <div class="space-y-3 pt-3">
-          <UInput type="file" size="sm" icon="i-heroicons-photo" @change="uploadCoverUrl" accept="image/*"/>
-          <UInput v-model="state.coverUrl" placeholder="或输入图片地址" size="sm"/>
+          <UInput v-model="state.coverUrl" placeholder="输入地址或上传" size="sm"/>
+          <label class="cursor-pointer group space-y-3">
+            <UInput
+              type="file"
+              @change="uploadCoverUrl"
+              accept="image/*"
+              class="hidden"
+            />
+            <div
+              class="flex-col w-24 h-24 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-400 dark:text-gray-500 group-hover:border-gray-400 dark:group-hover:border-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400 transition-colors"
+            >
+              <svg
+                class="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                ></path>
+              </svg>
+              <span class="text-xs">上传图片</span>
+            </div>
+          </label>
         </div>
         <div v-if="state.coverUrl" class="rounded overflow-hidden">
           <img :src="state.coverUrl" class="w-full h-full object-cover" alt=""/>
@@ -127,10 +177,10 @@ const save = async () => {
       }
     } else {
       // 普通用户模式：更新自己的信息
-  await useMyFetch('/user/saveProfile', state)
-  toast.success("保存成功")
-  location.reload()
-}
+      await useMyFetch('/user/saveProfile', state)
+      toast.success("保存成功")
+      location.reload()
+    }
   } catch (error) {
     toast.error(props.isAdminMode ? "用户更新失败" : "保存失败")
   }
@@ -169,7 +219,7 @@ onMounted(async () => {
     Object.assign(state, props.targetUser)
     state.password = ""
   } else {
-  Object.assign(state,currentUser.value)
+    Object.assign(state, currentUser.value)
   }
 })
 

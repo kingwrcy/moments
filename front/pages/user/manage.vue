@@ -147,11 +147,13 @@
           class="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 last:border-b-0"
         >
           <div class="flex items-center space-x-3">
-            <UAvatar
-              :src="user.avatarUrl"
-              size="md"
-              class="ring-2 ring-gray-200 dark:ring-gray-700 flex-shrink-0"
-            />
+            <NuxtLink :to="'/user/' + user.id">
+              <UAvatar
+                :src="user.avatarUrl"
+                size="md"
+                class="ring-2 ring-gray-200 dark:ring-gray-700 flex-shrink-0"
+              />
+            </NuxtLink>
             <div class="flex-1 min-w-0">
               <div class="flex items-center justify-between">
                 <div>
@@ -225,11 +227,13 @@
 
           <template #username-data="{ row }">
             <div class="flex items-center">
-              <UAvatar
-                :src="row.avatarUrl"
-                size="sm"
-                class="ring-2 ring-gray-200 dark:ring-gray-700"
-              />
+              <NuxtLink :to="'/user/' + row.id">
+                <UAvatar
+                  :src="row.avatarUrl"
+                  size="sm"
+                  class="ring-2 ring-gray-200 dark:ring-gray-700"
+                />
+              </NuxtLink>
               <div class="ml-3">
                 <div
                   class="text-sm font-medium text-gray-900 dark:text-gray-100"
