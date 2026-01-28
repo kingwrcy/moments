@@ -40,6 +40,12 @@ func setupRouter(injector do.Injector) {
 	memoGroup.POST("/getDoubanMovieInfo", memoHandler.GetDoubanMovieInfo)
 	memoGroup.POST("/getDoubanBookInfo", memoHandler.GetDoubanBookInfo)
 
+    // 新增路由
+    memoGroup.POST("/getSteamGameInfo", memoHandler.GetSteamGameInfo)
+    memoGroup.POST("/getTmdbInfo", memoHandler.GetTmdbInfo)
+
+// ...
+
 	commentGroup := apiGroup.Group("/comment")
 	commentGroup.POST("/add", commentHandler.AddComment)
 	commentGroup.POST("/remove", commentHandler.RemoveComment)

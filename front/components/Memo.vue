@@ -99,6 +99,17 @@
             v-if="extJSON.doubanMovie && extJSON.doubanMovie.title"
             :movie="extJSON.doubanMovie"
           />
+		  <steam-game-preview 
+            v-if="extJSON.steamGame && extJSON.steamGame.name"
+            :game="extJSON.steamGame"
+          />
+
+          <!-- 新增: TMDB 预览 -->
+          <tmdb-preview 
+            v-if="extJSON.tmdbItem && extJSON.tmdbItem.title"
+            :item="extJSON.tmdbItem"
+          />
+
           <video-preview-iframe
             v-if="
               extJSON.video &&
