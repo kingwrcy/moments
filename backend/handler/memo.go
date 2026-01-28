@@ -836,3 +836,224 @@ func (m MemoHandler) GetDoubanBookInfo(c echo.Context) error {
 	}
 	return SuccessResp(c, book)
 }
+// backend/handler/memo.go
+
+// ... 在 handler 中添加以下两个方法 ...
+
+// GetSteamGameInfo 获取 Steam 游戏详情
+// @Router /api/memo/getSteamGameInfo [post]
+// GetSteamGameInfo 获取 Steam 游戏详情
+// @Router /api/memo/getSteamGameInfo [post]
+func (m MemoHandler) GetSteamGameInfo(c echo.Context) error {
+	id := c.QueryParam("id")
+	// 设置语言为中文
+	target := fmt.Sprintf("https://store.steampowered.com/app/%s/?l=schinese", id)
+
+	userAgent := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+
+	req, _ := http.NewRequest("GET", target, nil)
+	req.Header.Set("User-Agent", userAgent)
+	req.Header.Set("Cookie", "birthtime=0; lastagecheckage=1-0-1900")
+
+	res, err := m.hc.Do(req)
+	if err != nil {
+		return FailRespWithMsg(c, Fail, err.Error())
+	}
+	defer res.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return FailRespWithMsg(c, Fail, "解析HTML失败")
+	}
+
+	var game vo.SteamGame
+	game.AppId = id
+	game.Url = target
+	
+	// [修复] 使用 First() 防止获取到重复的标题 (例如 "九日九日")
+	game.Name = strings.TrimSpace(doc.Find(".apphub_AppName").First().Text())
+	
+	game.Image = doc.Find("img.game_header_image_full").AttrOr("src", "")
+	game.Description = strings.TrimSpace(doc.Find(".game_description_snippet").Text())
+	game.ReleaseDate = strings.TrimSpace(doc.Find(".date").First().Text())
+	game.Price = strings.TrimSpace(doc.Find(".game_purchase_price").First().Text())
+	if game.Price == "" {
+		game.Price = strings.TrimSpace(doc.Find(".discount_final_price").First().Text())
+	}
+
+	if game.Name == "" {
+		return FailRespWithMsg(c, Fail, "无法获取游戏信息，可能ID无效")
+	}
+
+	return SuccessResp(c, game)
+}
+
+// GetTmdbInfo 获取 TMDB 详情
+// @Router /api/memo/getTmdbInfo [post]
+func (m MemoHandler) GetTmdbInfo(c echo.Context) error {
+	id := c.QueryParam("id")
+	typeStr := c.QueryParam("type") // "movie" or "tv"
+	if typeStr == "" {
+		typeStr = "movie"
+	}
+	target := fmt.Sprintf("https://www.themoviedb.org/%s/%s?language=zh-CN", typeStr, id)
+	userAgent := "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+	req, _ := http.NewRequest("GET", target, nil)
+	req.Header.Set("User-Agent", userAgent)
+	req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+	res, err := m.hc.Do(req)
+	if err != nil {
+		return FailRespWithMsg(c, Fail, err.Error())
+	}
+	defer res.Body.Close()
+	
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return FailRespWithMsg(c, Fail, "解析HTML失败")
+	}
+	
+	var item vo.TmdbItem
+	item.Id = id
+	item.Type = typeStr
+	item.Url = target
+	
+	// 1. Meta信息
+	item.Title = doc.Find("meta[property='og:title']").AttrOr("content", "")
+	item.Overview = strings.TrimSpace(doc.Find("meta[property='og:description']").AttrOr("content", ""))
+	item.PosterPath = doc.Find("meta[property='og:image']").AttrOr("content", "")
+	
+	// 2. 标题清理
+	if strings.Contains(item.Title, " (") {
+		parts := strings.Split(item.Title, " (")
+		item.Title = parts[0]
+	}
+	
+	// 3. 日期
+	dateStr := strings.TrimSpace(doc.Find(".facts .release").Text())
+	if dateStr != "" {
+		item.ReleaseDate = strings.TrimSpace(strings.Split(dateStr, " (")[0])
+	} else {
+		item.ReleaseDate = strings.TrimSpace(doc.Find(".tag.release_date").Text())
+	}
+	
+	// 4. 评分
+	scoreStr := doc.Find(".user_score_chart").AttrOr("data-percent", "")
+	if scoreStr != "" {
+		if scoreFloat, err := strconv.ParseFloat(scoreStr, 64); err == nil {
+			item.VoteAverage = fmt.Sprintf("%.1f", scoreFloat/10.0)
+		} else {
+			item.VoteAverage = scoreStr
+		}
+	}
+	
+	// 5. [优化] 获取导演/主创
+	var directors []string
+	
+	// 方法1: 从 header_info 中查找
+	doc.Find(".header_info ol.people li").Each(func(i int, s *goquery.Selection) {
+		// 获取职位（可能在不同的元素中）
+		job := strings.TrimSpace(s.Find("p.character").Text())
+		if job == "" {
+			job = strings.TrimSpace(s.Find(".character").Text())
+		}
+		
+		// 获取人名
+		name := strings.TrimSpace(s.Find("p a").Text())
+		if name == "" {
+			name = strings.TrimSpace(s.Find("a").First().Text())
+		}
+		if name == "" {
+			name = strings.TrimSpace(s.Find("p").First().Text())
+		}
+		
+		if name == "" {
+			return
+		}
+		
+		shouldAdd := false
+		if item.Type == "movie" {
+			// 电影：查找导演
+			if strings.Contains(job, "Director") || 
+			   strings.Contains(job, "导演") ||
+			   strings.Contains(job, "Directed by") {
+				shouldAdd = true
+			}
+		} else if item.Type == "tv" {
+			// 电视剧：查找主创
+			jobLower := strings.ToLower(job)
+			if strings.Contains(jobLower, "creator") || 
+			   strings.Contains(job, "主创") || 
+			   strings.Contains(job, "创作") ||
+			   strings.Contains(jobLower, "created by") ||
+			   strings.Contains(job, "原作") {
+				shouldAdd = true
+			}
+		}
+		
+		if shouldAdd {
+			directors = append(directors, name)
+		}
+	})
+	
+	// 方法2: 如果方法1没找到，尝试其他选择器（针对TV）
+	if len(directors) == 0 && item.Type == "tv" {
+		doc.Find("ol.people.credits li").Each(func(i int, s *goquery.Selection) {
+			job := strings.TrimSpace(s.Find("p.character").Text())
+			name := strings.TrimSpace(s.Find("p a").Text())
+			
+			if name != "" {
+				jobLower := strings.ToLower(job)
+				if strings.Contains(jobLower, "creator") || 
+				   strings.Contains(job, "主创") {
+					directors = append(directors, name)
+				}
+			}
+		})
+	}
+	
+	// 方法3: 最后的备用方案 - 查找所有 li，匹配关键词
+	if len(directors) == 0 && item.Type == "tv" {
+		doc.Find("section.panel.top_billed ol li").Each(func(i int, s *goquery.Selection) {
+			text := s.Text()
+			if strings.Contains(text, "主创") || 
+			   strings.Contains(strings.ToLower(text), "creator") {
+				name := strings.TrimSpace(s.Find("a").First().Text())
+				if name != "" {
+					directors = append(directors, name)
+				}
+			}
+		})
+	}
+	
+	// 去重并拼接
+	directorMap := make(map[string]bool)
+	var uniqueDirectors []string
+	for _, d := range directors {
+		if !directorMap[d] {
+			directorMap[d] = true
+			uniqueDirectors = append(uniqueDirectors, d)
+		}
+	}
+	item.Director = strings.Join(uniqueDirectors, " / ")
+	
+	// 6. 获取主演 (Top Billed Cast)
+	var actors []string
+	doc.Find("ol.people.scroller li.card").Each(func(i int, s *goquery.Selection) {
+		if i < 3 { // 取前4个
+			actorName := strings.TrimSpace(s.Find("p a").First().Text())
+			if actorName == "" {
+				actorName = strings.TrimSpace(s.Find("p").First().Text())
+			}
+			if actorName != "" {
+				actors = append(actors, actorName)
+			}
+		}
+	})
+	item.Actors = strings.Join(actors, " / ")
+	
+	if item.Title == "" {
+		return FailRespWithMsg(c, Fail, "无法获取信息，可能是ID错误")
+	}
+	
+	return SuccessResp(c, item)
+}

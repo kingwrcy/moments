@@ -22,16 +22,45 @@ type Music struct {
 	Api    string `json:"api,omitempty"`    //MetingJS的服务端API地址
 }
 
+// 确保这里只有一个 MemoExt 定义，并且包含了 SteamGame 和 TmdbItem
 type MemoExt struct {
 	Music       Music       `json:"music,omitempty"`       //音乐
 	DoubanBook  DoubanBook  `json:"doubanBook,omitempty"`  //豆瓣读书
 	DoubanMovie DoubanMovie `json:"doubanMovie,omitempty"` //豆瓣电影
 	Video       Video       `json:"video,omitempty"`       //视频
+	SteamGame   SteamGame   `json:"steamGame,omitempty"`   //Steam游戏 (新增)
+	TmdbItem    TmdbItem    `json:"tmdbItem,omitempty"`    //TMDB影视 (新增)
 }
 
 type Video struct {
 	Type  string `json:"type,omitempty"`  //视频类型,online:在线视频,youtube,bilibili
 	Value string `json:"value,omitempty"` //视频地址
+}
+
+// 新增 SteamGame 结构体
+type SteamGame struct {
+	AppId       string `json:"appId,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Image       string `json:"image,omitempty"` // header.jpg
+	Url         string `json:"url,omitempty"`
+	Description string `json:"description,omitempty"`
+	Price       string `json:"price,omitempty"`
+	ReleaseDate string `json:"releaseDate,omitempty"`
+}
+
+// 新增 TmdbItem 结构体
+type TmdbItem struct {
+	Id           string `json:"id,omitempty"`
+	Type         string `json:"type,omitempty"` // movie or tv
+	Title        string `json:"title,omitempty"`
+	Overview     string `json:"overview,omitempty"`
+	PosterPath   string `json:"posterPath,omitempty"` // 完整图片URL
+	BackdropPath string `json:"backdropPath,omitempty"`
+	ReleaseDate  string `json:"releaseDate,omitempty"`
+	VoteAverage  string `json:"voteAverage,omitempty"`
+	Director     string `json:"director,omitempty"`
+	Actors       string `json:"actors,omitempty"`  
+	Url          string `json:"url,omitempty"`
 }
 
 type SaveMemoReq struct {

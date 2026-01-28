@@ -103,7 +103,30 @@ export type ExtDTO = {
     doubanBook: DoubanBook,
     doubanMovie: DoubanMovie,
     video: Video,
+    steamGame?: SteamGame,
+    tmdbItem?: TmdbItem,
 }
+
+export type SteamGame = {
+    appId?: string
+    name?: string
+    image?: string
+    url?: string
+    description?: string
+    price?: string
+    releaseDate?: string
+}
+
+export type TmdbItem = {
+    id?: string
+    type?: 'movie' | 'tv'
+    title?: string
+    overview?: string
+    posterPath?: string
+    url?: string
+    voteAverage?: string
+} 
+
 
 export type MusicDTO = {
     id?: string,

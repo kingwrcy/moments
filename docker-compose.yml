@@ -1,12 +1,14 @@
 services:
   moments:
-    image: kingwrcy/moments:latest
+    # build: . 
+    build: .
     container_name: moments
     restart: always
     environment:
       PORT: 3000
-      JWT_KEY: $JWT_KEY
+      JWT_KEY: "test_secret_key" 
+      
     ports:
-      - 3000:3000
+      - "3000:3000"
     volumes:
-      - /var/moments:/app/data # 持久化数据到主机的 /var/moments 目录，可以按需修改
+      - ./data:/app/data
